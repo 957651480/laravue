@@ -91,9 +91,9 @@ class JsonResponse implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'success' => $this->success,
+            'code'=>$this->success?200:0,
             'data' => $this->data,
-            'error' => $this->error,
+            'msg' => $this->success?:$this->error,
         ];
     }
 
