@@ -12,7 +12,8 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        action="api/file/upload"
+        :headers="myHeaders"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
@@ -30,6 +31,7 @@
 </template>
 
 <script>
+import { getToken } from '@/utils/auth';
 export default {
   name: 'EditorSlideUpload',
   props: {
@@ -43,6 +45,7 @@ export default {
       dialogVisible: false,
       listObj: {},
       fileList: [],
+      myHeaders: { Authorization: 'Bearer ' + getToken() },
     };
   },
   methods: {
@@ -61,11 +64,11 @@ export default {
       this.dialogVisible = false;
     },
     handleSuccess(response, file) {
-      const uid = file.uid;
+      const file_id = file.file_id;
       const objKeyArr = Object.keys(this.listObj);
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
-        if (this.listObj[objKeyArr[i]].uid === uid) {
-          this.listObj[objKeyArr[i]].url = response.files.file;
+        if (this.listObj[objKeyArr[i]].file_id === file_id) {
+          this.listObj[objKeyArr[i]].url = response.url;
           this.listObj[objKeyArr[i]].hasSuccess = true;
           return;
         }

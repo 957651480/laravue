@@ -51,6 +51,9 @@
           <i class="el-icon-plus" />
         </el-upload>
       </el-form-item>
+      <el-form-item label="上传图片">
+        <tinymce />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">
           Create
@@ -65,8 +68,10 @@
 
 <script>
 import { getToken } from '@/utils/auth';
+import Tinymce from '@/components/Tinymce';
 
 export default {
+  components: { Tinymce },
   data() {
     return {
       form: {
