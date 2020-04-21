@@ -111,6 +111,7 @@ export const asyncRoutes = [
   errorRoutes,
   {
     path: '/i18n',
+    hidden: true,
     component: Layout,
     meta: { permissions: ['view menu i18n'] },
     children: [

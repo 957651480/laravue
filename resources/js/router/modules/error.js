@@ -6,6 +6,7 @@ const errorRoutes = {
   component: Layout,
   redirect: 'noredirect',
   name: 'ErrorPages',
+  hidden: true,
   meta: {
     title: 'errorPages',
     icon: '404',
