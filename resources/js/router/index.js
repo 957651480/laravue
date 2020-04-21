@@ -17,6 +17,7 @@ import elementUiRoutes from './modules/element-ui';
 import componentRoutes from './modules/components';
 import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
+import errorRoutes from './modules/error';
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -107,6 +108,7 @@ export const asyncRoutes = [
   componentRoutes,
   tableRoutes,
   adminRoutes,
+  errorRoutes,
   {
     path: '/i18n',
     component: Layout,
