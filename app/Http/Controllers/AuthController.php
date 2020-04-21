@@ -34,7 +34,7 @@ class AuthController extends Controller
 
         $user = $request->user();
         $token = $user->createToken('laravue');
-
+        $user->token = $token;
         return response()->json(new UserResource($user), Response::HTTP_OK)->header('Authorization', $token->plainTextToken);
     }
 
