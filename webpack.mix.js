@@ -67,6 +67,6 @@ if (mix.inProduction()) {
   mix
     .sourceMaps()
     .webpackConfig({
-      devtool: 'cheap-eval-source-map', // Fastest for development
+      devtool: '#eval-source-map', // Fastest for development
     });
 }
