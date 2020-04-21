@@ -16,6 +16,7 @@ use \App\Laravue\JsonResponse;
 */
 
 Route::post('auth/login', 'AuthController@login');
+
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('auth/user', 'AuthController@user');
     Route::post('auth/logout', 'AuthController@logout');
@@ -28,6 +29,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('roles', 'RoleController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::get('roles/{role}/permissions', 'RoleController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
+    Route::post('file/upload', 'FileController@upload');
 });
 
 

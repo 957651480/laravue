@@ -41,6 +41,16 @@
       <el-form-item label="Activity form">
         <el-input v-model="form.desc" type="textarea" />
       </el-form-item>
+      <el-form-item label="上传图片">
+        <el-upload
+          action="api/file/upload"
+          list-type="picture-card"
+          :on-success="handleSuccess"
+          :headers="myHeaders"
+        >
+          <i class="el-icon-plus" />
+        </el-upload>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">
           Create
@@ -54,6 +64,8 @@
 </template>
 
 <script>
+import { getToken } from '@/utils/auth';
+
 export default {
   data() {
     return {
@@ -64,13 +76,24 @@ export default {
         date2: '',
         delivery: false,
         type: [],
+        file_id: 0,
         resource: '',
         desc: '',
       },
+      dialogImageUrl: '',
+      dialogVisible: false,
+      myHeaders: { Authorization: 'Bearer ' + getToken() },
     };
   },
   methods: {
+
+    handleSuccess(response, file, fileList){
+      this.form.file_id = response.id;
+      debugger;
+    },
+
     onSubmit() {
+      this.form;
       this.$message('submit!');
     },
     onCancel() {
