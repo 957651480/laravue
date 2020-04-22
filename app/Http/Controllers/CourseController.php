@@ -101,5 +101,8 @@ class CourseController extends Controller
     public function destroy($id)
     {
         //
+        $course = $this->courses->where('course_id',$id)->first();
+        $course->delete();
+        return $this->renderSuccess();
     }
 }
