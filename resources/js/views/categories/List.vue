@@ -26,7 +26,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="350">
+      <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">
             编辑
