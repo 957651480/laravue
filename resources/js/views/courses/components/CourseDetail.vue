@@ -3,7 +3,7 @@
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
       <div class="createPost-main-container">
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="标题:">
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="标题:" prop="title">
           <el-input
             v-model="postForm.title"
             :rows="1"
@@ -13,7 +13,7 @@
             placeholder="请输入标题"
           />
         </el-form-item>
-        <el-form-item label-width="80px" label="分类:" class="postInfo-container-item">
+        <el-form-item label-width="80px" label="分类:" class="postInfo-container-item" prop="category_id">
           <el-select
             v-model="postForm.category_id"
             placeholder="选择分类"
@@ -26,7 +26,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="上传图片">
+        <el-form-item label="上传图片" prop="image_id">
           <el-upload
             action="api/file/upload"
             list-type="picture-card"
@@ -44,6 +44,7 @@
             <el-form-item
               label-width="120px"
               label="开始时间:"
+              prop="start_time"
               class="postInfo-container-item"
             >
               <el-date-picker
@@ -58,6 +59,7 @@
             <el-form-item
               label-width="120px"
               label="结束时间:"
+              prop="end_time"
               class="postInfo-container-item"
             >
               <el-date-picker
@@ -70,7 +72,7 @@
           </el-col>
         </el-row>
 
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="地址:">
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="地址:" prop="address">
           <el-input
             v-model="postForm.address"
             :rows="1"
@@ -81,7 +83,7 @@
           />
         </el-form-item>
 
-        <el-form-item prop="content" style="margin-bottom: 30px;">
+        <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
 
@@ -147,42 +149,19 @@ export default {
     },
   },
   data() {
-    const validateRequire = (rule, value, callback) => {
-      if (value === '') {
-        this.$message({
-          message: rule.field + ' is required',
-          type: 'error',
-        });
-        callback(new Error(rule.field + ' is required'));
-      } else {
-        callback();
-      }
-    };
-    const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback();
-        } else {
-          this.$message({
-            message: 'External URL is invalid.',
-            type: 'error',
-          });
-          callback(new Error('External URL is invalid.'));
-        }
-      } else {
-        callback();
-      }
-    };
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
-      userListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
-        title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }],
+        title: [{ required: true, message: '标题必须', trigger: 'blur' }],
+        category_id: [{ required: true, message: '请选择分类', trigger: 'blur' }],
+        image_id: [{ required: true, message: '请选择上传图片', trigger: 'blur' }],
+        start_time: [{ required: true, message: '请选择开始时间', trigger: 'blur' }],
+        end_time: [{ required: true, message: '请选择结束时间', trigger: 'blur' }],
+        address: [{ required: true, message: '请填写地点', trigger: 'blur' }],
+        content: [{ required: true, message: '请填写课程详情', trigger: 'blur' }],
       },
+
       tempRoute: {},
       dialogImageUrl: '',
       dialogVisible: false,
