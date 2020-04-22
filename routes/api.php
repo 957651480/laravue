@@ -30,6 +30,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('roles/{role}/permissions', 'RoleController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::post('file/upload', 'FileController@upload');
+    Route::apiResource('courses', 'CourseController');
+    Route::apiResource('categories', 'CategoryController');
+
 });
 
 

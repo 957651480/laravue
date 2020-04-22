@@ -16,11 +16,6 @@
     "report": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --report --config=node_modules/laravel-mix/setup/webpack.config.js",
     "lint": "eslint --ext .js,.vue resources/js"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "resources/**/*.{js,vue}": [
       "eslint --fix",
@@ -39,7 +34,6 @@
     "eslint": "^5.16.0",
     "eslint-loader": "^2.2.1",
     "eslint-plugin-vue": "^5.2.3",
-    "husky": "^3.0.5",
     "laravel-mix": "^4.1.4",
     "laravel-mix-eslint": "^0.1.3",
     "lint-staged": "^9.2.5",

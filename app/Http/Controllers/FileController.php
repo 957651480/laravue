@@ -42,6 +42,7 @@ class FileController extends Controller
          */
         $file = $this->files->create([
                 'filename'=>$filename,
+                'source_filename'=>$uploadFile->getClientOriginalName(),
                 'extension'=>$uploadFile->getClientOriginalExtension(),
                 'mime_type'=>$uploadFile->getClientMimeType(),
                 'size'=>$uploadFile->getSize()

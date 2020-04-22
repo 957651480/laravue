@@ -13,20 +13,20 @@ const exampleRoutes = {
   children: [
     {
       path: 'create',
-      component: () => import('@/views/example/Create'),
+      component: () => import('@/views/articles/Create'),
       name: 'CreateArticle',
       meta: { title: 'createArticle', icon: 'edit' },
     },
     {
       path: 'edit/:id(\\d+)',
-      component: () => import('@/views/example/Edit'),
+      component: () => import('@/views/articles/Edit'),
       name: 'EditArticle',
       meta: { title: 'editArticle', noCache: true },
       hidden: true,
     },
     {
       path: 'list',
-      component: () => import('@/views/example/List'),
+      component: () => import('@/views/articles/List'),
       name: 'ArticleList',
       meta: { title: 'articleList', icon: 'list' },
     },

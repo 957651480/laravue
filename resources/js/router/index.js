@@ -18,6 +18,10 @@ import componentRoutes from './modules/components';
 import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 import errorRoutes from './modules/error';
+import exampleRoutes from './modules/example';
+import courseRoutes from './modules/course';
+import categoryRoutes from './modules/category';
+
 
 /**
  * Sub-menu only appear when children.length>=1
@@ -102,6 +106,9 @@ export const constantRoutes = [
     ],
   },
   elementUiRoutes,
+  exampleRoutes,
+  courseRoutes,
+  categoryRoutes,
 ];
 
 export const asyncRoutes = [

@@ -1,3 +1,4 @@
+import axios from "axios";
 
 window._ = require('lodash');
 
@@ -31,9 +32,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * all outgoing HTTP requests automatically have it attached. This is just
  * a simple convenience so we don't have to attach every token manually.
  */
-
+axios.defaults.withCredentials=true;
 const token = document.head.querySelector('meta[name="csrf-token"]');
-
+window.axios.defaults.headers.common['XDEBUG_SESSION'] = 'PHPSTORM';
 if (token) {
   window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
