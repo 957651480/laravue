@@ -37,3 +37,10 @@ export function updateCourse(data) {
     data,
   });
 }
+
+export function deleteCourse(id) {
+  return request({
+    url: 'courses/' + id,
+    method: 'delete',
+  });
+}

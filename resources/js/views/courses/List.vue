@@ -1,6 +1,19 @@
 <template>
   <div class="app-container">
-    <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
+    <div class="filter-container">
+      <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="query.category_id" placeholder="选择分类" clearable style="width: 90px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in categories" :key="item.category_id" :label="item.name | uppercaseFirst" :value="item.category_id" />
+      </el-select>
+
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        {{ $t('table.search') }}
+      </el-button>
+      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+        {{ $t('table.export') }}
+      </el-button>
+    </div>
+    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.course_id }}</span>
@@ -14,7 +27,11 @@
           </router-link>
         </template>
       </el-table-column>
-
+      <el-table-column min-width="300px" label="标题">
+        <template slot-scope="{row}">
+            <span>{{ row.category_name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column min-width="300px" label="图片">
         <template slot-scope="{row}">
 
@@ -65,60 +82,97 @@
 
 
 
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
           <router-link :to="'/course/edit/'+scope.row.course_id">
             <el-button type="primary" size="small" icon="el-icon-edit">
               编辑
             </el-button>
           </router-link>
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.course_id)">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
+    <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
+import waves from '@/directive/waves';
 const courseResource = new Resource('courses');
+const categoryResource = new Resource('categories');
 
 export default {
   name: 'CourseList',
   components: { Pagination },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger',
-      };
-      return statusMap[status];
-    },
-  },
+  directives: { waves },
   data() {
     return {
       list: null,
       total: 0,
-      listLoading: true,
-      listQuery: {
+      downloading: false,
+      query: {
         page: 1,
-        limit: 20,
+        limit: 15,
+        keyword: '',
+        category_id:''
       },
+      categories:[]
     };
   },
   created() {
     this.getList();
+    this.getCategory();
   },
   methods: {
     async getList() {
-      this.listLoading = true;
-      const { data } = await courseResource.list(this.listQuery);
+      const { limit, page } = this.query;
+      this.loading = true;
+      const { data } = await courseResource.list(this.query);
       this.list = data.list;
-      this.total = data.total;
-      this.listLoading = false;
+      this.list.forEach((element, index) => {
+        element['index'] = (page - 1) * limit + index + 1;
+      });
+      this.loading = false;
+    },
+    async getCategory() {
+      const { data } = await categoryResource.list(this.query);
+      this.categories = data.list;
+    },
+    handleFilter() {
+      this.query.page = 1;
+      this.getList();
+    },
+    handleDelete(id) {
+      courseResource.destroy(id).then(response => {
+          this.$message({
+            type: 'success',
+            message: '已删除',
+          });
+          this.handleFilter();
+        }).catch(error => {
+          console.log(error);
+        });
+
+    },
+    handleDownload() {
+      this.downloading = true;
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['id', 'user_id', 'name', 'email', 'role'];
+        const filterVal = ['index', 'id', 'name', 'email', 'role'];
+        const data = this.formatJson(filterVal, this.list);
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'user-list',
+        });
+        this.downloading = false;
+      });
     },
   },
 };

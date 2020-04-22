@@ -21,6 +21,7 @@ class CreateCoursesTable extends Migration
             $table->unsignedInteger('start_time')->default(0)->comment('开始时间');
             $table->unsignedInteger('end_time')->default(0)->comment('开始时间');
             $table->string('address')->default('')->comment('地点');
+            $table->integer('category_id')->default(0)->comment('分类id');
             $table->softDeletes();
             $table->timestamps();
         });

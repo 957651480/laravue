@@ -45,4 +45,9 @@ class Course extends Model
     {
         return $this->hasOne(File::class,'file_id');
     }
+
+    public function category()
+    {
+        return $this->hasOne(Category::class,'category_id');
+    }
 }

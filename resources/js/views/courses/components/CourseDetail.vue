@@ -13,6 +13,19 @@
             placeholder="请输入标题"
           />
         </el-form-item>
+        <el-form-item label-width="80px" label="分类:" class="postInfo-container-item">
+          <el-select
+            v-model="postForm.category_id"
+            placeholder="选择分类"
+          >
+            <el-option
+              v-for="(item,index) in postForm.categories"
+              :key="index"
+              :label="item.name"
+              :value="item.category_id"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="上传图片">
           <el-upload
             action="api/file/upload"
@@ -26,22 +39,6 @@
             <img width="100%" :src.sync="postForm.image_url" alt="">
           </el-dialog>
         </el-form-item>
-        <!--<el-form-item label-width="80px" label="Author:" class="postInfo-container-item">
-          <el-select
-            v-model="postForm.author"
-            :remote-method="getRemoteUserList"
-            filterable
-            remote
-            placeholder="Search user"
-          >
-            <el-option
-              v-for="(item,index) in userListOptions"
-              :key="item+index"
-              :label="item"
-              :value="item"
-            />
-          </el-select>
-        </el-form-item>-->
         <el-row>
           <el-col :span="10">
             <el-form-item
@@ -109,6 +106,7 @@ import Sticky from '@/components/Sticky'; // Sticky header
 import { validURL } from '@/utils/validate';
 import { fetchCourse,createCourse,updateCourse } from '@/api/course';
 import { userSearch } from '@/api/search';
+const categoryResource = new Resource('categories');
 import {
   CommentDropdown,
   PlatformDropdown,
@@ -116,6 +114,7 @@ import {
 } from './Dropdown';
 import {getToken} from "@/utils/auth";
 import { parseTime } from '@/utils';
+import Resource from "@/api/resource";
 const defaultForm = {
   course_id: undefined,
   title: '',
@@ -125,7 +124,9 @@ const defaultForm = {
   image_id: 0,
   start_time:undefined,
   end_time:undefined,
-  dialogVisible:false
+  dialogVisible:false,
+  category_id:'',
+  categories:[]
 };
 
 export default {
@@ -201,7 +202,7 @@ export default {
     } else {
       this.postForm = Object.assign({}, defaultForm);
     }
-
+    this.getRemoteCategoryList();
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     this.tempRoute = Object.assign({}, this.$route);
@@ -272,6 +273,10 @@ export default {
         }
         this.loading = false;
       });
+    },
+    async getRemoteCategoryList(){
+      const { data } = await categoryResource.list({limit:100});
+      this.postForm.categories = data.list;
     },
     getRemoteUserList(query) {
       userSearch(query).then(response => {

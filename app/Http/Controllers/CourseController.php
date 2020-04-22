@@ -27,7 +27,14 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         //
-        $paginate = $this->courses->paginate($request->get('limit'));
+        $query = $this->courses->with(['category','image'])->newQuery();
+        if($keyword = $request->get('keyword')){
+            $query->where('title','like',"%{$keyword}%");
+        }
+        if($category_id = $request->get('category_id')){
+            $query->where('category_id','=',$category_id);
+        }
+        $paginate = $query->paginate($request->get('limit'));
         $data =[
             'total'=>$paginate->total(),
             'list'=>new CourseCollection($paginate)
@@ -51,7 +58,7 @@ class CourseController extends Controller
     {
         //
         $form  = $request->all();
-        $data = Arr::only($form,['title','content','image_id','address','start_time','end_time']);
+        $data = Arr::only($form,['title','category_id','content','image_id','address','start_time','end_time']);
         $data['start_time'] = strtotime($data['start_time']);
         $data['end_time'] = strtotime($data['end_time']);
         $this->courses->create($data);
@@ -62,7 +69,7 @@ class CourseController extends Controller
     public function show($id)
     {
         //
-        $course = $this->courses->with(['image'])->where('course_id',$id)->first();
+        $course = $this->courses->with(['image','category'])->where('course_id',$id)->first();
         $course = new \App\Http\Resources\Course($course);
         return $this->renderSuccess('',$course);
     }
@@ -92,12 +99,7 @@ class CourseController extends Controller
         return $this->renderSuccess();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         //
