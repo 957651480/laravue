@@ -19,8 +19,8 @@
             placeholder="选择分类"
           >
             <el-option
-              v-for="(item,index) in postForm.categories"
-              :key="index"
+              v-for="item in postForm.categories"
+              :key="item.category_id"
               :label="item.name"
               :value="item.category_id"
             />
@@ -28,16 +28,15 @@
         </el-form-item>
         <el-form-item label="上传图片" prop="image_id">
           <el-upload
+            class="avatar-uploader"
+            :show-file-list="false"
             action="api/file/upload"
-            list-type="picture-card"
             :on-success="handleSuccess"
             :headers="myHeaders"
           >
-            <i class="el-icon-plus" />
+            <img v-if="postForm.image_url" :src="postForm.image_url" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-          <el-dialog :visible.sync="postForm.dialogVisible">
-            <img width="100%" :src.sync="postForm.image_url" alt="">
-          </el-dialog>
         </el-form-item>
         <el-row>
           <el-col :span="10">
@@ -118,8 +117,7 @@ const defaultForm = {
   image_id: 0,
   start_time:undefined,
   end_time:undefined,
-  dialogVisible:false,
-  category_id:'',
+  category_id:0,
   categories:[]
 };
 
@@ -177,11 +175,7 @@ export default {
     fetchData(id) {
       fetchCourse(id)
         .then(response => {
-          this.postForm.dialogVisible=true;
           this.postForm = response.data;
-
-          // Just for tes
-
           // Set tagsview title
           this.setTagsViewTitle();
         })
@@ -192,7 +186,6 @@ export default {
     handleSuccess(response, file, fileList){
       this.postForm.image_id = response.file_id;
       this.postForm.image_url = response.url;
-      debugger;
     },
     setTagsViewTitle() {
       const title =
@@ -277,6 +270,29 @@ export default {
     right: -10px;
     top: 0px;
   }
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 </style>
 <style>
