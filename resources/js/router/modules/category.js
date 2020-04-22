@@ -12,19 +12,6 @@ const categoryRoutes = {
   },
   children: [
     {
-      path: 'create',
-      component: () => import('@/views/categories/Create'),
-      name: 'CreateCategory',
-      meta: { title: '创建分类', icon: 'edit' },
-    },
-    {
-      path: 'edit/:id(\\d+)',
-      component: () => import('@/views/categories/Edit'),
-      name: 'EditCategory',
-      meta: { title: '编辑分类', noCache: true },
-      hidden: true,
-    },
-    {
       path: 'list',
       component: () => import('@/views/categories/List'),
       name: 'CategoryList',
