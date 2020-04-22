@@ -27,16 +27,14 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column min-width="300px" label="标题">
+      <el-table-column min-width="150px" label="分类">
         <template slot-scope="{row}">
             <span>{{ row.category_name }}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="300px" label="图片">
-        <template slot-scope="{row}">
-
-            <span>图片</span>
-
+        <template slot-scope="scope">
+    　　　　<img :src="scope.row.image_url" width="40" height="40" />
         </template>
       </el-table-column>
       <el-table-column width="180px" align="center" label="开始时间">
@@ -138,6 +136,7 @@ export default {
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
+      this.total=data.total;
       this.loading = false;
     },
     async getCategory() {

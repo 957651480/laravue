@@ -103,17 +103,9 @@
 <script>
 import Tinymce from '@/components/Tinymce';
 import Upload from '@/components/Upload/SingleImage';
-import MDinput from '@/components/MDinput';
-import Sticky from '@/components/Sticky'; // Sticky header
-import { validURL } from '@/utils/validate';
 import { fetchCourse,createCourse,updateCourse } from '@/api/course';
 import { userSearch } from '@/api/search';
 const categoryResource = new Resource('categories');
-import {
-  CommentDropdown,
-  PlatformDropdown,
-  SourceUrlDropdown,
-} from './Dropdown';
 import {getToken} from "@/utils/auth";
 import { parseTime } from '@/utils';
 import Resource from "@/api/resource";
@@ -135,12 +127,7 @@ export default {
   name: 'CourseDetail',
   components: {
     Tinymce,
-    MDinput,
     Upload,
-    Sticky,
-    CommentDropdown,
-    PlatformDropdown,
-    SourceUrlDropdown,
   },
   props: {
     isEdit: {
