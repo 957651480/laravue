@@ -43,7 +43,7 @@ class Course extends Model
 
     public function image()
     {
-        return $this->hasOne(File::class,'file_id');
+        return $this->belongsTo(File::class,'image_id');
     }
 
     public function category()
