@@ -148,8 +148,8 @@ export default {
     },
     handleDelete(id, name) {
       this.$confirm('确定删除分类名为 ' + name + '吗?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
         deleteCategory(id).then(response => {
