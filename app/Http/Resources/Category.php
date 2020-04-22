@@ -14,6 +14,10 @@ class Category extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'category_id'=>(integer)$this->category_id,
+            'name'=>(string)$this->name,
+
+        ];
     }
 }
