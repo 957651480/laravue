@@ -194,7 +194,7 @@ export default {
             createCategory(this.newUser)
               .then(response => {
                 this.$message({
-                  message: 'New user ' + this.newUser.name + '(' + this.newUser.email + ') has been created successfully.',
+                  message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
