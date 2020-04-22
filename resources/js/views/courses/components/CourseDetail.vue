@@ -1,89 +1,93 @@
 <template>
-  <div class="createPost-container">
+  <div class="createPost-container" style="margin-top: 20px">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+
       <div class="createPost-main-container">
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="标题">
-              <el-input v-model="postForm.title" required />
-            </el-form-item>
-
-            <div class="postInfo-container">
-              <el-row>
-                <el-col :span="8">
-                  <el-form-item label-width="80px" label="Author:" class="postInfo-container-item">
-                    <el-select
-                      v-model="postForm.author"
-                      :remote-method="getRemoteUserList"
-                      filterable
-                      remote
-                      placeholder="Search user"
-                    >
-                      <el-option
-                        v-for="(item,index) in userListOptions"
-                        :key="item+index"
-                        :label="item"
-                        :value="item"
-                      />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="10">
-                  <el-form-item
-                    label-width="120px"
-                    label="Published date:"
-                    class="postInfo-container-item"
-                  >
-                    <el-date-picker
-                      v-model="postForm.display_time"
-                      type="datetime"
-                      format="yyyy-MM-dd HH:mm:ss"
-                      placeholder="Select date and time"
-                    />
-                  </el-form-item>
-                </el-col>
-
-                <el-col :span="6">
-                  <el-form-item
-                    label-width="80px"
-                    label="Important:"
-                    class="postInfo-container-item"
-                  >
-                    <el-rate
-                      v-model="postForm.importance"
-                      :max="3"
-                      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                      :low-threshold="1"
-                      :high-threshold="3"
-                      style="margin-top:8px;"
-                    />
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </div>
-          </el-col>
-        </el-row>
-
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="Summary:">
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="标题:">
           <el-input
-            v-model="postForm.content_short"
+            v-model="postForm.title"
             :rows="1"
             type="textarea"
             class="article-textarea"
             autosize
-            placeholder="Please enter the content"
+            placeholder="请输入标题"
           />
-          <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }} word</span>
+        </el-form-item>
+        <el-form-item label="上传图片">
+          <el-upload
+            action="api/file/upload"
+            list-type="picture-card"
+            :on-success="handleSuccess"
+            :headers="myHeaders"
+          >
+            <i class="el-icon-plus" />
+          </el-upload>
+          <el-dialog :visible.sync="postForm.dialogVisible">
+            <img width="100%" :src.sync="postForm.image_url" alt="">
+          </el-dialog>
+        </el-form-item>
+        <!--<el-form-item label-width="80px" label="Author:" class="postInfo-container-item">
+          <el-select
+            v-model="postForm.author"
+            :remote-method="getRemoteUserList"
+            filterable
+            remote
+            placeholder="Search user"
+          >
+            <el-option
+              v-for="(item,index) in userListOptions"
+              :key="item+index"
+              :label="item"
+              :value="item"
+            />
+          </el-select>
+        </el-form-item>-->
+        <el-row>
+          <el-col :span="10">
+            <el-form-item
+              label-width="120px"
+              label="开始时间:"
+              class="postInfo-container-item"
+            >
+              <el-date-picker
+                v-model="postForm.start_time"
+                type="datetime"
+                format="yyyy-MM-dd HH:mm"
+                placeholder="请选择开始时间"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item
+              label-width="120px"
+              label="结束时间:"
+              class="postInfo-container-item"
+            >
+              <el-date-picker
+                v-model="postForm.end_time"
+                type="datetime"
+                format="yyyy-MM-dd HH:mm"
+                placeholder="请选择结束时间"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="地址:">
+          <el-input
+            v-model="postForm.address"
+            :rows="1"
+            type="textarea"
+            class="article-textarea"
+            autosize
+            placeholder="请输入地址"
+          />
         </el-form-item>
 
         <el-form-item prop="content" style="margin-bottom: 30px;">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
 
-        <el-form-item prop="image_uri" style="margin-bottom: 30px;">
-          <Upload v-model="postForm.image_uri" />
-        </el-form-item>
         <el-button
           v-loading="loading"
           style="margin-left: 10px;"
@@ -91,9 +95,6 @@
           @click="submitForm"
         >
           Submit
-        </el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm">
-          Draft
         </el-button>
       </div>
     </el-form>
@@ -106,30 +107,29 @@ import Upload from '@/components/Upload/SingleImage';
 import MDinput from '@/components/MDinput';
 import Sticky from '@/components/Sticky'; // Sticky header
 import { validURL } from '@/utils/validate';
-import { fetchArticle } from '@/api/article';
+import { fetchCourse,createCourse,updateCourse } from '@/api/course';
 import { userSearch } from '@/api/search';
 import {
   CommentDropdown,
   PlatformDropdown,
   SourceUrlDropdown,
 } from './Dropdown';
-
+import {getToken} from "@/utils/auth";
+import { parseTime } from '@/utils';
 const defaultForm = {
-  status: 'draft',
+  course_id: undefined,
   title: '',
   content: '',
-  content_short: '',
-  source_uri: '',
-  image_uri: '',
-  display_time: undefined,
-  id: undefined,
-  platforms: ['a-platform'],
-  comment_disabled: false,
-  importance: 0,
+  address: '',
+  image_url: '',
+  image_id: 0,
+  start_time:undefined,
+  end_time:undefined,
+  dialogVisible:false
 };
 
 export default {
-  name: 'CategoryDetail',
+  name: 'CourseDetail',
   components: {
     Tinymce,
     MDinput,
@@ -183,12 +183,13 @@ export default {
         source_uri: [{ validator: validateSourceUri, trigger: 'blur' }],
       },
       tempRoute: {},
+      dialogImageUrl: '',
+      dialogVisible: false,
+      myHeaders: { Authorization: 'Bearer ' + getToken() },
     };
   },
   computed: {
-    contentShortLength() {
-      return this.postForm.content_short.length;
-    },
+
     lang() {
       return this.$store.getters.language;
     },
@@ -207,12 +208,12 @@ export default {
   },
   methods: {
     fetchData(id) {
-      fetchArticle(id)
+      fetchCourse(id)
         .then(response => {
+          this.postForm.dialogVisible=true;
           this.postForm = response.data;
-          // Just for test
-          this.postForm.title += `   Article Id:${this.postForm.id}`;
-          this.postForm.content_short += `   Article Id:${this.postForm.id}`;
+
+          // Just for tes
 
           // Set tagsview title
           this.setTagsViewTitle();
@@ -221,10 +222,15 @@ export default {
           console.log(err);
         });
     },
+    handleSuccess(response, file, fileList){
+      this.postForm.image_id = response.file_id;
+      this.postForm.image_url = response.url;
+      debugger;
+    },
     setTagsViewTitle() {
       const title =
         this.lang === 'zh'
-          ? '编辑文章'
+          ? '编辑课程'
           : this.lang === 'vi'
             ? 'Chỉnh sửa'
             : 'Edit Article'; // Should move to i18n
@@ -234,42 +240,38 @@ export default {
       this.$store.dispatch('updateVisitedView', route);
     },
     submitForm() {
-      this.postForm.display_time = parseInt(this.display_time / 1000);
+
+      this.postForm.start_time = parseTime(this.postForm.start_time);
+      this.postForm.end_time = parseTime(this.postForm.end_time);
+
       this.$refs.postForm.validate(valid => {
-        if (valid) {
-          this.loading = true;
-          this.$notify({
-            title: 'Success',
-            message: 'Article has been published successfully',
-            type: 'success',
-            duration: 2000,
-          });
-          this.postForm.status = 'published';
-          this.loading = false;
-        } else {
-          console.log('error submit!!');
+        if (!valid) {
           return false;
         }
+        this.loading = true;
+        if(this.isEdit){
+          updateCourse(this.postForm).then(response => {
+
+            this.$message({
+              message:response.msg,
+              type: 'success',
+              duration: 5 * 1000,
+            });
+          }).catch(() => {
+          })
+        }else {
+          createCourse(this.postForm).then(response => {
+
+            this.$message({
+              message:response.msg,
+              type: 'success',
+              duration: 5 * 1000,
+            });
+          }).catch(() => {
+          });
+        }
+        this.loading = false;
       });
-    },
-    draftForm() {
-      if (
-        this.postForm.content.length === 0 ||
-        this.postForm.title.length === 0
-      ) {
-        this.$message({
-          message: 'Please enter required title and content',
-          type: 'warning',
-        });
-        return;
-      }
-      this.$message({
-        message: 'Successfully saved',
-        type: 'success',
-        showClose: true,
-        duration: 1000,
-      });
-      this.postForm.status = 'draft';
     },
     getRemoteUserList(query) {
       userSearch(query).then(response => {
