@@ -24,6 +24,8 @@ class Course extends JsonResource
             'category_name'=>(string)$category?$category->name:'',
             'start_time'=>(string)date("Y-m-d H:i",$this->start_time),
             'end_time'=>(string)date("Y-m-d H:i",$this->end_time),
+            'attend_number'=>(integer)$this->attend_number,
+            'number'=>(integer)$this->number,
             'address'=>(string)$this->address,
             'content'=>(string)$this->content,
             'created_at'=>(string)$this->created_at,

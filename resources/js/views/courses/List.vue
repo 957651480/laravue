@@ -20,19 +20,29 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300px" label="标题">
+      <el-table-column min-width="200px" label="标题">
         <template slot-scope="{row}">
           <router-link :to="'/course/edit/'+row.course_id" class="link-type">
             <span>{{ row.title }}</span>
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column min-width="150px" label="分类">
+      <el-table-column min-width="100px" label="分类">
         <template slot-scope="{row}">
             <span>{{ row.category_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="300px" label="图片">
+      <el-table-column min-width="80px" label="报名人数">
+        <template slot-scope="scope">
+          <span>{{ scope.row.attend_number }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column min-width="80px" label="课程限定人数">
+        <template slot-scope="scope">
+            <span>{{ scope.row.number }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column min-width="200px" label="图片">
         <template slot-scope="scope">
     　　　　<img :src="scope.row.image_url" width="40" height="40" />
         </template>

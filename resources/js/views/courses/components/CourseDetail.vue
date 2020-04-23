@@ -25,6 +25,7 @@
               :value="item.category_id"
             />
           </el-select>
+          <span><router-link to="/category/list" class="link-type">去添加分类</router-link></span>
         </el-form-item>
         <el-form-item label="上传图片" prop="image_id">
           <el-upload
@@ -70,7 +71,9 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <el-form-item label="人数:" prop="number">
+            <el-input-number v-model="postForm.number"></el-input-number>
+        </el-form-item>
         <el-form-item style="margin-bottom: 40px;" label-width="80px" label="地址:" prop="address">
           <el-input
             v-model="postForm.address"
@@ -117,7 +120,8 @@ const defaultForm = {
   image_id: 0,
   start_time:undefined,
   end_time:undefined,
-  category_id:0,
+  category_id:'',
+  number:1,
   categories:[]
 };
 
@@ -143,6 +147,7 @@ export default {
         image_id: [{ required: true, message: '请选择上传图片', trigger: 'blur' }],
         start_time: [{ required: true, message: '请选择开始时间'}],
         end_time: [{ required: true, message: '请选择结束时间'}],
+        number: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         address: [{ required: true, message: '请填写地点', trigger: 'blur' }],
         content: [{ required: true, message: '请填写课程详情', trigger: 'blur' }],
       },
@@ -217,6 +222,9 @@ export default {
               type: 'success',
               duration: 5 * 1000,
             });
+            this.$router.push({
+              path: '/course',
+            });
           }).catch(() => {
           })
         }else {
@@ -226,6 +234,9 @@ export default {
               message:response.msg,
               type: 'success',
               duration: 5 * 1000,
+            });
+            this.$router.push({
+              path: '/course',
             });
           }).catch(() => {
           });

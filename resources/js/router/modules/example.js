@@ -6,6 +6,7 @@ const exampleRoutes = {
   component: Layout,
   redirect: '/example/list',
   name: 'Example',
+  hidden: true,
   meta: {
     title: 'example',
     icon: 'example',
