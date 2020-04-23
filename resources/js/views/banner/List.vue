@@ -96,7 +96,7 @@ const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
 export default {
-  name: 'TeacherList',
+  name: 'BannerList',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -151,6 +151,7 @@ export default {
       });
     },
     handleEdit(data){
+      debugger
       this.newTeacher = data;
       this.isEdit = true;
       this.dialogFormVisible = true;

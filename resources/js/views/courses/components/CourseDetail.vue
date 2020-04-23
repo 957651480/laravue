@@ -120,7 +120,7 @@ const defaultForm = {
   image_id: 0,
   start_time:undefined,
   end_time:undefined,
-  category_id:'',
+  category_id:null,
   number:1,
   categories:[]
 };

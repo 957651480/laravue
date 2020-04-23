@@ -113,7 +113,20 @@ export const constantRoutes = [
   courseRoutes,
   categoryRoutes,
   teacherRoutes,
-  attendRoutes
+  attendRoutes,
+  {
+    path: '/banner',
+    component: Layout,
+    redirect: '/banner/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/banner/list'),
+        name: 'Banner',
+        meta: { title: '首页轮播图', icon: 'guide', noCache: true },
+      },
+    ],
+  },
 ];
 
 export const asyncRoutes = [
