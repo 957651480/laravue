@@ -5,6 +5,7 @@ const elementUiRoutes = {
   component: Layout,
   redirect: '/element-ui/form',
   name: 'Element UI',
+  hidden: true,
   meta: {
     title: 'elementUi',
     icon: 'layout',

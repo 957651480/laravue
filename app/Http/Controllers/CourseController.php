@@ -34,25 +34,13 @@ class CourseController extends Controller
         if($category_id = $request->get('category_id')){
             $query->where('category_id','=',$category_id);
         }
-        $paginate = $query->paginate($request->get('limit'));
+        $paginate = $query->latest()->paginate($request->get('limit'));
         $data =[
             'total'=>$paginate->total(),
             'list'=>new CourseCollection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-
-    }
-
 
     public function store(Request $request)
     {
@@ -74,16 +62,6 @@ class CourseController extends Controller
         return $this->renderSuccess('',$course);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     public function update(Request $request, $id)
     {

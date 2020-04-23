@@ -14,7 +14,11 @@ class CreateTeachersTable extends Migration
     public function up()
     {
         Schema::create('teachers', function (Blueprint $table) {
-            $table->id();
+            $table->integerIncrements('teacher_id')->comment('教师id');
+            $table->string('name')->default('')->comment('名字');
+            $table->string('position')->default('')->comment('职位');
+            $table->string('introduction')->default('')->comment('教师简介');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

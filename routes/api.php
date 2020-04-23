@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('file/upload', 'FileController@upload');
     Route::apiResource('courses', 'CourseController');
     Route::apiResource('categories', 'CategoryController');
+    Route::apiResource('teachers', 'TeacherController');
 
 });
 

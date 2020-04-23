@@ -28,7 +28,7 @@ const courseRoutes = {
       path: 'list',
       component: () => import('@/views/courses/List'),
       name: 'CourseList',
-      meta: { title: '课程列表', icon: 'list' },
+      meta: { title: '课程列表', icon: 'list',noCache: true },
     },
   ],
 };

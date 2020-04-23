@@ -21,6 +21,7 @@ import errorRoutes from './modules/error';
 import exampleRoutes from './modules/example';
 import courseRoutes from './modules/course';
 import categoryRoutes from './modules/category';
+import teacherRoutes from "@/router/modules/teacher";
 
 
 /**
@@ -95,6 +96,7 @@ export const constantRoutes = [
   {
     path: '/guide',
     component: Layout,
+    hidden: true,
     redirect: '/guide/index',
     children: [
       {
@@ -109,6 +111,7 @@ export const constantRoutes = [
   exampleRoutes,
   courseRoutes,
   categoryRoutes,
+  teacherRoutes
 ];
 
 export const asyncRoutes = [

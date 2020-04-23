@@ -8,21 +8,29 @@
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
-      </el-button>
     </div>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.category_id }}</span>
+          <span>{{ scope.row.teacher_id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="分类名称">
+      <el-table-column align="center" label="教师名称">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="教师职位">
+        <template slot-scope="scope">
+          <span>{{ scope.row.position }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="教师简介">
+        <template slot-scope="scope">
+          <span>{{ scope.row.introduction }}</span>
         </template>
       </el-table-column>
 
@@ -36,12 +44,13 @@
           <span>{{ scope.row.updated_at }}</span>
         </template>
       </el-table-column>
+
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
           <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">
             编辑
           </el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.category_id, scope.row.name);">
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.teacher_id, scope.row.name);">
             删除
           </el-button>
         </template>
@@ -50,19 +59,24 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
 
-    <el-dialog v-model="isEdit" title="增加/编辑分类" :visible.sync="dialogFormVisible">
-      <div v-loading="userCreating" class="form-container">
-        <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
-
-          <el-form-item label="分类名称" prop="name">
-            <el-input v-model="newUser.name" />
+    <el-dialog v-model="isEdit" title="增加/编辑教师" :visible.sync="dialogFormVisible">
+      <div v-loading="teacherCreating" class="form-container">
+        <el-form ref="userForm" :rules="rules" :model="newTeacher" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="newTeacher.name" />
+          </el-form-item>
+          <el-form-item label="职位" prop="position">
+            <el-input v-model="newTeacher.position" />
+          </el-form-item>
+          <el-form-item label="简介" prop="introduction">
+            <el-input type="textarea" v-model="newTeacher.introduction"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false;isEdit=false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createUser()">
+          <el-button type="primary" @click="createTeacher()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -76,56 +90,41 @@ import Pagination from '@/components/Pagination'; // Secondary package based on 
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
-import permission from '@/directive/permission'; // Permission directive
-import { fetchList, updateCategory, createCategory, deleteCategory } from '@/api/category';
+import { fetchList, updateTeacher, createTeacher, deleteTeacher } from '@/api/teacher';
 
 const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
 export default {
-  name: 'UserList',
+  name: 'TeacherList',
   components: { Pagination },
-  directives: { waves, permission },
+  directives: { waves },
   data() {
     return {
       list: null,
       total: 0,
       loading: true,
       downloading: false,
-      userCreating: false,
+      teacherCreating: false,
       query: {
         page: 1,
         limit: 15,
         keyword: '',
       },
-      roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
-      nonAdminRoles: ['editor', 'user', 'visitor'],
-      newUser: {},
+      newTeacher: {},
       dialogFormVisible: false,
-      currentUserId: 0,
-      currentUser: {
-        name: '',
-        permissions: [],
-        rolePermissions: [],
-      },
       rules: {
-        name: [{ required: true, message: '分类名称必须', trigger: 'blur' }],
+        name: [{ required: true, message: '教师名称必须', trigger: 'blur' }],
+        position: [{ required: true, message: '职位必填', trigger: 'blur' }],
+        introduction: [{ required: true, message: '教师简介', trigger: 'blur' }],
       },
-      permissionProps: {
-        children: 'children',
-        label: 'name',
-        disabled: 'disabled',
-      },
-      permissions: [],
-      menuPermissions: [],
-      otherPermissions: [],
       isEdit: false,
     };
   },
   computed: {
   },
   created() {
-    this.resetNewUser();
+    this.resetNewTeacher();
     this.getList();
   },
   methods: {
@@ -145,14 +144,14 @@ export default {
       this.getList();
     },
     handleCreate() {
-      this.resetNewUser();
+      this.resetNewTeacher();
       this.dialogFormVisible = true;
       this.$nextTick(() => {
         this.$refs['userForm'].clearValidate();
       });
     },
     handleEdit(data){
-      this.newUser = data;
+      this.newTeacher = data;
       this.isEdit = true;
       this.dialogFormVisible = true;
     },
@@ -162,7 +161,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        deleteCategory(id).then(response => {
+        deleteTeacher(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',
@@ -174,20 +173,19 @@ export default {
       }).catch(() => {
       });
     },
-    createUser() {
+    createTeacher() {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
-          this.newUser.roles = [this.newUser.role];
-          this.userCreating = true;
+          this.teacherCreating = true;
           if (this.isEdit){
-            updateCategory(this.newUser)
+            updateTeacher(this.newTeacher)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetNewUser();
+                this.resetNewTeacher();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -195,17 +193,17 @@ export default {
                 console.log(error);
               })
               .finally(() => {
-                this.userCreating = false;
+                this.teacherCreating = false;
               });
           } else {
-            createCategory(this.newUser)
+            createTeacher(this.newTeacher)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetNewUser();
+                this.resetNewTeacher();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -213,7 +211,7 @@ export default {
                 console.log(error);
               })
               .finally(() => {
-                this.userCreating = false;
+                this.teacherCreating = false;
               });
           }
         } else {
@@ -222,28 +220,12 @@ export default {
         }
       });
     },
-    resetNewUser() {
-      this.newUser = {
+    resetNewTeacher() {
+      this.newTeacher = {
         name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        role: 'user',
+        position: '',
+        introduction: '',
       };
-    },
-    handleDownload() {
-      this.downloading = true;
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['id', 'user_id', 'name', 'email', 'role'];
-          const filterVal = ['index', 'id', 'name', 'email', 'role'];
-          const data = this.formatJson(filterVal, this.list);
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: 'user-list',
-          });
-          this.downloading = false;
-        });
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
