@@ -9,10 +9,13 @@
 namespace App\Http\Controllers;
 
 use App\Laravue\JsonResponse;
+use App\User;
+use Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Http;
 
 /**
  * Class AuthController
@@ -34,7 +37,7 @@ class AuthController extends Controller
 
         $user = $request->user();
         $token = $user->createToken('laravue');
-        $user->token = $token;
+        $user->token = $token->plainTextToken;
         return response()->json(new UserResource($user), Response::HTTP_OK)->header('Authorization', $token->plainTextToken);
     }
 
@@ -47,5 +50,64 @@ class AuthController extends Controller
     public function user()
     {
         return new UserResource(Auth::user());
+    }
+
+    public function wxLogin(Request $request)
+    {
+        $form = $request->all();
+        $code = Arr::get($form,'code');
+        $appId ='wxe02410441ea47ba5';
+        $secret ='d730d25795ccf699d3876d7fd4f9fc85';
+        $session = $this->sessionKey($code,$appId,$secret);
+        if (isset($session['errcode']))
+        {
+            return $this->renderError($session['errmsg']);
+        }
+        // 自动注册用户
+        $refereeId = isset($form['referee_id']) ? $form['referee_id'] : null;
+        $userInfo = json_decode($form['user_info'], true);
+        //查询openId
+        $openid = Arr::get($session,'openid');
+        $userData = Arr::only($userInfo,['nickName','avatarUrl']);
+        $users = new User();
+        if(!$user = $users->where('open_id',$openid)->first())
+        {
+            $user = new User();
+            $user->open_id = $openid;
+            $user->name = $userData['nickName'];
+            $user->nickName = $userData['nickName'];
+            $user->avatarUrl = $userData['avatarUrl'];
+            $user->save();
+        }
+        //登录
+        Auth::loginUsingId($user->id);
+        $user = $request->user();
+        $token = $user->createToken('laravue');
+        $user->token = $token->plainTextToken;
+        return response()->json(new UserResource($user), Response::HTTP_OK)->header('Authorization', $token->plainTextToken);
+
+    }
+
+
+    /**
+     * 获取session_key
+     * @param $code
+     * @return array|mixed
+     */
+    public function sessionKey($code,$appid,$secret)
+    {
+        /**
+         * code 换取 session_key
+         * ​这是一个 HTTPS 接口，开发者服务器使用登录凭证 code 获取 session_key 和 openid。
+         * 其中 session_key 是对用户数据进行加密签名的密钥。为了自身应用安全，session_key 不应该在网络上传输。
+         */
+        $url = 'https://api.weixin.qq.com/sns/jscode2session';
+        $response = Http::withoutVerifying()->get($url, [
+            'appid' => $appid,
+            'secret' => $secret,
+            'grant_type' => 'authorization_code',
+            'js_code' => $code
+        ])->json();
+        return $response;
     }
 }
