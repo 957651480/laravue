@@ -39,5 +39,9 @@ module.exports = {
       },
     ],
   },
+  externals:{
+    'echarts':'echarts',
+    'xlsx':'xlsx',
+  },
   plugins: plugins,
 };

@@ -167,6 +167,7 @@ export default {
       rules: {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
         category_id: [{ required: true, message: '请选择分类', trigger: 'blur' }],
+        teacher_id: [{ required: true, message: '请选择教师', trigger: 'blur' }],
         image_id: [{ required: true, message: '请选择上传图片', trigger: 'blur' }],
         start_time: [{ required: true, message: '请选择开始时间'}],
         end_time: [{ required: true, message: '请选择结束时间'}],
