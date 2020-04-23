@@ -56,9 +56,8 @@ class AuthController extends Controller
     {
         $form = $request->all();
         $code = Arr::get($form,'code');
-        $appId ='wxe02410441ea47ba5';
-        $secret ='d730d25795ccf699d3876d7fd4f9fc85';
-        $session = $this->sessionKey($code,$appId,$secret);
+        $wechat = config('wechat');
+        $session = $this->sessionKey($code,$wechat['app_id'],$wechat['secret']);
         if (isset($session['errcode']))
         {
             return $this->renderError($session['errmsg']);
