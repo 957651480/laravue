@@ -24,6 +24,7 @@ class CreateCoursesTable extends Migration
             $table->string('attend_number')->default(0)->comment('报名人数');
             $table->string('number')->default(0)->comment('上课人数');
             $table->integer('category_id')->default(0)->comment('分类id');
+            $table->integer('teacher_id')->default(0)->comment('教师关联id');
             $table->softDeletes();
             $table->timestamps();
         });

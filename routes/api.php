@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('auth/user', 'AuthController@user');
     Route::post('auth/logout', 'AuthController@logout');
     Route::get('users', 'UserController@index')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
+    Route::post('users', 'UserController@store')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
     Route::get('users/{user}', 'UserController@show')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
     Route::put('users/{user}', 'UserController@update');
     Route::delete('users/{user}', 'UserController@destroy')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
@@ -34,8 +35,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('categories', 'CategoryController');
     Route::apiResource('teachers', 'TeacherController');
     Route::apiResource('attends', 'AttendController');
-
 });
+
 Route::apiResource('courses', 'CourseController');
 Route::apiResource('banners', 'BannerController');
 

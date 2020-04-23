@@ -32,6 +32,11 @@
             <span>{{ row.category_name }}</span>
         </template>
       </el-table-column>
+      <el-table-column min-width="100px" label="课程教师">
+        <template slot-scope="{row}">
+          <span>{{ row.teacher_name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column min-width="80px" label="报名人数">
         <template slot-scope="scope">
           <span>{{ scope.row.attend_number }}</span>

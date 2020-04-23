@@ -13,20 +13,42 @@
             placeholder="请输入标题"
           />
         </el-form-item>
-        <el-form-item label-width="80px" label="分类:" class="postInfo-container-item" prop="category_id">
-          <el-select
-            v-model="postForm.category_id"
-            placeholder="选择分类"
-          >
-            <el-option
-              v-for="item in categories"
-              :key="item.category_id"
-              :label="item.name"
-              :value="item.category_id"
-            />
-          </el-select>
-          <span><router-link to="/category/list" class="link-type">去添加分类</router-link></span>
-        </el-form-item>
+        <el-row>
+          <el-col :span="10">
+
+            <el-form-item label-width="80px" label="分类:" class="postInfo-container-item" prop="category_id">
+              <el-select
+                v-model="postForm.category_id"
+                placeholder="选择分类"
+              >
+                <el-option
+                  v-for="item in categories"
+                  :key="item.category_id"
+                  :label="item.name"
+                  :value="item.category_id"
+                />
+              </el-select>
+              <span><router-link to="/category/list" class="link-type">去添加分类</router-link></span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label-width="80px" label="教师:" class="postInfo-container-item" prop="teacher_id">
+              <el-select
+                v-model="postForm.teacher_id"
+                placeholder="选择教师"
+              >
+                <el-option
+                  v-for="item in teachers"
+                  :key="item.teacher_id"
+                  :label="item.name"
+                  :value="item.teacher_id"
+                />
+              </el-select>
+              <span><router-link to="/teacher/list" class="link-type">去添加教师</router-link></span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item label="上传图片" prop="image_id">
           <el-upload
             class="avatar-uploader"
@@ -108,6 +130,7 @@ import Upload from '@/components/Upload/SingleImage';
 import { fetchCourse,createCourse,updateCourse } from '@/api/course';
 import { userSearch } from '@/api/search';
 const categoryResource = new Resource('categories');
+const teacherResource = new Resource('teachers');
 import {getToken} from "@/utils/auth";
 import { parseTime } from '@/utils';
 import Resource from "@/api/resource";
@@ -121,6 +144,7 @@ const defaultForm = {
   start_time:undefined,
   end_time:undefined,
   category_id:null,
+  teacher_id:null,
   number:1,
 };
 
@@ -155,7 +179,8 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       myHeaders: { Authorization: 'Bearer ' + getToken() },
-      categories:[]
+      categories:[],
+      teachers:[],
     };
   },
   computed: {
@@ -172,6 +197,7 @@ export default {
       this.postForm = Object.assign({}, defaultForm);
     }
     this.getRemoteCategoryList();
+    this.getRemoteTeacherList();
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     this.tempRoute = Object.assign({}, this.$route);
@@ -247,6 +273,10 @@ export default {
     async getRemoteCategoryList(){
       const { data } = await categoryResource.list({limit:100});
       this.categories = data.list;
+    },
+    async getRemoteTeacherList(){
+        const { data } = await teacherResource.list({limit:100});
+        this.teachers = data.list;
     },
     getRemoteUserList(query) {
       userSearch(query).then(response => {

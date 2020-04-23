@@ -27,7 +27,7 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->courses->with(['category','image'])->newQuery();
+        $query = $this->courses->with(['category','image','teacher'])->newQuery();
         if($keyword = $request->get('keyword')){
             $query->where('title','like',"%{$keyword}%");
         }
@@ -57,7 +57,7 @@ class CourseController extends Controller
     public function show($id)
     {
         //
-        $course = $this->courses->with(['image','category'])->where('course_id',$id)->first();
+        $course = $this->courses->with(['category','image','teacher'])->where('course_id',$id)->first();
         $course = new \App\Http\Resources\Course($course);
         return $this->renderSuccess('',$course);
     }

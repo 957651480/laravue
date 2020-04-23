@@ -50,4 +50,9 @@ class Course extends Model
     {
         return $this->belongsTo(Category::class,'category_id');
     }
+
+    public function teacher()
+    {
+        return $this->belongsTo(Teacher::class,'teacher_id');
+    }
 }
