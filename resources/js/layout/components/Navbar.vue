@@ -14,7 +14,7 @@
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <lang-select class="right-menu-item hover-effect" />
+        <!--<lang-select class="right-menu-item hover-effect" />-->
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -28,16 +28,11 @@
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>
-          <router-link v-show="userId !== null" :to="`/profile/edit`">
+          <!--<router-link v-show="userId !== null" :to="`/profile/edit`">
             <el-dropdown-item>
               {{ $t('navbar.profile') }}
             </el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/tuandm/laravue/">
-            <el-dropdown-item>
-              {{ $t('navbar.github') }}
-            </el-dropdown-item>
-          </a>
+          </router-link>-->
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>
