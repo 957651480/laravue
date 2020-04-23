@@ -10,27 +10,27 @@
       </el-button>
     </div>
 
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+    <el-table v-loading="tableLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.teacher_id }}</span>
+          <span>{{ scope.row.banner_id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="教师名称">
+      <el-table-column align="center" label="标题">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="教师职位">
+      <el-table-column align="center" label="图片">
         <template slot-scope="scope">
-          <span>{{ scope.row.position }}</span>
+          <img :src="scope.row.image_url" width="40" height="40" />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="教师简介">
+      <el-table-column align="center" label="状态">
         <template slot-scope="scope">
-          <span>{{ scope.row.introduction }}</span>
+          <span>{{ scope.row.show===10?'显示':'隐藏' }}</span>
         </template>
       </el-table-column>
 
@@ -50,7 +50,7 @@
           <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">
             编辑
           </el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.teacher_id, scope.row.name)">
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.banner_id)">
             删除
           </el-button>
         </template>
@@ -59,24 +59,37 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
 
-    <el-dialog v-model="isEdit" title="增加/编辑教师" :visible.sync="dialogFormVisible">
-      <div v-loading="teacherCreating" class="form-container">
-        <el-form ref="userForm" :rules="rules" :model="newTeacher" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item label="名称" prop="name">
-            <el-input v-model="newTeacher.name" />
+    <el-dialog v-model="isEdit" title="增加/编辑轮播图" :visible.sync="dialogFormVisible">
+      <div v-loading="BannerCreating" class="form-container">
+        <el-form ref="userForm" :rules="rules" :model="newBanner" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item label="名称" prop="title">
+            <el-input v-model="newBanner.title" />
           </el-form-item>
-          <el-form-item label="职位" prop="position">
-            <el-input v-model="newTeacher.position" />
+          <el-form-item label="上传图片" prop="image_id">
+            <el-upload
+              class="avatar-uploader"
+              :show-file-list="false"
+              action="api/file/upload"
+              :on-success="handleSuccess"
+              :headers="myHeaders"
+            >
+              <img v-if="newBanner.image_url" :src="newBanner.image_url" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
           </el-form-item>
-          <el-form-item label="简介" prop="introduction">
-            <el-input type="textarea" v-model="newTeacher.introduction"></el-input>
+          <el-form-item label="状态" prop="show">
+            <el-radio v-model="newBanner.show" :label="10">显示</el-radio>
+            <el-radio v-model="newBanner.show" :label="20">隐藏</el-radio>
+          </el-form-item>
+          <el-form-item label="排序" prop="sort">
+            <el-input-number v-model="newBanner.sort"></el-input-number>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false;isEdit=false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createTeacher()">
+          <el-button type="primary" @click="createBanner()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -87,13 +100,9 @@
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import UserResource from '@/api/user';
-import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
-import { fetchList, updateTeacher, createTeacher, deleteTeacher } from '@/api/teacher';
-
-const userResource = new UserResource();
-const permissionResource = new Resource('permissions');
+import { fetchList, updateBanner, createBanner, deleteBanner } from '@/api/banner';
+import {getToken} from "@/utils/auth";
 
 export default {
   name: 'BannerList',
@@ -103,66 +112,64 @@ export default {
     return {
       list: null,
       total: 0,
-      loading: true,
-      downloading: false,
-      teacherCreating: false,
+      tableLoading: true,
+      BannerCreating: false,
       query: {
         page: 1,
         limit: 15,
         keyword: '',
       },
-      newTeacher: {},
+      newBanner: {},
       dialogFormVisible: false,
       rules: {
-        name: [{ required: true, message: '教师名称必须', trigger: 'blur' }],
-        position: [{ required: true, message: '职位必填', trigger: 'blur' }],
-        introduction: [{ required: true, message: '教师简介', trigger: 'blur' }],
+        title: [{ required: true, message: '辩题必须', trigger: 'blur' }],
+        image_id: [{ required: true, message: '图片必填', trigger: 'blur' }],
       },
       isEdit: false,
+      myHeaders: { Authorization: 'Bearer ' + getToken() },
     };
   },
   computed: {
   },
   created() {
-    this.resetNewTeacher();
+    this.resetNewBanner();
     this.getList();
   },
   methods: {
     async getList() {
       const { limit, page } = this.query;
-      this.loading = true;
+      this.tableLoading = true;
       const { data } = await fetchList(this.query);
       this.list = data.list;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
       this.total = data.total;
-      this.loading = false;
+      this.tableLoading = false;
     },
     handleFilter() {
       this.query.page = 1;
       this.getList();
     },
     handleCreate() {
-      this.resetNewTeacher();
+      this.resetNewBanner();
       this.dialogFormVisible = true;
       this.$nextTick(() => {
         this.$refs['userForm'].clearValidate();
       });
     },
     handleEdit(data){
-      debugger
-      this.newTeacher = data;
+      this.newBanner = data;
       this.isEdit = true;
       this.dialogFormVisible = true;
     },
-    handleDelete(id, name) {
-      this.$confirm('确定删除名为 ' + name + '吗?', 'Warning', {
+    handleDelete(id) {
+      this.$confirm('确定删除吗?', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        deleteTeacher(id).then(response => {
+        deleteBanner(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',
@@ -174,20 +181,20 @@ export default {
       }).catch(() => {
       });
     },
-    createTeacher() {
+    createBanner() {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
-          this.teacherCreating = true;
+          this.BannerCreating = true;
           if (this.isEdit){
-            let  id = this.newTeacher.teacher_id;
-            updateTeacher(id,this.newTeacher)
+            let  id = this.newBanner.banner_id;
+            updateBanner(id,this.newBanner)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetNewTeacher();
+                this.resetNewBanner();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -195,17 +202,17 @@ export default {
                 console.log(error);
               })
               .finally(() => {
-                this.teacherCreating = false;
+                this.BannerCreating = false;
               });
           } else {
-            createTeacher(this.newTeacher)
+            createBanner(this.newBanner)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetNewTeacher();
+                this.resetNewBanner();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -213,7 +220,7 @@ export default {
                 console.log(error);
               })
               .finally(() => {
-                this.teacherCreating = false;
+                this.BannerCreating = false;
               });
           }
         } else {
@@ -222,12 +229,18 @@ export default {
         }
       });
     },
-    resetNewTeacher() {
-      this.newTeacher = {
-        name: '',
-        position: '',
-        introduction: '',
+    resetNewBanner() {
+      this.newBanner = {
+        title: '',
+        image_id:null,
+        image_url:'',
+        show: 10,
+        sort: 100,
       };
+    },
+    handleSuccess(response, file, fileList){
+      this.newBanner.image_id = response.file_id;
+      this.newBanner.image_url = response.url;
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
@@ -262,5 +275,28 @@ export default {
     .clear-left {
       clear: left;
     }
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>

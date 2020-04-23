@@ -30,13 +30,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('roles/{role}/permissions', 'RoleController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::post('file/upload', 'FileController@upload');
-    Route::apiResource('courses', 'CourseController');
+
     Route::apiResource('categories', 'CategoryController');
     Route::apiResource('teachers', 'TeacherController');
     Route::apiResource('attends', 'AttendController');
 
 });
-
+Route::apiResource('courses', 'CourseController');
+Route::apiResource('banners', 'BannerController');
 
 // Fake APIs
 Route::get('/table/list', function () {
