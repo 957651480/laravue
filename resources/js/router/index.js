@@ -84,15 +84,15 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
-    redirect: 'dashboard',
-    children: [
+    redirect: '/course/list',
+    /*children: [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard', noCache: false },
       },
-    ],
+    ],*/
   },
   {
     path: '/guide',
