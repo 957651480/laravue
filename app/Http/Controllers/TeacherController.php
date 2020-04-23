@@ -65,9 +65,8 @@ class TeacherController extends Controller
     {
         //
         $form  = $request->all();
-        $teacher_id = Arr::pull($form,'teacher_id');
         $teacher = $this->teachers->where('teacher_id',$id)->first();
-        $data = Arr::only($form,['name',]);
+        $data = Arr::only($form,['name','position','introduction']);
         $teacher->update($data);
         return $this->renderSuccess();
     }

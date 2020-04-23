@@ -30,9 +30,9 @@ export function createTeacher(data) {
   });
 }
 
-export function updateTeacher(data) {
+export function updateTeacher(id,data) {
   return request({
-    url: 'teachers/update',
+    url: 'teachers/'+id,
     method: 'put',
     data,
   });

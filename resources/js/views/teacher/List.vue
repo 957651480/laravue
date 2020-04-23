@@ -50,7 +50,7 @@
           <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">
             编辑
           </el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.teacher_id, scope.row.name);">
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.teacher_id, scope.row.name)">
             删除
           </el-button>
         </template>
@@ -151,12 +151,13 @@ export default {
       });
     },
     handleEdit(data){
+      debugger
       this.newTeacher = data;
       this.isEdit = true;
       this.dialogFormVisible = true;
     },
     handleDelete(id, name) {
-      this.$confirm('确定删除分类名为 ' + name + '吗?', 'Warning', {
+      this.$confirm('确定删除名为 ' + name + '吗?', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
@@ -178,7 +179,8 @@ export default {
         if (valid) {
           this.teacherCreating = true;
           if (this.isEdit){
-            updateTeacher(this.newTeacher)
+            let  id = this.newTeacher.teacher_id;
+            updateTeacher(id,this.newTeacher)
               .then(response => {
                 this.$message({
                   message: '成功',
