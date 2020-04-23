@@ -19,7 +19,7 @@
             placeholder="选择分类"
           >
             <el-option
-              v-for="item in postForm.categories"
+              v-for="item in categories"
               :key="item.category_id"
               :label="item.name"
               :value="item.category_id"
@@ -122,7 +122,6 @@ const defaultForm = {
   end_time:undefined,
   category_id:null,
   number:1,
-  categories:[]
 };
 
 export default {
@@ -156,6 +155,7 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       myHeaders: { Authorization: 'Bearer ' + getToken() },
+      categories:[]
     };
   },
   computed: {
@@ -246,7 +246,7 @@ export default {
     },
     async getRemoteCategoryList(){
       const { data } = await categoryResource.list({limit:100});
-      this.postForm.categories = data.list;
+      this.categories = data.list;
     },
     getRemoteUserList(query) {
       userSearch(query).then(response => {
