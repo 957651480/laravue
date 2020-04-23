@@ -22,6 +22,7 @@ import exampleRoutes from './modules/example';
 import courseRoutes from './modules/course';
 import categoryRoutes from './modules/category';
 import teacherRoutes from "@/router/modules/teacher";
+import attendRoutes from "@/router/modules/attend";
 
 
 /**
@@ -111,7 +112,8 @@ export const constantRoutes = [
   exampleRoutes,
   courseRoutes,
   categoryRoutes,
-  teacherRoutes
+  teacherRoutes,
+  attendRoutes
 ];
 
 export const asyncRoutes = [

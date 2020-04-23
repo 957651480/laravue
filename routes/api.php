@@ -16,7 +16,7 @@ use \App\Laravue\JsonResponse;
 */
 
 Route::post('auth/login', 'AuthController@login');
-
+Route::post('auth/wxlogin', 'AuthController@wxLogin');
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get('auth/user', 'AuthController@user');
     Route::post('auth/logout', 'AuthController@logout');
@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('courses', 'CourseController');
     Route::apiResource('categories', 'CategoryController');
     Route::apiResource('teachers', 'TeacherController');
+    Route::apiResource('attends', 'AttendController');
 
 });
 
