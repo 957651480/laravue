@@ -49,7 +49,7 @@
           </el-col>
         </el-row>
 
-        <el-form-item label="图片" prop="image_id">
+        <!--<el-form-item label="图片" prop="image_id">
           <el-upload
             class="avatar-uploader"
             :show-file-list="false"
@@ -60,7 +60,7 @@
             <img v-if="postForm.image_url" :src="postForm.image_url" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
-        </el-form-item>
+        </el-form-item>-->
 
         <el-row v-for="(item,key) in postForm.times" v-bind:key="key">
           <el-col :span="5" >
@@ -68,6 +68,7 @@
               <el-date-picker
                 v-model="item.start_time"
                 type="datetime"
+                format="yyyy-MM-dd HH:mm"
                 placeholder="选择日期时间">
               </el-date-picker>
             </el-form-item>
@@ -77,6 +78,7 @@
               <el-date-picker
                 v-model="item.end_time"
                 type="datetime"
+                format="yyyy-MM-dd HH:mm"
                 placeholder="选择日期时间">
               </el-date-picker>
             </el-form-item>
@@ -87,14 +89,14 @@
         <el-form-item label="人数:" prop="number">
             <el-input-number v-model="postForm.number"></el-input-number>
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="地址:" prop="address">
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="地点:" prop="address">
           <el-input
             v-model="postForm.address"
             :rows="1"
             type="textarea"
             class="article-textarea"
             autosize
-            placeholder="请输入地址"
+            placeholder="请输入地点"
           />
         </el-form-item>
 
@@ -130,8 +132,8 @@ const defaultForm = {
   title: '',
   content: '',
   address: '',
-  image_url: '',
-  image_id: null,
+  //image_url: '',
+  //image_id: null,
   category_id:null,
   teacher_id:null,
   number:1,
@@ -158,7 +160,7 @@ export default {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
         category_id: [{ required: true, message: '请选择分类', trigger: 'blur' }],
         teacher_id: [{ required: true, message: '请选择教师', trigger: 'blur' }],
-        image_id: [{ required: true, message: '请选择上传图片', trigger: 'blur' }],
+        //image_id: [{ required: true, message: '请选择上传图片', trigger: 'blur' }],
         number: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         address: [{ required: true, message: '请填写地点', trigger: 'blur' }],
         content: [{ required: true, message: '请填写课程详情', trigger: 'blur' }],
@@ -200,10 +202,10 @@ export default {
           console.log(err);
         });
     },
-    handleSuccess(response, file, fileList){
+    /*handleSuccess(response, file, fileList){
       this.postForm.image_id = response.file_id;
       this.postForm.image_url = response.url;
-    },
+    },*/
     setTagsViewTitle() {
       const title =
         this.lang === 'zh'
@@ -224,15 +226,14 @@ export default {
         return false;
       }
       let valid=true;
-      debugger
       for (let i = 0; i < times.length; i++)
       {
         if(times[i].start_time===null||times[i].end_time===null){
           valid=false;
           break;
         }else{
-          times[i].start_time = parseTime(times[i].start_time);
-          times[i].end_time = parseTime(times[i].end_time);
+          times[i].start_time = parseTime(times[i].start_time,'{y}-{m}-{d} {h}:{i}');
+          times[i].end_time = parseTime(times[i].end_time,'{y}-{m}-{d} {h}:{i}');
         }
       }
       if(!valid){

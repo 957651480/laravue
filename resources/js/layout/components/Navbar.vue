@@ -19,7 +19,8 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'/128'" class="user-avatar">
+          <span>{{this.$store.getters.name}}</span>
+          <!--<img :src="avatar+'/128'" class="user-avatar">-->
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">

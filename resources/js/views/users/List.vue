@@ -39,16 +39,16 @@
           <img :src="scope.row.avatarUrl" width="40" height="40" />
         </template>
       </el-table-column>
-      <el-table-column align="center" label="创建时间">
+      <el-table-column align="center" label="注册时间">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="更新时间">
+      <!--<el-table-column align="center" label="更新时间">
         <template slot-scope="scope">
           <span>{{ scope.row.updated_at }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
       <!--<el-table-column align="center" label="邮箱">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>

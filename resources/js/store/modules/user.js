@@ -46,6 +46,7 @@ const actions = {
         .then(response => {
           commit('SET_TOKEN', response.token);
           setToken(response.token);
+          commit('SET_NAME', response.name);
           resolve();
         })
         .catch(error => {

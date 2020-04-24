@@ -37,6 +37,15 @@
           <span>{{ row.teacher_name }}</span>
         </template>
       </el-table-column>
+      <el-table-column min-width="200px" label="教师图片">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 80px; height: 80px"
+            :src="scope.row.teacher_image_url"
+            :preview-src-list="[scope.row.teacher_image_url]"
+            ></el-image>
+        </template>
+      </el-table-column>
       <el-table-column min-width="80px" label="报名人数">
         <template slot-scope="scope">
           <span>{{ scope.row.attend_number }}</span>
@@ -47,19 +56,14 @@
             <span>{{ scope.row.number }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="200px" label="图片">
+
+      <el-table-column width="180px" align="center" label="时间段">
         <template slot-scope="scope">
-    　　　　<img :src="scope.row.image_url" width="40" height="40" />
-        </template>
-      </el-table-column>
-      <el-table-column width="180px" align="center" label="开始时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.start_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="180px" align="center" label="结束时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.end_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <div v-for="item in scope.row.times" >
+            <span>开始时间:{{ item.start_time  }}</span>
+            <span>结束时间:{{ item.end_time }}</span>
+          </div>
+
         </template>
       </el-table-column>
       <el-table-column width="180px" align="center" label="地址">

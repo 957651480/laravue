@@ -28,6 +28,15 @@
           <span>{{ scope.row.position }}</span>
         </template>
       </el-table-column>
+      <el-table-column min-width="100px" label="教师图片">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 80px; height: 80px"
+            :src="scope.row.image_url"
+            :preview-src-list="[scope.row.image_url]"
+          ></el-image>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="教师简介">
         <template slot-scope="scope">
           <span>{{ scope.row.introduction }}</span>
@@ -62,13 +71,13 @@
     <el-dialog v-model="isEdit" title="增加/编辑教师" :visible.sync="dialogFormVisible">
       <div v-loading="teacherCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="newTeacher" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item label="名称:" prop="name">
+          <el-form-item label="教师名称:" prop="name">
             <el-input v-model="newTeacher.name" />
           </el-form-item>
-          <el-form-item label="职位:" prop="position">
+          <el-form-item label="教师职位:" prop="position">
             <el-input v-model="newTeacher.position" />
           </el-form-item>
-          <el-form-item label="图片:" prop="image_id">
+          <el-form-item label="教师图片:" prop="image_id">
             <el-upload
               class="avatar-uploader"
               :show-file-list="false"
