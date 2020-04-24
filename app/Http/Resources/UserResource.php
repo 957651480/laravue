@@ -17,6 +17,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'nickName' => $this->nickName,
             'email' => $this->email,
             'roles' => array_map(
                 function ($role) {
@@ -30,8 +31,11 @@ class UserResource extends JsonResource
                 },
                 $this->getAllPermissions()->toArray()
             ),
+            'open_id'=>$this->open_id,
             'avatar' =>$this->avatarUrl,
             'token'=>$this->token,
+            'created_at'=>$this->created_at->toDateTimeString(),
+            'updated_at'=>$this->updated_at->toDateTimeString(),
         ];
     }
 }

@@ -19,6 +19,7 @@ class AttendController extends Controller
      */
     public function __construct(Attend $attends)
     {
+        $this->middleware('auth:api')->only(['store','update','destroy']);
         $this->attends = $attends;
     }
 

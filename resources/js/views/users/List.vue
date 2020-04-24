@@ -11,9 +11,9 @@
       <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>-->
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
-      </el-button>
+      </el-button>-->
     </div>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
@@ -34,9 +34,18 @@
           <span>{{ scope.row.nickName }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="微信OPENID">
+        <template slot-scope="scope">
+          <span>{{ scope.row.open_id }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="微信头像">
         <template slot-scope="scope">
-          <img :src="scope.row.avatarUrl" width="40" height="40" />
+          <el-image
+            style="width: 80px; height: 80px"
+            :src="scope.row.avatar"
+            :preview-src-list="[scope.row.avatar]"
+          ></el-image>
         </template>
       </el-table-column>
       <el-table-column align="center" label="注册时间">
@@ -65,7 +74,7 @@
         <template slot-scope="scope">
           <router-link v-if="!scope.row.roles.includes('admin')" :to="'/administrator/users/edit/'+scope.row.id">
             <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit">
-              编辑
+              详情
             </el-button>
           </router-link>
           <!--<el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">

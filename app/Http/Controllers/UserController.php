@@ -49,11 +49,11 @@ class UserController extends Controller
             $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
         }
         if($has_open_id){
-            $userQuery->where('open_id','<>','');
+            $userQuery->where('open_id','!=','');
         }
         if (!empty($keyword)) {
-            $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
-            $userQuery->where('email', 'LIKE', '%' . $keyword . '%');
+            $userQuery->where('nickName', 'LIKE', '%' . $keyword . '%');
+            //$userQuery->where('email', 'LIKE', '%' . $keyword . '%');
         }
 
         return UserResource::collection($userQuery->paginate($limit));

@@ -1,18 +1,24 @@
 <template>
   <el-card v-if="user.name">
     <el-tabs v-model="activeActivity" @tab-click="handleClick">
-      <el-tab-pane v-loading="updating" label="Account" name="first">
-        <el-form-item label="Name">
-          <el-input v-model="user.name" :disabled="user.role === 'admin'" />
+      <el-tab-pane v-loading="updating" label="用户信息" name="first">
+        <el-form-item label="用户名">
+          <el-input v-model="user.name" :disabled="true" />
         </el-form-item>
-        <el-form-item label="Email">
-          <el-input v-model="user.email" :disabled="user.role === 'admin'" />
+        <el-form-item label="微信昵称">
+          <el-input v-model="user.nickName" :disabled="true" />
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="微信OPENID">
+          <el-input v-model="user.open_id" :disabled="true" />
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="user.email" :disabled="true" />
+        </el-form-item>
+        <!--<el-form-item>
           <el-button type="primary" :disabled="user.role === 'admin'" @click="onSubmit">
             Update
           </el-button>
-        </el-form-item>
+        </el-form-item>-->
       </el-tab-pane>
     </el-tabs>
   </el-card>
@@ -29,7 +35,8 @@ export default {
       default: () => {
         return {
           name: '',
-          email: '',
+          nickName: '',
+          open_id: '',
           avatar: '',
           roles: [],
         };
@@ -41,9 +48,6 @@ export default {
       activeActivity: 'first',
       carouselImages: [
         'https://cdn.laravue.dev/photo1.png',
-        'https://cdn.laravue.dev/photo2.png',
-        'https://cdn.laravue.dev/photo3.jpg',
-        'https://cdn.laravue.dev/photo4.jpg',
       ],
       updating: false,
     };
@@ -59,7 +63,7 @@ export default {
         .then(response => {
           this.updating = false;
           this.$message({
-            message: 'User information has been updated successfully',
+            message: '编辑成功',
             type: 'success',
             duration: 5 * 1000,
           });

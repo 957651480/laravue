@@ -34,9 +34,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::apiResource('categories', 'CategoryController');
     Route::apiResource('teachers', 'TeacherController');
-    Route::apiResource('attends', 'AttendController');
-});
 
+});
+Route::get('courses/export', 'CourseController@export');
+Route::apiResource('attends', 'AttendController');
 Route::apiResource('courses', 'CourseController');
 Route::apiResource('banners', 'BannerController');
 

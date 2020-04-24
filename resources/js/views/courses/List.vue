@@ -121,6 +121,8 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
 import waves from '@/directive/waves';
+import {exportCourse} from "@/api/course";
+
 const courseResource = new Resource('courses');
 const categoryResource = new Resource('categories');
 
@@ -180,16 +182,14 @@ export default {
     },
     handleDownload() {
       this.downloading = true;
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['id', 'user_id', 'name', 'email', 'role'];
-        const filterVal = ['index', 'id', 'name', 'email', 'role'];
-        const data = this.formatJson(filterVal, this.list);
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'user-list',
+      exportCourse().then(response => {
+        this.$message({
+          type: 'success',
+          message: '已导出',
         });
         this.downloading = false;
+      }).catch(error => {
+        console.log(error);
       });
     },
   },

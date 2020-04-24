@@ -123,7 +123,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/banner/list'),
         name: 'Banner',
-        meta: { title: '首页轮播图', icon: 'guide', noCache: true },
+        meta: { title: '首页轮播图', icon: 'list', noCache: true },
       },
     ],
   },
