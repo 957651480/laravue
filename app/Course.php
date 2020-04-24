@@ -55,4 +55,14 @@ class Course extends Model
     {
         return $this->belongsTo(Teacher::class,'teacher_id');
     }
+
+    public function getTimesAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    public function setTimesAttribute($value)
+    {
+        $this->attributes['times'] = json_encode($value,true);
+    }
 }

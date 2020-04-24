@@ -49,7 +49,7 @@
           </el-col>
         </el-row>
 
-        <el-form-item label="上传图片" prop="image_id">
+        <el-form-item label="图片" prop="image_id">
           <el-upload
             class="avatar-uploader"
             :show-file-list="false"
@@ -61,37 +61,28 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-row>
-          <el-col :span="10">
-            <el-form-item
-              label-width="120px"
-              label="开始时间:"
-              prop="start_time"
-              class="postInfo-container-item"
-            >
+
+        <el-row v-for="(item,key) in postForm.times" v-bind:key="key">
+          <el-col :span="5" >
+            <el-form-item label="开始时间:" >
               <el-date-picker
-                v-model="postForm.start_time"
+                v-model="item.start_time"
                 type="datetime"
-                format="yyyy-MM-dd HH:mm"
-                placeholder="请选择开始时间"
-              />
+                placeholder="选择日期时间">
+              </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
-            <el-form-item
-              label-width="120px"
-              label="结束时间:"
-              prop="end_time"
-              class="postInfo-container-item"
-            >
+          <el-col :span="5">
+            <el-form-item label="结束时间:">
               <el-date-picker
-                v-model="postForm.end_time"
+                v-model="item.end_time"
                 type="datetime"
-                format="yyyy-MM-dd HH:mm"
-                placeholder="请选择结束时间"
-              />
+                placeholder="选择日期时间">
+              </el-date-picker>
             </el-form-item>
           </el-col>
+          <i class="el-icon" @click="addTime()">添加</i>
+          <i class="el-icon-delete" @click="deleteTime(key)">删除</i>
         </el-row>
         <el-form-item label="人数:" prop="number">
             <el-input-number v-model="postForm.number"></el-input-number>
@@ -140,12 +131,11 @@ const defaultForm = {
   content: '',
   address: '',
   image_url: '',
-  image_id: 0,
-  start_time:undefined,
-  end_time:undefined,
+  image_id: null,
   category_id:null,
   teacher_id:null,
   number:1,
+  times: [{'start_time':null,'end_time':null}],
 };
 
 export default {
@@ -169,16 +159,11 @@ export default {
         category_id: [{ required: true, message: '请选择分类', trigger: 'blur' }],
         teacher_id: [{ required: true, message: '请选择教师', trigger: 'blur' }],
         image_id: [{ required: true, message: '请选择上传图片', trigger: 'blur' }],
-        start_time: [{ required: true, message: '请选择开始时间'}],
-        end_time: [{ required: true, message: '请选择结束时间'}],
         number: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         address: [{ required: true, message: '请填写地点', trigger: 'blur' }],
         content: [{ required: true, message: '请填写课程详情', trigger: 'blur' }],
       },
-
       tempRoute: {},
-      dialogImageUrl: '',
-      dialogVisible: false,
       myHeaders: { Authorization: 'Bearer ' + getToken() },
       categories:[],
       teachers:[],
@@ -233,9 +218,28 @@ export default {
     },
     submitForm() {
 
-      this.postForm.start_time = parseTime(this.postForm.start_time);
-      this.postForm.end_time = parseTime(this.postForm.end_time);
-
+      let times = this.postForm.times;
+      if(times.length===0){
+        this.$alert('时间段至少选择一项');
+        return false;
+      }
+      let valid=true;
+      debugger
+      for (let i = 0; i < times.length; i++)
+      {
+        if(times[i].start_time===null||times[i].end_time===null){
+          valid=false;
+          break;
+        }else{
+          times[i].start_time = parseTime(times[i].start_time);
+          times[i].end_time = parseTime(times[i].end_time);
+        }
+      }
+      if(!valid){
+          this.$alert('时间段未填写完整');
+          return false;
+      }
+      this.postForm.times=times;
       this.$refs.postForm.validate(valid => {
         if (!valid) {
           return false;
@@ -287,6 +291,18 @@ export default {
         this.userListOptions = response.data.items.map(v => v.name);
       });
     },
+    //添加时间段
+    addTime(){
+      this.postForm.times.push({})
+    },
+    //删除时间段
+    deleteTime(index){
+      if(index===0){
+        this.$alert('不能删除第一项');
+        return false;
+      }
+      this.postForm.times.splice(index,1);
+    }
   },
 };
 </script>
