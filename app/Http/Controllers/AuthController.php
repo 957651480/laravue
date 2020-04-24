@@ -30,13 +30,12 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('name', 'password');
         if (!Auth::attempt($credentials)) {
             return response()->json(new JsonResponse([], 'login_error'), Response::HTTP_UNAUTHORIZED);
         }
-
         $user = $request->user();
-        $token = $user->createToken('laravue');
+        $token = $user->createToken('api');
         $user->token = $token->plainTextToken;
         return response()->json(new UserResource($user), Response::HTTP_OK)->header('Authorization', $token->plainTextToken);
     }
@@ -81,7 +80,7 @@ class AuthController extends Controller
         //登录
         Auth::loginUsingId($user->id);
         $user = $request->user();
-        $token = $user->createToken('laravue');
+        $token = $user->createToken('api');
         $user->token = $token->plainTextToken;
         return response()->json(new UserResource($user), Response::HTTP_OK)->header('Authorization', $token->plainTextToken);
 

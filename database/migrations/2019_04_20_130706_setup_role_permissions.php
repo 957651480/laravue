@@ -16,8 +16,16 @@ class SetupRolePermissions extends Migration
      */
     public function up()
     {
-        foreach (Acl::roles() as $role) {
-            Role::findOrCreate($role);
+        $roles = [
+            ['name'=>'admin','display_name'=>'超级管理员','guard_name'=>'api'],
+            ['name'=>'manager','display_name'=>'管理员','guard_name'=>'api'],
+            ['name'=>'editor','display_name'=>'编辑员','guard_name'=>'api'],
+            ['name'=>'user','display_name'=>'用户','guard_name'=>'api'],
+            ['name'=>'visitor','display_name'=>'访客','guard_name'=>'api'],
+        ];
+
+        foreach ($roles as $role) {
+            Role::firstOrCreate(['name'=>$role['name']],$role);
         }
 
         $adminRole = Role::findByName(Acl::ROLE_ADMIN);
@@ -26,8 +34,27 @@ class SetupRolePermissions extends Migration
         $userRole = Role::findByName(Acl::ROLE_USER);
         $visitorRole = Role::findByName(Acl::ROLE_VISITOR);
 
-        foreach (Acl::permissions() as $permission) {
-            Permission::findOrCreate($permission, 'api');
+        $permissions =[
+            ['name'=>'view menu element ui','display_name'=>'查看elementUi','guard_name'=>'api'],
+            ['name'=>'view menu permission','display_name'=>'查看权限','guard_name'=>'api'],
+            ['name'=>'view menu components','display_name'=>'查看组件','guard_name'=>'api'],
+            ['name'=>'view menu charts','display_name'=>'查看Echats','guard_name'=>'api'],
+            ['name'=>'view menu nested routes','display_name'=>'查看嵌套路由','guard_name'=>'api'],
+            ['name'=>'view menu table','display_name'=>'查看table','guard_name'=>'api'],
+            ['name'=>'view menu administrator','display_name'=>'查看管理员','guard_name'=>'api'],
+            ['name'=>'view menu theme','display_name'=>'查看主题','guard_name'=>'api'],
+            ['name'=>'view menu clipboard','display_name'=>'查看主题','guard_name'=>'api'],
+            ['name'=>'view menu excel','display_name'=>'查看主题','guard_name'=>'api'],
+            ['name'=>'view menu zip','display_name'=>'查看主题','guard_name'=>'api'],
+            ['name'=>'view menu pdf','display_name'=>'查看主题','guard_name'=>'api'],
+            ['name'=>'view menu i18n','display_name'=>'查看I18N','guard_name'=>'api'],
+
+            ['name'=>'manage user','display_name'=>'显示名','guard_name'=>'api'],
+            ['name'=>'manage article','display_name'=>'显示名','guard_name'=>'api'],
+            ['name'=>'manage permission','display_name'=>'显示名','guard_name'=>'api'],
+        ];
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name'=>$permission['name']],$permission);
         }
 
         // Setup basic permission

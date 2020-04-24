@@ -6,7 +6,7 @@ const adminRoutes = {
   component: Layout,
   redirect: '/administrator/users',
   name: 'Administrator',
-  alwaysShow: true,
+  //alwaysShow: true,
   meta: {
     title: 'administrator',
     icon: 'admin',
@@ -14,11 +14,11 @@ const adminRoutes = {
   },
   children: [
     /** User managements */
-    {
+   {
       path: 'users/edit/:id(\\d+)',
       component: () => import('@/views/users/UserProfile'),
       name: 'UserProfile',
-      meta: { title: 'userProfile', noCache: true, permissions: ['manage user'] },
+      meta: { title: '用户信息', noCache: true, permissions: ['manage user'] },
       hidden: true,
     },
     {
@@ -28,12 +28,12 @@ const adminRoutes = {
       meta: { title: 'UserList', icon: 'user', permissions: ['manage user'] },
     },
     /** Role and permission */
-    {
+    /*{
       path: 'roles',
       component: () => import('@/views/role-permission/List'),
       name: 'RoleList',
       meta: { title: 'rolePermission', icon: 'role', permissions: ['manage permission'] },
-    },
+    },*/
   ],
 };
 

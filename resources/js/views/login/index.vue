@@ -4,12 +4,12 @@
       <h3 class="title">
         {{ $t('login.title') }}
       </h3>
-      <lang-select class="set-language" />
-      <el-form-item prop="email">
+      <!--<lang-select class="set-language" />-->
+      <el-form-item prop="name">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input v-model="loginForm.email" name="email" type="text" auto-complete="on" :placeholder="$t('login.email')" />
+        <el-input v-model="loginForm.name" name="name" type="text" auto-complete="on" placeholder="请输入用户名" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
@@ -20,7 +20,7 @@
           :type="pwdType"
           name="password"
           auto-complete="on"
-          placeholder="password"
+          placeholder="请输入密码"
           @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
@@ -33,8 +33,8 @@
         </el-button>
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">Email: admin@laravue.dev</span>
-        <span>Password:laravue</span>
+        <span style="margin-right:20px;">username: admin</span>
+        <span>Password:admin</span>
       </div>
     </el-form>
   </div>
@@ -64,11 +64,11 @@ export default {
     };
     return {
       loginForm: {
-        email: 'admin@laravue.dev',
-        password: 'laravue',
+        name: 'admin',
+        password: 'admin',
       },
       loginRules: {
-        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
+        name: [{ required: true, trigger: 'blur'}],
         password: [{ required: true, trigger: 'blur', validator: validatePass }],
       },
       loading: false,

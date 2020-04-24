@@ -62,10 +62,10 @@
     <el-dialog v-model="isEdit" title="增加/编辑轮播图" :visible.sync="dialogFormVisible">
       <div v-loading="BannerCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="newBanner" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item label="名称" prop="title">
+          <el-form-item label="名称:" prop="title">
             <el-input v-model="newBanner.title" />
           </el-form-item>
-          <el-form-item label="上传图片" prop="image_id">
+          <el-form-item label="图片:" prop="image_id">
             <el-upload
               class="avatar-uploader"
               :show-file-list="false"
@@ -77,11 +77,11 @@
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
-          <el-form-item label="状态" prop="show">
+          <el-form-item label="状态:" prop="show">
             <el-radio v-model="newBanner.show" :label="10">显示</el-radio>
             <el-radio v-model="newBanner.show" :label="20">隐藏</el-radio>
           </el-form-item>
-          <el-form-item label="排序" prop="sort">
+          <el-form-item label="排序:" prop="sort">
             <el-input-number v-model="newBanner.sort"></el-input-number>
           </el-form-item>
         </el-form>

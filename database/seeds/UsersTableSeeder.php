@@ -13,8 +13,8 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $userList = [
-            "admin",
+        /*$userList = [
+            "demo",
         ];
 
         foreach ($userList as $fullName) {
@@ -27,12 +27,12 @@ class UsersTableSeeder extends Seeder
             ]);
             $user = \App\Laravue\Models\User::create([
                 'name' => $fullName,
-                'email' => strtolower($name) . '@admin.com',
-                'password' => \Illuminate\Support\Facades\Hash::make('admin'),
+                'email' => strtolower($name) . '@demo.com',
+                'password' => \Illuminate\Support\Facades\Hash::make('laravue'),
             ]);
 
             $role = Role::findByName($roleName);
             $user->syncRoles($role);
-        }
+        }*/
     }
 }

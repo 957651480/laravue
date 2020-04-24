@@ -1,16 +1,16 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
+      <el-input v-model="query.keyword" placeholder="请输入用户昵称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <!--<el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
         <el-option v-for="item in roles" :key="item" :label="item | uppercaseFirst" :value="item" />
-      </el-select>
+      </el-select>-->
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
-      </el-button>
+      </el-button>-->
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
@@ -23,36 +23,56 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Name">
+      <!--<el-table-column align="center" label="用户名">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
 
-      <el-table-column align="center" label="Email">
+      <el-table-column align="center" label="微信昵称">
+        <template slot-scope="scope">
+          <span>{{ scope.row.nickName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="微信头像">
+        <template slot-scope="scope">
+          <img :src="scope.row.avatarUrl" width="40" height="40" />
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="创建时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.created_at }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="更新时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updated_at }}</span>
+        </template>
+      </el-table-column>
+      <!--<el-table-column align="center" label="邮箱">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
 
-      <el-table-column align="center" label="Role" width="120">
+      <!--<el-table-column align="center" label="Role" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.roles.join(', ') }}</span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
 
-      <el-table-column align="center" label="Actions" width="350">
+      <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
           <router-link v-if="!scope.row.roles.includes('admin')" :to="'/administrator/users/edit/'+scope.row.id">
             <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit">
-              Edit
+              编辑
             </el-button>
           </router-link>
-          <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
+          <!--<el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
             Permissions
-          </el-button>
+          </el-button>-->
           <el-button v-if="scope.row.roles.includes('visitor')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
-            Delete
+            删除
           </el-button>
         </template>
       </el-table-column>
@@ -158,6 +178,7 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
+        has_open_id:1
       },
       roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
       nonAdminRoles: ['editor', 'user', 'visitor'],
