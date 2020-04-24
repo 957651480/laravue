@@ -44,7 +44,7 @@ class TeacherController extends Controller
     {
         //
         $form  = $request->all();
-        $data = Arr::only($form,['name','position','introduction']);
+        $data = Arr::only($form,['name','position','introduction','image_id']);
         $this->teachers->create($data);
         return $this->renderSuccess();
     }
@@ -66,7 +66,7 @@ class TeacherController extends Controller
         //
         $form  = $request->all();
         $teacher = $this->teachers->where('teacher_id',$id)->first();
-        $data = Arr::only($form,['name','position','introduction']);
+        $data = Arr::only($form,['name','position','introduction','image_id']);
         $teacher->update($data);
         return $this->renderSuccess();
     }

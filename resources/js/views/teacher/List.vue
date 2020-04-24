@@ -62,13 +62,25 @@
     <el-dialog v-model="isEdit" title="增加/编辑教师" :visible.sync="dialogFormVisible">
       <div v-loading="teacherCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="newTeacher" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item label="名称" prop="name">
+          <el-form-item label="名称:" prop="name">
             <el-input v-model="newTeacher.name" />
           </el-form-item>
-          <el-form-item label="职位" prop="position">
+          <el-form-item label="职位:" prop="position">
             <el-input v-model="newTeacher.position" />
           </el-form-item>
-          <el-form-item label="简介" prop="introduction">
+          <el-form-item label="图片:" prop="image_id">
+            <el-upload
+              class="avatar-uploader"
+              :show-file-list="false"
+              action="api/file/upload"
+              :on-success="handleSuccess"
+              :headers="myHeaders"
+            >
+              <img v-if="newTeacher.image_url" :src="newTeacher.image_url" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="简介:" prop="introduction">
             <el-input type="textarea" v-model="newTeacher.introduction"></el-input>
           </el-form-item>
         </el-form>
@@ -91,6 +103,7 @@ import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import { fetchList, updateTeacher, createTeacher, deleteTeacher } from '@/api/teacher';
+import {getToken} from "@/utils/auth";
 
 const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
@@ -116,9 +129,11 @@ export default {
       rules: {
         name: [{ required: true, message: '教师名称必须', trigger: 'blur' }],
         position: [{ required: true, message: '职位必填', trigger: 'blur' }],
+        image_id: [{ required: true, message: '图片', trigger: 'blur' }],
         introduction: [{ required: true, message: '教师简介', trigger: 'blur' }],
       },
       isEdit: false,
+      myHeaders: { Authorization: 'Bearer ' + getToken() },
     };
   },
   computed: {
@@ -225,8 +240,14 @@ export default {
       this.newTeacher = {
         name: '',
         position: '',
+        image_id:null,
+        image_url:'',
         introduction: '',
       };
+    },
+    handleSuccess(response, file, fileList){
+      this.newTeacher.image_id = response.file_id;
+      this.newTeacher.image_url = response.url;
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
@@ -261,5 +282,28 @@ export default {
     .clear-left {
       clear: left;
     }
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>

@@ -12,4 +12,9 @@ class Teacher extends Model
     protected $guarded = [];
     protected $primaryKey='teacher_id';
 
+
+    public function image()
+    {
+        return $this->belongsTo(File::class,'image_id');
+    }
 }
