@@ -121,7 +121,9 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
 import waves from '@/directive/waves';
-import {exportCourse} from "@/api/course";
+import axios from "axios";
+import {getToken} from "@/utils/auth";
+
 
 const courseResource = new Resource('courses');
 const categoryResource = new Resource('categories');
@@ -141,7 +143,8 @@ export default {
         keyword: '',
         category_id:''
       },
-      categories:[]
+      categories:[],
+      myHeaders: { Authorization: 'Bearer ' + getToken() },
     };
   },
   created() {
@@ -182,15 +185,41 @@ export default {
     },
     handleDownload() {
       this.downloading = true;
-      exportCourse().then(response => {
-        this.$message({
-          type: 'success',
-          message: '已导出',
-        });
-        this.downloading = false;
-      }).catch(error => {
-        console.log(error);
-      });
+
+        axios
+            .get("/api/courses/export", {
+                params: this.query,
+                headers:this.myHeaders,
+                responseType : "blob" // 1.首先设置responseType对象格式为 blob:
+            })
+            .then(
+                res => {
+                    //resolve(res)
+                    let blob = new Blob([res.data], {
+                        type: "application/vnd.ms-excel"
+                    }); // 2.获取请求返回的response对象中的blob 设置文件类型，这里以excel为例
+                    let url = window.URL.createObjectURL(blob); // 3.创建一个临时的url指向blob对象
+
+                    // 4.创建url之后可以模拟对此文件对象的一系列操作，例如：预览、下载
+                    let a = document.createElement("a");
+                    a.href = url;
+                    a.download = "课程.csv";
+                    a.click();
+                    // 5.释放这个临时的对象url
+                    window.URL.revokeObjectURL(url);
+                    this.$message({
+                        type: 'success',
+                        message: '已导出',
+                    });
+                    this.downloading = false;
+                },
+                err => {
+                    resolve(err.response);
+                }
+            )
+            .catch(error => {
+                reject(error);
+            });
     },
   },
 };

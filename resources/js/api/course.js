@@ -49,5 +49,6 @@ export function exportCourse() {
   return request({
     url: 'courses/export',
     method: 'get',
+    responseType: "blob"
   });
 }

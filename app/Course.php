@@ -58,7 +58,7 @@ class Course extends Model
 
     public function getTimesAttribute($value)
     {
-        return json_decode($value);
+        return json_decode($value,true);
     }
 
     public function setTimesAttribute($value)

@@ -28,17 +28,17 @@ class CourseController extends Controller
     }
 
 
+
     public function index(Request $request)
     {
         //
         $query = $this->courses->with(['category','image','teacher.image'])->newQuery();
-        if($keyword = $request->get('keyword')){
-            $query->where('title','like',"%{$keyword}%");
-        }
-        if($category_id = $request->get('category_id')){
-            $query->where('category_id','=',$category_id);
-        }
+        $wheres =$this->filter($request);
+        $query->when($wheres,function ($query)use($wheres){
+            $query->where($wheres);
+        });
         $paginate = $query->latest()->paginate($request->get('limit'));
+
         $data =[
             'total'=>$paginate->total(),
             'list'=>new CourseCollection($paginate)
@@ -88,16 +88,28 @@ class CourseController extends Controller
 
     public function export(Request $request)
     {
-
-        $cellData = [
-            ['学号','姓名','成绩'],
-            ['10001','AAAAA','99'],
-            ['10002','BBBBB','92'],
-            ['10003','CCCCC','95'],
-            ['10004','DDDDD','89'],
-            ['10005','EEEEE','96'],
-        ];
-        return $this->export_excel('demo.csv');
+        $tileArray=['课程ID','标题','分类名称','教师名称','报名人数','课程人数','地点'];
+        $query = $this->courses->with(['category','image','teacher.image'])->newQuery();
+        $wheres =$this->filter($request);
+        $query->when($wheres,function ($query)use($wheres){
+            $query->where($wheres);
+        });
+        $courseCol = $query->get();
+        $transform = $courseCol->transform(function ($course)
+        {
+            $category = $course->category;
+            $teacher = $course->teacher;
+            return [
+                'course_id' => (integer)$course->course_id,
+                'title'=>$course->title,
+                'category_name' => $category ? (string)$category->name : '',
+                'teacher_name' => $teacher ? (string)$teacher->name : '',
+                'attend_number' => (integer)$course->attend_number,
+                'number' => (integer)$course->number,
+                'address' => (string)$course->address,
+            ];
+        });
+        return $this->export_excel('kkk.csv',$tileArray,$transform->toArray());
     }
 
 
@@ -107,7 +119,7 @@ class CourseController extends Controller
      * @param array $tileArray
      * @param array $dataArray
      */
-    function export_excel($fileName, $tileArray = [], $dataArray = [])
+    protected function export_excel($fileName, $tileArray = [], $dataArray = [])
     {
         ini_set('memory_limit', '512M');
         ini_set('max_execution_time', 0);
@@ -131,5 +143,26 @@ class CourseController extends Controller
         ob_flush();
         flush();
         ob_end_clean();
+    }
+
+
+    protected function filter(Request $request)
+    {
+        $wheres =[];
+        if($keyword = $request->get('keyword')){
+            $this->filterTitleLike($keyword);
+        }
+        if($category_id = $request->get('category_id')){
+            $wheres[]=$this->filterCategoryId($category_id);
+        }
+        return $wheres;
+    }
+    protected function filterTitleLike($title)
+    {
+        return ['title','like',"%{$title}%"];
+    }
+    protected function filterCategoryId($id)
+    {
+        return ['category_id','=',$id];
     }
 }
