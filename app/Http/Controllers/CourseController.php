@@ -46,7 +46,7 @@ class CourseController extends Controller
     {
         //
         $form  = $request->all();
-        $data = Arr::only($form,['title','category_id','content','image_id','address','start_time','end_time','number']);
+        $data = Arr::only($form,['title','category_id','content','image_id','address','start_time','end_time','number','teacher_id']);
         $data['start_time'] = strtotime($data['start_time']);
         $data['end_time'] = strtotime($data['end_time']);
         $this->courses->create($data);
@@ -70,7 +70,7 @@ class CourseController extends Controller
         $course_id = Arr::pull($form,'course_id');
 
         $course = $this->courses->where('course_id',$course_id)->first();
-        $data = Arr::only($form,['title','content','image_id','address','start_time','end_time','number']);
+        $data = Arr::only($form,['title','content','image_id','address','start_time','end_time','number','teacher_id']);
         $data['start_time'] = strtotime($data['start_time']);
         $data['end_time'] = strtotime($data['end_time']);
         $course->update($data);
