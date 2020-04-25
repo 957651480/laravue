@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 export function fetchList(query) {
   return request({
-    url: 'courses',
+    url: 'courses/list',
     method: 'get',
     params: query,
   });
@@ -10,38 +10,32 @@ export function fetchList(query) {
 
 export function fetchCourse(id) {
   return request({
-    url: 'courses/' + id,
+    url: 'courses/detail/' + id,
     method: 'get',
   });
 }
 
-export function fetchPv(id) {
-  return request({
-    url: 'course/' + id + '/pageviews',
-    method: 'get',
-  });
-}
 
 export function createCourse(data) {
   return request({
-    url: 'courses',
+    url: 'courses/create',
     method: 'post',
     data,
   });
 }
 
-export function updateCourse(data) {
+export function updateCourse(id,data) {
   return request({
-    url: 'courses/update',
-    method: 'put',
+    url: 'courses/update/'+id,
+    method: 'post',
     data,
   });
 }
 
 export function deleteCourse(id) {
   return request({
-    url: 'courses/' + id,
-    method: 'delete',
+    url: 'courses/delete/' + id,
+    method: 'get',
   });
 }
 

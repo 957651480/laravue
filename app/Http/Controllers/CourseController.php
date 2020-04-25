@@ -23,7 +23,6 @@ class CourseController extends Controller
      */
     public function __construct(Course $courses)
     {
-        $this->middleware('auth:api')->only(['store','update','destroy','export']);
         $this->courses = $courses;
     }
 

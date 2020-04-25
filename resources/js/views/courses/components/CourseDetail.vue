@@ -121,7 +121,6 @@
 import Tinymce from '@/components/Tinymce';
 import Upload from '@/components/Upload/SingleImage';
 import { fetchCourse,createCourse,updateCourse } from '@/api/course';
-import { userSearch } from '@/api/search';
 const categoryResource = new Resource('categories');
 const teacherResource = new Resource('teachers');
 import {getToken} from "@/utils/auth";
@@ -247,7 +246,8 @@ export default {
         }
         this.loading = true;
         if(this.isEdit){
-          updateCourse(this.postForm).then(response => {
+          let course_id = this.postForm.course_id;
+          updateCourse(course_id,this.postForm).then(response => {
 
             this.$message({
               message:response.msg,
@@ -283,14 +283,6 @@ export default {
     async getRemoteTeacherList(){
         const { data } = await teacherResource.list({limit:100});
         this.teachers = data.list;
-    },
-    getRemoteUserList(query) {
-      userSearch(query).then(response => {
-        if (!response.data.items) {
-          return;
-        }
-        this.userListOptions = response.data.items.map(v => v.name);
-      });
     },
     //添加时间段
     addTime(){

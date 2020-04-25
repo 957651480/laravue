@@ -32,13 +32,21 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::post('file/upload', 'FileController@upload');
 
+    //课程路由
+    Route::post('courses/create', 'CourseController@store');
+    Route::post('courses/update/{id}', 'CourseController@update');
+    Route::get('courses/delete/{id}', 'CourseController@destroy');
+
     Route::apiResource('categories', 'CategoryController');
     Route::apiResource('teachers', 'TeacherController');
 
 });
+//课程路由
+Route::get('courses', 'CourseController@index');
+Route::get('courses/detail/{id}', 'CourseController@show');
 Route::get('courses/export', 'CourseController@export');
+
 Route::apiResource('attends', 'AttendController');
-Route::apiResource('courses', 'CourseController');
 Route::apiResource('banners', 'BannerController');
 
 // Fake APIs
