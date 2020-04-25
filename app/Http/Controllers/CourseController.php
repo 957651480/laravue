@@ -21,8 +21,11 @@ class CourseController extends Controller
      * CourseController constructor.
      * @param Course $courses
      */
-    public function __construct(Course $courses)
+    public function __construct(Course $courses,Request $request)
     {
+        if($mine = $request->get('mine')&&$request->getPathInfo()=='/api/courses'){
+            $this->middleware('auth:api');
+        }
         $this->courses = $courses;
     }
 
@@ -33,6 +36,13 @@ class CourseController extends Controller
         //
         $query = $this->courses->with(['category','image','teacher.image'])->newQuery();
         $wheres =$this->filter($request);
+        if($mine = $request->get('mine'))
+        {
+            $user_id = $request->user()->id;
+            $query->whereHas('attend',function ($query)use($user_id){
+                $query->where('user_id', '=', $user_id);
+            });
+        }
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
         });
