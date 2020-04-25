@@ -40,7 +40,7 @@ export function updateAttend(id,data) {
 
 export function deleteAttend(id) {
   return request({
-    url: 'attends/' + id,
-    method: 'delete',
+    url: 'attends/delete/' + id,
+    method: 'get',
   });
 }

@@ -10,21 +10,15 @@ export function fetchList(query) {
 
 export function fetchBanner(id) {
   return request({
-    url: 'banners/' + id,
+    url: 'banners/detail/' + id,
     method: 'get',
   });
 }
 
-export function fetchPv(id) {
-  return request({
-    url: 'banners/' + id + '/pageviews',
-    method: 'get',
-  });
-}
 
 export function createBanner(data) {
   return request({
-    url: 'banners',
+    url: 'banners/create',
     method: 'post',
     data,
   });
@@ -32,15 +26,15 @@ export function createBanner(data) {
 
 export function updateBanner(id,data) {
   return request({
-    url: 'banners/'+id,
-    method: 'put',
+    url: 'banners/update/'+id,
+    method: 'post',
     data,
   });
 }
 
 export function deleteBanner(id) {
   return request({
-    url: 'banners/' + id,
-    method: 'delete',
+    url: 'banners/delete/' + id,
+    method: 'get',
   });
 }

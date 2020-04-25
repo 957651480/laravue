@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Attend;
 use App\Course;
 use App\Http\Resources\AttendCollection;
+use Arr;
 use DB;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,6 @@ class AttendController extends Controller
      */
     public function __construct(Attend $attends)
     {
-        $this->middleware('auth:api')->only(['store','update','destroy']);
         $this->attends = $attends;
     }
 
@@ -50,38 +50,7 @@ class AttendController extends Controller
     public function store(Request $request)
     {
         //
-        $data = $request->validate([
-            'course_id'=>'required',
-        ],[
-            'course_id.required'=>'请填写要报名的课程'
-        ]);
-        DB::transaction(function () use($data,$request){
 
-            //判断课程人数是否已经满了
-            $courseWheres =[
-                ['course_id','=',$data['course_id']],
-                ['attend_number','<','number'],
-            ];
-            $course = Course::where($courseWheres)->sharedLock()->first();
-            throw_unless($course,\Exception::class,'该课程报名人数已满');
-
-            $user = $request->user();
-            //判断自己是否有报过该课程
-            $attendWheres =[
-                ['course_id','=',$data['course_id']],
-                ['user_id','=',$user->id],
-            ];
-            $attend = $this->attends->where($attendWheres)->sharedLock()->first();
-            throw_if($attend,\Exception::class,'你已经报名了该课程');
-            //报名
-
-            $this->attends->create([
-                'course_id'=>$data['course_id'],
-                'user_id'=>$user->id
-            ]);
-            $course->increment('attend_number');
-        }, 2);
-        return $this->renderSuccess('报名成功');
     }
 
     /**
@@ -114,5 +83,55 @@ class AttendController extends Controller
         $attend = $this->attends->where('attend_id',$id)->first();
         $attend->delete();
         return $this->renderSuccess();
+    }
+
+    public function join(Request $request,$id)
+    {
+
+        $post = $request->all();
+        $rules=[
+            'student_name'=>'required',
+            'grade'=>'required',
+            'class'=>'required',
+            'time_id'=>'required',
+        ];
+        $validator = \Validator::make($post,$rules,[
+            'student_name.required'=>'学生姓名必填',
+            'grade.required'=>'年级必填',
+            'class.required'=>'班级必填',
+            'time_id.required'=>'请选择时间段',
+        ]);
+        if($validator->fails()){
+            return $this->renderError($validator->messages()->first());
+        }
+        $data = Arr::only($post,array_keys($rules));
+        $user_id = $request->user()->id;
+        DB::transaction(function () use($id,$data,$user_id){
+
+            //判断课程人数是否已经满了
+            $courseWheres =[
+                ['course_id','=',$id],
+                ['attend_number','<','number'],
+            ];
+            $course = Course::where($courseWheres)->sharedLock()->first();
+            throw_unless($course,\Exception::class,'该课程报名人数已满');
+
+
+            //判断自己是否有报过该课程
+            $attendWheres =[
+                ['course_id','=',$id],
+                ['user_id','=',$user_id],
+            ];
+            $attend = $this->attends->where($attendWheres)->sharedLock()->first();
+            throw_if($attend,\Exception::class,'你已经报名了该课程');
+            //报名
+            $data = array_merge($data,[
+                'course_id'=>$id,
+                'user_id'=>$user_id
+            ]);
+            $this->attends->create($data);
+            $course->increment('attend_number');
+        }, 2);
+        return $this->renderSuccess('报名成功');
     }
 }

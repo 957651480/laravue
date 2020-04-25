@@ -304,12 +304,12 @@ export default {
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
-      const { data, meta } = await userResource.list(this.query);
-      this.list = data;
+      const { data } = await userResource.list(this.query);
+      this.list = data.list;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
-      this.total = meta.total;
+      this.total = data.total;
       this.loading = false;
     },
     handleFilter() {

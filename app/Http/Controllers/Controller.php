@@ -13,6 +13,7 @@ class Controller extends BaseController
 
     public function renderError($msg='成功',$data=[])
     {
+        empty($data)&&$data=new \stdClass();
         return response()->json([
             'code'=>0,
             'msg'=>$msg,
@@ -22,6 +23,7 @@ class Controller extends BaseController
 
     public function renderSuccess($msg='成功',$data=[])
     {
+        empty($data)&&$data=new \stdClass();
         return response()->json([
             'code'=>200,
             'msg'=>$msg,

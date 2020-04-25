@@ -15,6 +15,10 @@ class CreateAttendsTable extends Migration
     {
         Schema::create('attends', function (Blueprint $table) {
             $table->integerIncrements('attend_id')->comment('报名id');
+            $table->string('student_name')->default('')->comment('学生姓名');
+            $table->string('grade')->default('')->comment('年级');
+            $table->string('class')->default('')->comment('班级');
+            $table->integer('time_id')->default(0)->comment('时间段id');
             $table->integer('course_id')->comment('课程id');
             $table->integer('user_id')->comment('用户id');
             $table->softDeletes();

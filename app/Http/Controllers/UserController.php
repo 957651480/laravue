@@ -55,8 +55,12 @@ class UserController extends Controller
             $userQuery->where('nickName', 'LIKE', '%' . $keyword . '%');
             //$userQuery->where('email', 'LIKE', '%' . $keyword . '%');
         }
-
-        return UserResource::collection($userQuery->paginate($limit));
+        $paginator = $userQuery->paginate($limit);
+        $data =[
+            'total'=>$paginator->total(),
+            'list'=>UserResource::collection($paginator)
+        ];
+        return $this->renderSuccess('',$data);
     }
 
     /**
