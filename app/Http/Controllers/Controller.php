@@ -21,13 +21,13 @@ class Controller extends BaseController
         ]);
     }
 
-    public function renderSuccess($msg='成功',$data=[])
+    public function renderSuccess($msg='成功',$data=[],$header=[])
     {
         empty($data)&&$data=new \stdClass();
         return response()->json([
             'code'=>200,
             'msg'=>$msg,
             'data'=>$data
-        ]);
+        ])->withHeaders($header);
     }
 }

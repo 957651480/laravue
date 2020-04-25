@@ -37,7 +37,7 @@ class AuthController extends Controller
         $user = $request->user();
         $token = $user->createToken('api');
         $user->token = $token->plainTextToken;
-        return response()->json(new UserResource($user), Response::HTTP_OK)->header('Authorization', $token->plainTextToken);
+        return $this->renderSuccess('',new UserResource($user),['Authorization', $token->plainTextToken]);
     }
 
     public function logout(Request $request)
@@ -54,6 +54,18 @@ class AuthController extends Controller
     public function wxLogin(Request $request)
     {
         $form = $request->all();
+        $rules=[
+            'code'=>'required',
+            'user_info'=>'required',
+        ];
+        $validator = \Validator::make($form,$rules,[
+            'code.required'=>'授权码必须',
+            'user_info'=>'用户信息必须',
+        ]);
+        if($validator->fails()){
+            return $this->renderError($validator->messages()->first());
+        }
+
         $code = Arr::get($form,'code');
         $wechat = config('wechat');
         $session = $this->sessionKey($code,$wechat['app_id'],$wechat['secret']);
@@ -72,7 +84,6 @@ class AuthController extends Controller
         {
             $user = new User();
             $user->open_id = $openid;
-            $user->name = $userData['nickName'];
             $user->nickName = $userData['nickName'];
             $user->avatarUrl = $userData['avatarUrl'];
             $user->save();
@@ -82,8 +93,7 @@ class AuthController extends Controller
         $user = $request->user();
         $token = $user->createToken('api');
         $user->token = $token->plainTextToken;
-        return response()->json(new UserResource($user), Response::HTTP_OK)->header('Authorization', $token->plainTextToken);
-
+        return $this->renderSuccess('',new UserResource($user));
     }
 
 
