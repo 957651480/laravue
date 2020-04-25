@@ -36,12 +36,16 @@ class FileController extends Controller
         //定义文件名
         $format = sprintf("%s%s",date('Y-m-d-h-i-s'),$uploadFile->getClientOriginalName());
         $filename = md5($format).'.'.$ext;
-        Storage::disk('uploads')->put($filename, file_get_contents($path));
+        $dir = sprintf("%s/%s/",$ext,date('Y/m'));
+        if(!Storage::disk('uploads')->exists($dir)){
+            Storage::disk('uploads')->makeDirectory($dir);
+        }
+        Storage::disk('uploads')->put($dir.$filename, file_get_contents($path));
         /**
          * @var File $file
          */
         $file = $this->files->create([
-                'filename'=>$filename,
+                'filename'=>$dir.$filename,
                 'source_filename'=>$uploadFile->getClientOriginalName(),
                 'extension'=>$uploadFile->getClientOriginalExtension(),
                 'mime_type'=>$uploadFile->getClientMimeType(),
