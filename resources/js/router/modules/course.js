@@ -5,7 +5,7 @@ const courseRoutes = {
   path: '/course',
   component: Layout,
   redirect: '/course/list',
-  name: 'Example',
+  name: 'Course',
   meta: {
     title: '课程管理',
     icon: 'example',

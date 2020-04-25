@@ -5,7 +5,7 @@ const categoryRoutes = {
   path: '/category',
   component: Layout,
   redirect: '/category/list',
-  name: 'Example',
+  name: 'Category',
   meta: {
     title: '分类管理',
     icon: 'example',
