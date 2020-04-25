@@ -19,12 +19,12 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'nickName' => $this->nickName,
             'email' => $this->email,
-            'roles' => [array_map(
+            'roles' => array_map(
                 function ($role) {
                     return $role['name'];
                 },
                 $this->roles->toArray()
-            )],
+            ),
             'permissions' => array_map(
                 function ($permission) {
                     return $permission['name'];
