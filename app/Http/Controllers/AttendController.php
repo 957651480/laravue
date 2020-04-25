@@ -80,7 +80,7 @@ class AttendController extends Controller
     public function destroy($id)
     {
         //
-        $attend = $this->attends->where('attend_id',$id)->first();
+        $attend = $this->attends->where('attend_id',$id)->firstOrFail();
         $attend->delete();
         return $this->renderSuccess();
     }

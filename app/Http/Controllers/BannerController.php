@@ -63,7 +63,7 @@ class BannerController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $banner = $this->banners->where('banner_id',$id)->first();
+        $banner = $this->banners->where('banner_id',$id)->firstOrFail();
         $form  = $request->all();
         $data =Arr::only($form,['title','image_id','show','sort']);
         $banner->update($data);
@@ -74,7 +74,7 @@ class BannerController extends Controller
     public function destroy($id)
     {
         //
-        $banner = $this->banners->where('banner_id',$id)->first();
+        $banner = $this->banners->where('banner_id',$id)->firstOrFail();
         $banner->delete();
         return $this->renderSuccess();
     }

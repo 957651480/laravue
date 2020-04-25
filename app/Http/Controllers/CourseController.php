@@ -23,9 +23,6 @@ class CourseController extends Controller
      */
     public function __construct(Course $courses,Request $request)
     {
-        if($mine = $request->get('mine')&&$request->getPathInfo()=='/api/courses'){
-            $this->middleware('auth:api');
-        }
         $this->courses = $courses;
     }
 
@@ -36,13 +33,6 @@ class CourseController extends Controller
         //
         $query = $this->courses->with(['category','image','teacher.image'])->newQuery();
         $wheres =$this->filter($request);
-        if($mine = $request->get('mine'))
-        {
-            $user_id = $request->user()->id;
-            $query->whereHas('attend',function ($query)use($user_id){
-                $query->where('user_id', '=', $user_id);
-            });
-        }
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
         });
@@ -68,7 +58,7 @@ class CourseController extends Controller
     public function show($id)
     {
         //
-        $course = $this->courses->with(['category','image','teacher.image'])->where('course_id',$id)->first();
+        $course = $this->courses->with(['category','image','teacher.image'])->where('course_id',$id)->firstOrFail();
         $course = new \App\Http\Resources\Course($course);
         return $this->renderSuccess('',$course);
     }
@@ -80,7 +70,7 @@ class CourseController extends Controller
         $form  = $request->all();
         $course_id = Arr::pull($form,'course_id');
 
-        $course = $this->courses->where('course_id',$course_id)->first();
+        $course = $this->courses->where('course_id',$course_id)->firstOrFail();
         $data = Arr::only($form,['title','content','image_id','address','times','number','teacher_id']);
         $course->update($data);
         return $this->renderSuccess();
@@ -90,9 +80,42 @@ class CourseController extends Controller
     public function destroy($id)
     {
         //
-        $course = $this->courses->where('course_id',$id)->first();
+        $course = $this->courses->where('course_id',$id)->firstOrFail();
         $course->delete();
         return $this->renderSuccess();
+    }
+
+    public function myCourseList(Request $request)
+    {
+        $query = $this->courses->with(['category','image','teacher.image','attend'])->newQuery();
+        $wheres =$this->filter($request);
+        $user_id = $request->user()->id;
+        $query->whereHas('attend',function ($query)use($user_id){
+            $query->where('user_id', '=', $user_id);
+        });
+        $query->when($wheres,function ($query)use($wheres){
+            $query->where($wheres);
+        });
+        $paginate = $query->latest()->paginate($request->get('limit'));
+
+        $data =[
+            'total'=>$paginate->total(),
+            'list'=>new CourseCollection($paginate)
+        ];
+        return $this->renderSuccess('',$data);
+    }
+
+    public function myCourseDetail(Request $request,$id)
+    {
+        $user_id = $request->user()->id;
+        $query = $this->courses->with(['category','image','teacher.image','attend']);
+        $query->whereHas('attend',function ($query)use($user_id){
+            $query->where('user_id', '=', $user_id);
+        });
+        $course = $query->where('course_id',$id)->firstOrFail();
+
+        $course = new \App\Http\Resources\Course($course);
+        return $this->renderSuccess('',$course);
     }
 
     public function export(Request $request)

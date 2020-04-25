@@ -37,6 +37,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('courses/update/{id}', 'CourseController@update');
     Route::get('courses/delete/{id}', 'CourseController@destroy');
     Route::get('courses/export', 'CourseController@export');
+    //我报名的课程
+    Route::get('courses/mine', 'CourseController@myCourseList');
+    Route::get('courses/mine/detail/{id}', 'CourseController@myCourseDetail');
 
     Route::apiResource('categories', 'CategoryController');
     Route::apiResource('teachers', 'TeacherController');

@@ -14,7 +14,7 @@ const teacherRoutes = {
     {
       path: 'list',
       component: () => import('@/views/teacher/List'),
-      name: 'CategoryList',
+      name: 'TeacherList',
       meta: { title: '教师列表', icon: 'list' },
     },
   ],

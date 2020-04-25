@@ -65,7 +65,7 @@ class TeacherController extends Controller
     {
         //
         $form  = $request->all();
-        $teacher = $this->teachers->where('teacher_id',$id)->first();
+        $teacher = $this->teachers->where('teacher_id',$id)->firstOrFail();
         $data = Arr::only($form,['name','position','introduction','image_id']);
         $teacher->update($data);
         return $this->renderSuccess();
@@ -75,7 +75,7 @@ class TeacherController extends Controller
     public function destroy($id)
     {
         //
-        $teacher = $this->teachers->where('teacher_id',$id)->first();
+        $teacher = $this->teachers->where('teacher_id',$id)->firstOrFail();
         $teacher->delete();
         return $this->renderSuccess();
     }

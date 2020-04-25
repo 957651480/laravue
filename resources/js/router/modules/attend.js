@@ -14,7 +14,7 @@ const attendRoutes = {
     {
       path: 'list',
       component: () => import('@/views/attend/List'),
-      name: 'CategoryList',
+      name: 'AttendList',
       meta: { title: '报名列表', icon: 'list' },
     },
   ],

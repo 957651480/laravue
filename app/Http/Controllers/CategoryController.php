@@ -76,7 +76,7 @@ class CategoryController extends Controller
     {
         //
         $form  = $request->all();
-        $category = $this->categories->where('category_id',$id)->first();
+        $category = $this->categories->where('category_id',$id)->firstOrFail();
         $data = Arr::only($form,['name','sort']);
         $category->update($data);
         return $this->renderSuccess();
@@ -86,7 +86,7 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         //
-        $category = $this->categories->where('category_id',$id)->first();
+        $category = $this->categories->where('category_id',$id)->firstOrFail();
         $category->delete();
         return $this->renderSuccess();
     }
