@@ -23,11 +23,11 @@
         </template>
       </el-table-column>
 
-      <!--<el-table-column align="center" label="用户名">
+      <el-table-column align="center" label="用户名">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
 
       <el-table-column align="center" label="微信昵称">
         <template slot-scope="scope">
@@ -72,7 +72,7 @@
 
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
-          <router-link v-if="!scope.row.roles.includes('admin')" :to="'/administrator/users/edit/'+scope.row.id">
+          <router-link  :to="'/administrator/users/edit/'+scope.row.id">
             <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit">
               详情
             </el-button>
@@ -187,7 +187,6 @@ export default {
         limit: 15,
         keyword: '',
         role: '',
-        has_open_id:1
       },
       roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
       nonAdminRoles: ['editor', 'user', 'visitor'],

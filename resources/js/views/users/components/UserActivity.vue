@@ -3,22 +3,34 @@
     <el-tabs v-model="activeActivity" @tab-click="handleClick">
       <el-tab-pane v-loading="updating" label="用户信息" name="first">
         <el-form-item label="用户名">
-          <el-input v-model="user.name" :disabled="true" />
+          <el-input v-model="user.name" />
+        </el-form-item>
+        <el-form-item label="密码:">
+          <el-input v-model="user.password"  name="password"/>
+        </el-form-item>
+        <el-form-item label="头像:">
+          <el-upload
+            class="avatar-uploader"
+            :show-file-list="false"
+            action="api/file/upload"
+            :on-success="handleSuccess"
+            :headers="myHeaders"
+          >
+            <img v-if="user.avatar" :src="user.avatar" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon">上传头像</i>
+          </el-upload>
         </el-form-item>
         <el-form-item label="微信昵称">
-          <el-input v-model="user.nickName" :disabled="true" />
+          <el-input v-model="user.nickName"  />
         </el-form-item>
         <el-form-item label="微信OPENID">
-          <el-input v-model="user.open_id" :disabled="true" />
+          <el-input v-model="user.open_id" />
         </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="user.email" :disabled="true" />
-        </el-form-item>
-        <!--<el-form-item>
+       <el-form-item>
           <el-button type="primary" :disabled="user.role === 'admin'" @click="onSubmit">
-            Update
+            更新
           </el-button>
-        </el-form-item>-->
+        </el-form-item>
       </el-tab-pane>
     </el-tabs>
   </el-card>
@@ -26,6 +38,7 @@
 
 <script>
 import Resource from '@/api/resource';
+import {getToken} from "@/utils/auth";
 const userResource = new Resource('users');
 
 export default {
@@ -35,6 +48,7 @@ export default {
       default: () => {
         return {
           name: '',
+          password:'',
           nickName: '',
           open_id: '',
           avatar: '',
@@ -50,12 +64,16 @@ export default {
         'https://cdn.laravue.dev/photo1.png',
       ],
       updating: false,
+      myHeaders: { Authorization: 'Bearer ' + getToken() },
     };
   },
   methods: {
     handleClick(tab, event) {
       console.log('Switching tab ', tab, event);
     },
+      handleSuccess(response, file, fileList){
+          this.user.avatar = response.url;
+      },
     onSubmit() {
       this.updating = true;
       userResource
@@ -146,6 +164,30 @@ export default {
 
   .el-carousel__item:nth-child(2n+1) {
     background-color: #d3dce6;
+  }
+  /*上传图片样式*/
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 }
 </style>

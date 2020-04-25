@@ -48,9 +48,6 @@ class UserController extends Controller
         if (!empty($role)) {
             $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
         }
-        if($has_open_id){
-            $userQuery->where('open_id','!=','');
-        }
         if (!empty($keyword)) {
             $userQuery->where('nickName', 'LIKE', '%' . $keyword . '%');
             //$userQuery->where('email', 'LIKE', '%' . $keyword . '%');
@@ -121,30 +118,37 @@ class UserController extends Controller
         if ($user === null) {
             return response()->json(['error' => 'User not found'], 404);
         }
-        if ($user->isAdmin()) {
+        /*if ($user->isAdmin()) {
             return response()->json(['error' => 'Admin can not be modified'], 403);
-        }
+        }*/
 
         $currentUser = Auth::user();
-        if (!$currentUser->isAdmin()
+        /*if (!$currentUser->isAdmin()
             && $currentUser->id !== $user->id
             && !$currentUser->hasPermission(\App\Laravue\Acl::PERMISSION_USER_MANAGE)
         ) {
             return response()->json(['error' => 'Permission denied'], 403);
-        }
+        }*/
 
         $validator = Validator::make($request->all(), $this->getValidationRules(false));
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 403);
         } else {
-            $email = $request->get('email');
+            /*$email = $request->get('email');
             $found = User::where('email', $email)->first();
             if ($found && $found->id !== $user->id) {
                 return response()->json(['error' => 'Email has been taken'], 403);
+            }*/
+            $form = $request->only(['name','nickName','open_id']);
+            if($password = $request->get('password')){
+                $form['password'] =Hash::make($password);
             }
-
-            $user->name = $request->get('name');
-            $user->email = $email;
+            $form['avatarUrl']=$request->get('avatar');
+            if($form = array_filter($form)){
+                foreach ($form as $key => $value) {
+                    $user->$key=$value;
+                }
+            }
             $user->save();
             return new UserResource($user);
         }
