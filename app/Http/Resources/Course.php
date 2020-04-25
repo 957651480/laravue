@@ -25,6 +25,7 @@ class Course extends JsonResource
             'category_name' => $category ? (string)$category->name : '',
             'teacher_id' => (integer)$this->teacher_id,
             'teacher_name' => $teacher ? (string)$teacher->name : '',
+            'teacher_position' => $teacher ? (array)$teacher->position : '',
             'teacher_image_url' => $teacher ? $teacher->image->url : '',
             'times' => $this->times,
             'attend_number' => (integer)$this->attend_number,

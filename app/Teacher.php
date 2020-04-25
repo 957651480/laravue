@@ -17,4 +17,14 @@ class Teacher extends Model
     {
         return $this->belongsTo(File::class,'image_id');
     }
+
+    public function getPositionAttribute($value)
+    {
+        return json_decode($value,true);
+    }
+
+    public function setPositionAttribute($value)
+    {
+        $this->attributes['position'] = json_encode($value,true);
+    }
 }

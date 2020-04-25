@@ -25,7 +25,7 @@
 
       <el-table-column align="center" label="教师职位">
         <template slot-scope="scope">
-          <span>{{ scope.row.position }}</span>
+          <span>{{ scope.row.position.join(',') }}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" label="教师图片">
@@ -74,8 +74,27 @@
           <el-form-item label="教师名称:" prop="name">
             <el-input v-model="newTeacher.name" />
           </el-form-item>
-          <el-form-item label="教师职位:" prop="position">
-            <el-input v-model="newTeacher.position" />
+          <el-form-item label="职位:" prop="position">
+            <el-tag
+              :key="tag"
+              v-for="tag in newTeacher.position"
+              closable
+              :disable-transitions="false"
+              @close="handleTagClose(tag)">
+              {{tag}}
+            </el-tag>
+            <el-input
+              class="input-new-tag"
+              v-if="inputVisible"
+              v-model="inputValue"
+              ref="saveTagInput"
+              size="small"
+              @keyup.enter.native="handleInputConfirm"
+              @blur="handleInputConfirm"
+            >
+            </el-input>
+            <el-button v-else class="button-new-tag" size="small" @click="showInput">添加</el-button>
+            <span>填写后按回车</span>
           </el-form-item>
           <el-form-item label="教师图片:" prop="image_id">
             <el-upload
@@ -143,6 +162,8 @@ export default {
       },
       isEdit: false,
       myHeaders: { Authorization: 'Bearer ' + getToken() },
+      inputVisible: false,
+      inputValue: ''
     };
   },
   computed: {
@@ -248,7 +269,7 @@ export default {
     resetNewTeacher() {
       this.newTeacher = {
         name: '',
-        position: '',
+        position: [],
         image_id:null,
         image_url:'',
         introduction: '',
@@ -261,6 +282,26 @@ export default {
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
     },
+      handleTagClose(tag) {
+          this.newTeacher.position.splice(this.newTeacher.position.indexOf(tag), 1);
+          return false;
+      },
+
+      showInput() {
+          this.inputVisible = true;
+          this.$nextTick(() => {
+              this.$refs.saveTagInput.$refs.input.focus();
+          });
+      },
+
+      handleInputConfirm() {
+          let inputValue = this.inputValue;
+          if (inputValue) {
+              this.newTeacher.position.push(inputValue);
+          }
+          this.inputVisible = false;
+          this.inputValue = '';
+      }
   },
 };
 </script>
@@ -292,6 +333,7 @@ export default {
       clear: left;
     }
   }
+  /*上传图片样式*/
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -314,5 +356,21 @@ export default {
     width: 178px;
     height: 178px;
     display: block;
+  }
+  /*标签样式*/
+  .el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
   }
 </style>

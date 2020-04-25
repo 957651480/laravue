@@ -18,7 +18,7 @@ class Teacher extends JsonResource
         return [
             'teacher_id'=>(integer)$this->teacher_id,
             'name'=>(string)$this->name,
-            'position'=>(string)$this->position,
+            'position'=>(array)$this->position,
             'image_id'=>(integer)$this->image_id,
             'image_url'=>(string)$image->url??'',
             'introduction'=>(string)$this->introduction,
