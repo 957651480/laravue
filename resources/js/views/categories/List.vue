@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
@@ -25,7 +25,11 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column align="center" label="排序">
+        <template slot-scope="scope">
+          <span>{{ scope.row.sort }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
@@ -51,18 +55,22 @@
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
 
     <el-dialog v-model="isEdit" title="增加/编辑分类" :visible.sync="dialogFormVisible">
-      <div v-loading="userCreating" class="form-container">
-        <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
+      <div v-loading="categoryCreating" class="form-container">
+        <el-form ref="categoryForm" :rules="rules" :model="newCategory" label-position="left" label-width="150px" style="max-width: 500px;">
 
           <el-form-item label="分类名称" prop="name">
-            <el-input v-model="newUser.name" />
+            <el-input v-model="newCategory.name" />
+          </el-form-item>
+          <el-form-item label="排序:" prop="sort">
+            <el-input-number v-model="newCategory.sort"></el-input-number>
+            <span>排序越大越靠前</span>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false;isEdit=false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createUser()">
+          <el-button type="primary" @click="createCategory()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -73,59 +81,35 @@
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import UserResource from '@/api/user';
-import Resource from '@/api/resource';
-import waves from '@/directive/waves'; // Waves directive
-import permission from '@/directive/permission'; // Permission directive
 import { fetchList, updateCategory, createCategory, deleteCategory } from '@/api/category';
 
-const userResource = new UserResource();
-const permissionResource = new Resource('permissions');
-
 export default {
-  name: 'UserList',
+  name: 'CategoryList',
   components: { Pagination },
-  directives: { waves, permission },
   data() {
     return {
       list: null,
       total: 0,
       loading: true,
       downloading: false,
-      userCreating: false,
+      categoryCreating: false,
       query: {
         page: 1,
         limit: 15,
         keyword: '',
       },
-      roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
-      nonAdminRoles: ['editor', 'user', 'visitor'],
-      newUser: {},
+      newCategory: {},
       dialogFormVisible: false,
-      currentUserId: 0,
-      currentUser: {
-        name: '',
-        permissions: [],
-        rolePermissions: [],
-      },
       rules: {
         name: [{ required: true, message: '分类名称必须', trigger: 'blur' }],
       },
-      permissionProps: {
-        children: 'children',
-        label: 'name',
-        disabled: 'disabled',
-      },
-      permissions: [],
-      menuPermissions: [],
-      otherPermissions: [],
       isEdit: false,
     };
   },
   computed: {
   },
   created() {
-    this.resetNewUser();
+    this.resetCategory();
     this.getList();
   },
   methods: {
@@ -145,14 +129,14 @@ export default {
       this.getList();
     },
     handleCreate() {
-      this.resetNewUser();
+      this.resetCategory();
       this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['userForm'].clearValidate();
+        this.$refs['categoryForm'].clearValidate();
       });
     },
     handleEdit(data){
-      this.newUser = data;
+      this.newCategory = data;
       this.isEdit = true;
       this.dialogFormVisible = true;
     },
@@ -174,20 +158,21 @@ export default {
       }).catch(() => {
       });
     },
-    createUser() {
-      this.$refs['userForm'].validate((valid) => {
+    createCategory() {
+      this.$refs['categoryForm'].validate((valid) => {
         if (valid) {
-          this.newUser.roles = [this.newUser.role];
-          this.userCreating = true;
+          this.newCategory.roles = [this.newCategory.role];
+          this.categoryCreating = true;
           if (this.isEdit){
-            updateCategory(this.newUser)
+              let  category_id = this.newCategory.category_id;
+            updateCategory(category_id,this.newCategory)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetNewUser();
+                this.resetCategory();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -195,17 +180,17 @@ export default {
                 console.log(error);
               })
               .finally(() => {
-                this.userCreating = false;
+                this.categoryCreating = false;
               });
           } else {
-            createCategory(this.newUser)
+            createCategory(this.newCategory)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetNewUser();
+                this.resetCategory();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -213,7 +198,7 @@ export default {
                 console.log(error);
               })
               .finally(() => {
-                this.userCreating = false;
+                this.categoryCreating = false;
               });
           }
         } else {
@@ -222,28 +207,12 @@ export default {
         }
       });
     },
-    resetNewUser() {
-      this.newUser = {
+    resetCategory() {
+      this.newCategory = {
+        category_id:null,
         name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        role: 'user',
+        sort: 10,
       };
-    },
-    handleDownload() {
-      this.downloading = true;
-        import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['id', 'user_id', 'name', 'email', 'role'];
-          const filterVal = ['index', 'id', 'name', 'email', 'role'];
-          const data = this.formatJson(filterVal, this.list);
-          excel.export_json_to_excel({
-            header: tHeader,
-            data,
-            filename: 'user-list',
-          });
-          this.downloading = false;
-        });
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));

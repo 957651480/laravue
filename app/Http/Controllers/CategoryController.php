@@ -34,7 +34,7 @@ class CategoryController extends Controller
         if($keyword = $request->get('keyword')){
             $query->where('name','like',"%{$keyword}%");
         }
-        $paginate = $query->latest()->paginate($request->get('limit'));
+        $paginate = $query->latest()->orderBy('sort','desc')->paginate($request->get('limit'));
         $data =[
             'total'=>$paginate->total(),
             'list'=>new CategoryCollection($paginate)
@@ -48,7 +48,7 @@ class CategoryController extends Controller
     {
         //
         $form  = $request->all();
-        $data = Arr::only($form,['name']);
+        $data = Arr::only($form,['name','sort']);
         $this->categories->create($data);
         return $this->renderSuccess();
     }
@@ -76,10 +76,8 @@ class CategoryController extends Controller
     {
         //
         $form  = $request->all();
-        $category_id = Arr::pull($form,'category_id');
-
-        $category = $this->categories->where('category_id',$category_id)->first();
-        $data = Arr::only($form,['name',]);
+        $category = $this->categories->where('category_id',$id)->first();
+        $data = Arr::only($form,['name','sort']);
         $category->update($data);
         return $this->renderSuccess();
     }

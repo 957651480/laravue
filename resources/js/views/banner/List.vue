@@ -83,6 +83,7 @@
           </el-form-item>
           <el-form-item label="排序:" prop="sort">
             <el-input-number v-model="newBanner.sort"></el-input-number>
+            <span>排序越大越靠前</span>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">

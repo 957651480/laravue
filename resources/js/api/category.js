@@ -30,9 +30,9 @@ export function createCategory(data) {
   });
 }
 
-export function updateCategory(data) {
+export function updateCategory(id,data) {
   return request({
-    url: 'categories/update',
+    url: 'categories/'+id,
     method: 'put',
     data,
   });
