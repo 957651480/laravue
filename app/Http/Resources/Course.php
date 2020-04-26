@@ -19,6 +19,7 @@ class Course extends JsonResource
         return [
             'course_id' => (integer)$this->course_id,
             'title' => (string)$this->title,
+            'desc' => (string)$this->desc,
             'image_id' => (integer)$this->image_id,
             'image_url' => (string)$this->image ? $this->image->url : '',
             'category_id' => (integer)$this->category_id,

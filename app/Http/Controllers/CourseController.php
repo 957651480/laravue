@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Course;
 use App\Http\Resources\CourseCollection;
-use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CourseController extends Controller
 {
@@ -49,7 +46,7 @@ class CourseController extends Controller
     {
         //
         $form  = $request->all();
-        $data = Arr::only($form,['title','category_id','content','image_id','address','times','number','teacher_id']);
+        $data = Arr::only($form,['title','desc','category_id','content','image_id','address','times','number','teacher_id']);
         $this->courses->create($data);
         return $this->renderSuccess();
     }
@@ -71,7 +68,7 @@ class CourseController extends Controller
         $course_id = Arr::pull($form,'course_id');
 
         $course = $this->courses->where('course_id',$course_id)->firstOrFail();
-        $data = Arr::only($form,['title','content','image_id','address','times','number','teacher_id']);
+        $data = Arr::only($form,['title','desc','content','image_id','address','times','number','teacher_id']);
         $course->update($data);
         return $this->renderSuccess();
     }

@@ -16,6 +16,7 @@ class CreateCoursesTable extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->integerIncrements('course_id')->comment('课程id');
             $table->string('title')->default('')->comment('标题');
+            $table->string('desc')->default('')->comment('简介');
             $table->longText('content')->comment('详细介绍');
             $table->integer('image_id')->default(0)->comment('文件id');
             $table->string('times')->default('[]')->comment('时间段');

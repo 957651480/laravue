@@ -13,6 +13,16 @@
             placeholder="请输入标题"
           />
         </el-form-item>
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="简介:" prop="desc">
+          <el-input
+            v-model="postForm.desc"
+            :rows="1"
+            type="textarea"
+            class="article-textarea"
+            autosize
+            placeholder="简介"
+          />
+        </el-form-item>
         <el-row>
           <el-col :span="10">
 
@@ -129,6 +139,7 @@ import Resource from "@/api/resource";
 const defaultForm = {
   course_id: undefined,
   title: '',
+  desc: '',
   content: '',
   address: '',
   //image_url: '',
@@ -157,6 +168,7 @@ export default {
       loading: false,
       rules: {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
+        desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
         category_id: [{ required: true, message: '请选择分类', trigger: 'blur' }],
         teacher_id: [{ required: true, message: '请选择教师', trigger: 'blur' }],
         //image_id: [{ required: true, message: '请选择上传图片', trigger: 'blur' }],

@@ -3,8 +3,10 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -52,12 +54,42 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-
-        return response()->json([
-            'code' => $exception->getCode(),
-            'msg' => $exception->getMessage(),
-            'data' => new \stdClass()
-        ]);
         return parent::render($request, $exception);
     }
+
+
+    /**
+     * Convert an authentication exception into a response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Auth\AuthenticationException  $exception
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        return $request->expectsJson()
+            ? response()->json([
+                'code'=>$exception->getCode(),
+                'msg' => $exception->getMessage(),
+                'data' => new \stdClass(),
+            ], 401)
+            : redirect()->guest($exception->redirectTo() ?? route('login'));
+    }
+
+    /**
+     * Convert a validation exception into a JSON response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Validation\ValidationException  $exception
+     * @return \Illuminate\Http\JsonResponse
+     */
+        protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json([
+            'code'=>$exception->getCode(),
+            'msg' => $exception->getMessage(),
+            'data' => new \stdClass(),
+        ], $exception->status);
+    }
+
 }
