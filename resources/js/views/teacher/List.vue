@@ -98,7 +98,7 @@
           </el-form-item>
           <el-form-item label="教师图片:" prop="images">
 
-           <multiple-image :fileList="newTeacher.images"></multiple-image>
+           <multiple-image :fileList="newTeacher.images" @changFiles="changFiles"></multiple-image>
           </el-form-item>
           <el-form-item label="简介:" prop="introduction">
             <el-input type="textarea" v-model="newTeacher.introduction"></el-input>
@@ -292,6 +292,9 @@ export default {
           }
           this.inputVisible = false;
           this.inputValue = '';
+      },
+      changFiles(fileList){
+        this.newTeacher.images= fileList;
       }
   },
 };

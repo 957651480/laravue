@@ -35,7 +35,8 @@ export default {
   },
   methods: {
     handleRemove(file, fileList) {
-
+      this.fileList=fileList;
+        this.$emit('changFiles',this.fileList);
     },
       handleSuccess(response, file, fileList){
         debugger
@@ -46,7 +47,7 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     }
-  }
+  },
 };
 </script>
 
