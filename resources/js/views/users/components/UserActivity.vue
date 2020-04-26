@@ -1,5 +1,5 @@
 <template>
-  <el-card v-if="user.name">
+  <el-card >
     <el-tabs v-model="activeActivity" @tab-click="handleClick">
       <el-tab-pane v-loading="updating" label="用户信息" name="first">
         <el-form-item label="用户名">
