@@ -148,6 +148,7 @@ class AttendController extends Controller
                 'class'=>$attend->class,
                 'student_name'=>$attend->student_name,
                 'course_title'=>$attend->course->title,
+                'course_date'=>$course->date,
                 'course_times'=>$times,
                 'course_address'=>$attend->course->address,
             ];
