@@ -135,24 +135,20 @@ class AttendController extends Controller
             return $attendWheres;
         }, 2);
         $attend = $this->attends->with('course')->where($attendWheres)->first();
-        $data = [];
-        tap($attend,function ($attend)use(&$data){
-            $course = $attend->course;
-            $time_id = $attend->time_id;
-            $times = tap($course->times,function ($times)use($time_id){
-                return Arr::only($times,$time_id);
-            });
-             $data =[
+        $course = $attend->course;
+        $times = Arr::only($course->times,$attend->time_id);
+        $date = date_create($course->date);
+        $date = date_format($date, 'm-d');
+        $data =[
 
-                'grade'=>$attend->grade,
-                'class'=>$attend->class,
-                'student_name'=>$attend->student_name,
-                'course_title'=>$attend->course->title,
-                'course_date'=>$course->date,
-                'course_times'=>$times,
-                'course_address'=>$attend->course->address,
-            ];
-        });
+            'grade'=>$attend->grade,
+            'class'=>$attend->class,
+            'student_name'=>$attend->student_name,
+            'course_title'=>$attend->course->title,
+            'course_date'=>$date,
+            'course_times'=>$times,
+            'course_address'=>$attend->course->address,
+        ];
         return $this->renderSuccess('报名成功',$data);
     }
 }
