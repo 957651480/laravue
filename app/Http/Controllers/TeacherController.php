@@ -27,7 +27,7 @@ class TeacherController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->teachers->newQuery();
+        $query = $this->teachers->with(['images.file'])->newQuery();
         if($keyword = $request->get('keyword')){
             $query->where('name','like',"%{$keyword}%");
         }
@@ -44,8 +44,14 @@ class TeacherController extends Controller
     {
         //
         $form  = $request->all();
-        $data = Arr::only($form,['name','position','introduction','image_id']);
-        $this->teachers->create($data);
+        $data = Arr::only($form,['name','position','introduction']);
+        $teacher = $this->teachers->create($data);
+        if($images = Arr::get($form,'images')){
+            $images_key_ids = array_map(function ($item){
+                return Arr::only($item,'file_id');
+            },$images);
+            $teacher->images()->createMany($images_key_ids);
+        }
         return $this->renderSuccess();
     }
 
@@ -65,9 +71,18 @@ class TeacherController extends Controller
     {
         //
         $form  = $request->all();
-        $teacher = $this->teachers->where('teacher_id',$id)->firstOrFail();
-        $data = Arr::only($form,['name','position','introduction','image_id']);
+        $teacher = $this->teachers->with(['images.file'])->where('teacher_id',$id)->firstOrFail();
+        $data = Arr::only($form,['name','position','introduction']);
         $teacher->update($data);
+        if($images = Arr::get($form,'images')){
+            foreach ($teacher->images as $index => $image) {
+                $image->delete();
+            }
+            $images_key_ids = array_map(function ($item){
+                return Arr::only($item,'file_id');
+            },$images);
+            $teacher->images()->createMany($images_key_ids);
+        }
         return $this->renderSuccess();
     }
 
@@ -77,6 +92,9 @@ class TeacherController extends Controller
         //
         $teacher = $this->teachers->where('teacher_id',$id)->firstOrFail();
         $teacher->delete();
+        foreach ($teacher->images as $index => $image) {
+            $image->delete();
+        }
         return $this->renderSuccess();
     }
 }

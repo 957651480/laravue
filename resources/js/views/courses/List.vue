@@ -41,8 +41,8 @@
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
-            :src="scope.row.teacher_image_url"
-            :preview-src-list="[scope.row.teacher_image_url]"
+            :src="scope.row.teacher_image_url[0]"
+            :preview-src-list="scope.row.teacher_image_url"
             ></el-image>
         </template>
       </el-table-column>

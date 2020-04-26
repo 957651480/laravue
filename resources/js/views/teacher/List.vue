@@ -32,8 +32,8 @@
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
-            :src="scope.row.image_url"
-            :preview-src-list="[scope.row.image_url]"
+            :src="scope.row.images[0].url"
+            :preview-src-list="scope.row.images.forEach(item=>{return item.url})"
           ></el-image>
         </template>
       </el-table-column>
@@ -96,17 +96,9 @@
             <el-button v-else class="button-new-tag" size="small" @click="showInput">添加</el-button>
             <span>填写后按回车</span>
           </el-form-item>
-          <el-form-item label="教师图片:" prop="image_id">
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              action="api/file/upload"
-              :on-success="handleSuccess"
-              :headers="myHeaders"
-            >
-              <img v-if="newTeacher.image_url" :src="newTeacher.image_url" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+          <el-form-item label="教师图片:" prop="images">
+
+           <multiple-image :file-list="newTeacher.images"></multiple-image>
           </el-form-item>
           <el-form-item label="简介:" prop="introduction">
             <el-input type="textarea" v-model="newTeacher.introduction"></el-input>
@@ -132,13 +124,14 @@ import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import { fetchList, updateTeacher, createTeacher, deleteTeacher } from '@/api/teacher';
 import {getToken} from "@/utils/auth";
+import MultipleImage from "@/components/Upload/MultipleImage";
 
 const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
 export default {
   name: 'TeacherList',
-  components: { Pagination },
+  components: {MultipleImage, Pagination },
   directives: { waves },
   data() {
     return {
@@ -157,11 +150,10 @@ export default {
       rules: {
         name: [{ required: true, message: '教师名称必须', trigger: 'blur' }],
         position: [{ required: true, message: '职位必填', trigger: 'blur' }],
-        image_id: [{ required: true, message: '图片', trigger: 'blur' }],
+          images: [{ required: true, message: '图片', trigger: 'blur' }],
         introduction: [{ required: true, message: '教师简介', trigger: 'blur' }],
       },
       isEdit: false,
-      myHeaders: { Authorization: 'Bearer ' + getToken() },
       inputVisible: false,
       inputValue: ''
     };
@@ -270,8 +262,7 @@ export default {
       this.newTeacher = {
         name: '',
         position: [],
-        image_id:null,
-        image_url:'',
+        images:[],
         introduction: '',
       };
     },

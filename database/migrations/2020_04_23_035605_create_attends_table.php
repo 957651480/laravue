@@ -18,7 +18,7 @@ class CreateAttendsTable extends Migration
             $table->string('student_name')->default('')->comment('学生姓名');
             $table->string('grade')->default('')->comment('年级');
             $table->string('class')->default('')->comment('班级');
-            $table->integer('time_id')->default('[]')->comment('时间段id');
+            $table->string('time_id')->default('[]')->comment('时间段id');
             $table->integer('course_id')->comment('课程id');
             $table->integer('user_id')->comment('用户id');
             $table->softDeletes();

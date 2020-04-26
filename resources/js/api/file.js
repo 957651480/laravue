@@ -24,7 +24,7 @@ export function fetchPv(id) {
 
 export function createFile(data) {
   return request({
-    url: 'teachers',
+    url: 'file/upload',
     method: 'post',
     data,
   });
