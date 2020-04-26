@@ -41,8 +41,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('courses/mine', 'CourseController@myCourseList');
     Route::get('courses/mine/detail/{id}', 'CourseController@myCourseDetail');
 
-    Route::apiResource('categories', 'CategoryController');
-    Route::apiResource('teachers', 'TeacherController');
+    //分类路由
+    Route::post('categories/create', 'CategoryController@store');
+    Route::post('categories/update/{id}', 'CategoryController@update');
+    Route::get('categories/delete/{id}', 'CategoryController@destroy');
 
     //轮播图路由
     Route::post('banners/create', 'BannerController@store');
@@ -57,7 +59,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 //课程路由
 Route::get('courses', 'CourseController@index');
 Route::get('courses/detail/{id}', 'CourseController@show');
-
+//分类路由
+Route::get('categories','CategoryController@index');
+Route::get('categories/detail/{id}','CategoryController@show');
 //banner路由
 Route::get('banners', 'BannerController@index');
 Route::get('banners/detail/{id}', 'BannerController@show');

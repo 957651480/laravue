@@ -24,7 +24,7 @@ export function fetchPv(id) {
 
 export function createCategory(data) {
   return request({
-    url: 'categories',
+    url: 'categories/create',
     method: 'post',
     data,
   });
@@ -32,15 +32,15 @@ export function createCategory(data) {
 
 export function updateCategory(id,data) {
   return request({
-    url: 'categories/'+id,
-    method: 'put',
+    url: 'categories/update/'+id,
+    method: 'post',
     data,
   });
 }
 
 export function deleteCategory(id) {
   return request({
-    url: 'categories/' + id,
-    method: 'delete',
+    url: 'categories/delete/' + id,
+    method: 'get',
   });
 }
