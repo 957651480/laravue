@@ -107,7 +107,7 @@ class AttendController extends Controller
         }
         $data = Arr::only($post,array_keys($rules));
         $user_id = $request->user()->id;
-        DB::transaction(function () use($id,$data,$user_id){
+        $attendWheres = DB::transaction(function () use($id,$data,$user_id){
 
             //判断课程人数是否已经满了
             $courseWheres =[
@@ -132,7 +132,26 @@ class AttendController extends Controller
             ]);
             $this->attends->create($data);
             $course->increment('attend_number');
+            return $attendWheres;
         }, 2);
-        return $this->renderSuccess('报名成功');
+        $attend = $this->attends->with('course')->where($attendWheres)->first();
+        $data = [];
+        tap($attend,function ($attend)use(&$data){
+            $course = $attend->course;
+            $time_id = $attend->time_id;
+            $times = tap($course->times,function ($times)use($time_id){
+                return Arr::only($times,$time_id);
+            });
+             $data =[
+
+                'grade'=>$attend->grade,
+                'class'=>$attend->class,
+                'student_name'=>$attend->student_name,
+                'course_title'=>$attend->course->title,
+                'course_times'=>$times,
+                'course_address'=>$attend->course->address,
+            ];
+        });
+        return $this->renderSuccess('报名成功',$data);
     }
 }
