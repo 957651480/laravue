@@ -20,6 +20,9 @@ class CourseController extends Controller
      */
     public function __construct(Course $courses,Request $request)
     {
+        if($request->hasHeader('Authorization')){
+            $this->middleware('auth:api');
+        }
         $this->courses = $courses;
     }
 
@@ -28,7 +31,7 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->courses->with(['category','image','teacher.image'])->newQuery();
+        $query = $this->courses->with(['category','image','teacher.image','attend'])->newQuery();
         $wheres =$this->filter($request);
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
@@ -52,10 +55,11 @@ class CourseController extends Controller
     }
 
 
-    public function show($id)
+    public function show(Request$id)
     {
         //
-        $course = $this->courses->with(['category','image','teacher.image'])->where('course_id',$id)->firstOrFail();
+
+        $course = $this->courses->with(['category','image','teacher.image','attend'])->where('course_id',$id)->firstOrFail();
         $course = new \App\Http\Resources\Course($course);
         return $this->renderSuccess('',$course);
     }

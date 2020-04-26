@@ -14,34 +14,53 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="报名用户">
+      <el-table-column align="center" label="报名用户微信用户名">
         <template slot-scope="scope">
           <span>{{ scope.row.user_nickName }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column align="center" label="报名头像">
+      <el-table-column align="center" label="年级">
         <template slot-scope="scope">
-          <img :src="scope.row.user_avatarUrl" width="40" height="40" />
+          <span>{{ scope.row.grade }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="班级">
+        <template slot-scope="scope">
+          <span>{{ scope.row.class }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="姓名">
+        <template slot-scope="scope">
+          <span>{{ scope.row.student_name }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="报名的课程">
         <template slot-scope="scope">
           <span>{{ scope.row.course_title }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="创建时间">
+      <el-table-column align="center" label="报名的课程">
+        <template slot-scope="scope">
+          <span>{{ scope.row.course_title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180px" align="center" label="时间段">
+        <template slot-scope="scope">
+          <div v-for="item in scope.row.times" >
+            <span>开始时间:{{ item.start_time  }}</span>
+            <span>结束时间:{{ item.end_time }}</span>
+          </div>
+
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="报名时间">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="更新时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.updated_at }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
           <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.attend_id)">
