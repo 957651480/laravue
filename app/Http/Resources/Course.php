@@ -28,6 +28,7 @@ class Course extends JsonResource
             'teacher_name' => $teacher ? (string)$teacher->name : '',
             'teacher_position' => $teacher ? (array)$teacher->position : '',
             'teacher_image_url' => $teacher ? [$teacher->image->url] : [],
+            'date'=>$this->date,
             'times' => $this->times,
             'attend_number' => (integer)$this->attend_number,
             'number' => (integer)$this->number,

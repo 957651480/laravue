@@ -19,6 +19,7 @@ class CreateCoursesTable extends Migration
             $table->string('desc')->default('')->comment('简介');
             $table->longText('content')->comment('详细介绍');
             $table->integer('image_id')->default(0)->comment('文件id');
+            $table->date('date')->comment('授课日期');
             $table->string('times')->default('[]')->comment('时间段');
             $table->string('address')->default('')->comment('地点');
             $table->string('attend_number')->default(0)->comment('报名人数');

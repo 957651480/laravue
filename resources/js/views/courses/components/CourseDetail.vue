@@ -71,26 +71,34 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>-->
-
-        <el-row v-for="(item,key) in postForm.times" v-bind:key="key">
+        <el-form-item label="授课日期:" prop="date">
+          <el-date-picker
+            v-model="postForm.date"
+            type="date"
+            placeholder="选择授课日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-row v-for="(item,key) in postForm.times" v-bind:key="key" prop="times">
+          <el-col :span="2">
+            <span>时间段{{key+1}}</span>
+          </el-col>
           <el-col :span="5" >
+
             <el-form-item label="开始时间:" >
-              <el-date-picker
+              <el-time-picker
                 v-model="item.start_time"
-                type="datetime"
-                format="yyyy-MM-dd HH:mm"
-                placeholder="选择日期时间">
-              </el-date-picker>
+                format="HH:mm"
+                placeholder="选择时间">
+              </el-time-picker>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="结束时间:">
-              <el-date-picker
+              <el-time-picker
                 v-model="item.end_time"
-                type="datetime"
-                format="yyyy-MM-dd HH:mm"
-                placeholder="选择日期时间">
-              </el-date-picker>
+                format="HH:mm"
+                placeholder="选择时间">
+              </el-time-picker>
             </el-form-item>
           </el-col>
           <i class="el-icon" @click="addTime()">添加</i>
@@ -147,6 +155,7 @@ const defaultForm = {
   category_id:null,
   teacher_id:null,
   number:1,
+  date:null,
   times: [{'start_time':null,'end_time':null}],
 };
 
@@ -172,6 +181,8 @@ export default {
         category_id: [{ required: true, message: '请选择分类', trigger: 'blur' }],
         teacher_id: [{ required: true, message: '请选择教师', trigger: 'blur' }],
         //image_id: [{ required: true, message: '请选择上传图片', trigger: 'blur' }],
+        date: [{ required: true, message: '请填写授课日期', trigger: 'blur' }],
+        times: [{ required: true, message: '请填写授课时间段', trigger: 'blur' }],
         number: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         address: [{ required: true, message: '请填写地点', trigger: 'blur' }],
         content: [{ required: true, message: '请填写课程详情', trigger: 'blur' }],
@@ -243,8 +254,8 @@ export default {
           valid=false;
           break;
         }else{
-          times[i].start_time = parseTime(times[i].start_time,'{y}-{m}-{d} {h}:{i}');
-          times[i].end_time = parseTime(times[i].end_time,'{y}-{m}-{d} {h}:{i}');
+          times[i].start_time = parseTime(times[i].start_time,'{h}:{i}');
+          times[i].end_time = parseTime(times[i].end_time,'{h}:{i}');
         }
       }
       if(!valid){
@@ -252,6 +263,7 @@ export default {
           return false;
       }
       this.postForm.times=times;
+      this.postForm.date = parseTime(this.postForm.date,'{y}-{m}-{d}');
       this.$refs.postForm.validate(valid => {
         if (!valid) {
           return false;
