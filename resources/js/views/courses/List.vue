@@ -56,6 +56,11 @@
             <span>{{ scope.row.number }}</span>
         </template>
       </el-table-column>
+      <el-table-column min-width="80px" label="授课日期">
+        <template slot-scope="scope">
+          <span>{{ scope.row.date }}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column width="180px" align="center" label="时间段">
         <template slot-scope="scope">
