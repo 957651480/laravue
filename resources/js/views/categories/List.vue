@@ -5,9 +5,9 @@
       <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
-      </el-button>
+      </el-button>-->
       <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>-->
@@ -45,9 +45,9 @@
           <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">
             编辑
           </el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.category_id, scope.row.name);">
+          <!--<el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.category_id, scope.row.name);">
             删除
-          </el-button>
+          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
