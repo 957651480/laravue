@@ -50,6 +50,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('banners/create', 'BannerController@store');
     Route::post('banners/update/{id}', 'BannerController@update');
     Route::get('banners/delete/{id}', 'BannerController@destroy');
+    //教师路由
+    Route::apiResource('teachers', 'TeacherController');
     //报名列表
     Route::get('attends', 'AttendController@index');
     //报名路由
