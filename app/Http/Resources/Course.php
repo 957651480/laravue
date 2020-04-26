@@ -15,13 +15,16 @@ class Course extends JsonResource
     public function toArray($request)
     {
         $attended=0;
+        $time_id = [];
         $user = $request->user();
         if($user&&$this->attend){
             $user_id = $user->id;
             if($this->attend->user_id==$user_id){
                 $attended=1;
             }
+            $time_id = $this->attend->time_id;
         }
+
         $category = $this->category;
         $teacher = $this->teacher;
         return [
@@ -37,6 +40,7 @@ class Course extends JsonResource
             'teacher_position' => $teacher ? (array)$teacher->position : '',
             'teacher_image_url' => $teacher ? [$teacher->image->url] : [],
             'date'=>$this->date,
+            'time_id'=>$time_id,
             'times' => $this->times,
             'attended'=>$attended,
             'attend_number' => (integer)$this->attend_number,
