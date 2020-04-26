@@ -55,10 +55,9 @@ class CourseController extends Controller
     }
 
 
-    public function show(Request$id)
+    public function show($id)
     {
         //
-
         $course = $this->courses->with(['category','image','teacher.image','attend'])->where('course_id',$id)->firstOrFail();
         $course = new \App\Http\Resources\Course($course);
         return $this->renderSuccess('',$course);
