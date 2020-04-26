@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Attend;
 use App\Course;
+use App\Exceptions\ApiException;
 use App\Http\Resources\AttendCollection;
 use Arr;
 use DB;
@@ -114,7 +115,7 @@ class AttendController extends Controller
                 ['attend_number','<','number'],
             ];
             $course = Course::where($courseWheres)->sharedLock()->first();
-            throw_unless($course,\Exception::class,'该课程报名人数已满');
+            throw_unless($course,ApiException::class,'该课程报名人数已满');
 
 
             //判断自己是否有报过该课程
@@ -123,7 +124,7 @@ class AttendController extends Controller
                 ['user_id','=',$user_id],
             ];
             $attend = $this->attends->where($attendWheres)->sharedLock()->first();
-            throw_if($attend,\Exception::class,'你已经报名了该课程');
+            throw_if($attend,ApiException::class,'你已经报名了该课程');
             //报名
             $data = array_merge($data,[
                 'course_id'=>$id,
