@@ -21,4 +21,14 @@ class Attend extends Model
     {
         return $this->belongsTo(User::class,'user_id');
     }
+
+    public function getTimeIdAttribute($value)
+    {
+        return json_decode($value,true);
+    }
+
+    public function setTimeIdAttribute($value)
+    {
+        $this->attributes['time_id'] = json_encode($value,true);
+    }
 }
