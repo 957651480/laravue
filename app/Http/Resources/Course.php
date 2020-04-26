@@ -15,7 +15,8 @@ class Course extends JsonResource
     public function toArray($request)
     {
         $attended=0;
-        if($user = $request->user()){
+        $user = $request->user();
+        if($user&&$this->attend){
             $user_id = $user->id;
             if($this->attend->user_id==$user_id){
                 $attended=1;
