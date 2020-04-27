@@ -217,6 +217,24 @@ export default {
       fetchCourse(id)
         .then(response => {
           this.postForm = response.data;
+          let times = this.postForm.times;
+          //格式化时间
+          for (let i = 0; i < times.length; i++)
+          {
+              let start_times = times[i].start_time.split(":");
+              let start_time = new Date();
+              start_time.setHours(start_times[0]);
+              start_time.setMinutes(start_times[1]);
+              times[i].start_time = start_time;
+
+              let end_times = times[i].end_time.split(":");
+              let end_time = new Date();
+              end_time.setHours(end_times[0]);
+              end_time.setMinutes(end_times[1]);
+              times[i].end_time = end_time;
+
+          }
+          this.postForm.times=times;
           // Set tagsview title
           this.setTagsViewTitle();
         })

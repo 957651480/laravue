@@ -74,8 +74,8 @@
               :headers="myHeaders"
             >
               <img v-if="newBanner.image_url" :src="newBanner.image_url" class="avatar">
-              <span>建议传入尺寸为344*146</span>
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              <span>建议传入尺寸为344*146</span>
             </el-upload>
           </el-form-item>
           <el-form-item label="状态:" prop="show">
