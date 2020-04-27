@@ -49,7 +49,7 @@ class CourseController extends Controller
     {
         //
         $form  = $request->all();
-        $data = Arr::only($form,['title','desc','category_id','content','image_id','address','date','times','number','teacher_id']);
+        $data = Arr::only($form,['title','desc','category_id','content','address','date','times','number','teacher_id']);
         $this->courses->create($data);
         return $this->renderSuccess();
     }
@@ -71,7 +71,7 @@ class CourseController extends Controller
         $course_id = Arr::pull($form,'course_id');
 
         $course = $this->courses->where('course_id',$course_id)->firstOrFail();
-        $data = Arr::only($form,['title','desc','content','image_id','address','date','times','number','teacher_id']);
+        $data = Arr::only($form,['title','desc','content','address','date','times','number','teacher_id']);
         $course->update($data);
         return $this->renderSuccess();
     }

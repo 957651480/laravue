@@ -78,7 +78,7 @@
             placeholder="选择授课日期">
           </el-date-picker>
         </el-form-item>
-        <el-row v-for="(item,key) in postForm.times" v-bind:key="key" prop="times">
+        <el-row v-for="(item,key) in postForm.times" v-bind:key="key">
           <el-col :span="2">
             <span>时间段{{key+1}}</span>
           </el-col>
