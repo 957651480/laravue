@@ -129,6 +129,7 @@ import waves from '@/directive/waves';
 import axios from "axios";
 import {getToken} from "@/utils/auth";
 
+import {deleteCourse} from "@/api/course";
 
 const courseResource = new Resource('courses');
 const categoryResource = new Resource('categories');
@@ -177,7 +178,7 @@ export default {
       this.getList();
     },
     handleDelete(id) {
-      courseResource.destroy(id).then(response => {
+      deleteCourse(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',
