@@ -51,6 +51,7 @@ class FileController extends Controller
                 'mime_type'=>$uploadFile->getClientMimeType(),
                 'size'=>$uploadFile->getSize()
         ]);
-        return $file->setVisible(['file_id','filename','url']);
+        $file->name=$file->source_filename;
+        return $file->setVisible(['file_id','filename','name','url']);
     }
 }

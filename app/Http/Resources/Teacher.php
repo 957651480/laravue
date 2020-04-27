@@ -14,13 +14,14 @@ class Teacher extends JsonResource
      */
     public function toArray($request)
     {
-        $image = $this->image;
+        $image = $this->images->map(function ($image){
+            return $image->file;
+        });
         return [
             'teacher_id'=>(integer)$this->teacher_id,
             'name'=>(string)$this->name,
             'position'=>(array)$this->position,
-            'image_id'=>(integer)$this->image_id,
-            'image_url'=>(string)$image->url??'',
+            'images'=>$image,
             'introduction'=>(string)$this->introduction,
             'created_at'=>(string)$this->created_at,
             'updated_at'=>(string)$this->updated_at,

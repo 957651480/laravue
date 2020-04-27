@@ -1,40 +1,23 @@
 <template>
-  <el-upload
-    :action=""
-    list-type="picture-card"
-    :on-preview="handlePictureCardPreview"
-    on-success="handleSuccess"
-    :on-remove="handleRemove">
-    <i class="el-icon-plus"></i>
-  </el-upload>
-  <el-dialog :visible.sync="dialogVisible">
-    <img width="100%" :src="dialogImageUrl" alt="">
-  </el-dialog>
-  <script>
-    export default {
-      data() {
-        return {
-          dialogImageUrl: '',
-          dialogVisible: false
-        };
-      },
-      methods: {
-        handleRemove(file, fileList) {
-          console.log(file, fileList);
-        },
-        handlePictureCardPreview(file) {
-          this.dialogImageUrl = file.url;
-          this.dialogVisible = true;
-        },
-        handleSuccess(response, file, fileList){
-          fileList.push(response.url);
-        }
-      }
-    }
-  </script>
+ <div>
+   <el-upload
+     action="/api/file/upload"
+     list-type="picture-card"
+     :file-list="this.fileList"
+     :on-preview="handlePictureCardPreview"
+     :on-success="handleSuccess"
+     :headers="headers"
+     :on-remove="handleRemove">
+     <i class="el-icon-plus"></i>
+   </el-upload>
+   <el-dialog :visible.sync="dialogVisible">
+     <img width="100%" :src="dialogImageUrl" alt="">
+   </el-dialog>
+ </div>
 </template>
 
 <script>
+    import {getToken} from "@/utils/auth";
 export default {
   name: 'MultipleImage',
   props: {
@@ -46,18 +29,25 @@ export default {
   data() {
     return {
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+        headers: { Authorization: 'Bearer ' + getToken() }
     };
   },
   methods: {
     handleRemove(file, fileList) {
-      console.log(file, fileList);
+      this.fileList=fileList;
+        this.$emit('changFiles',this.fileList);
     },
+      handleSuccess(response, file, fileList){
+        debugger
+
+          this.fileList.push({name:response.name,file_id: response.file_id, url: response.url, uid: this.fileList.length});
+      },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     }
-  }
+  },
 };
 </script>
 

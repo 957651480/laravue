@@ -13,9 +13,9 @@ class Teacher extends Model
     protected $primaryKey='teacher_id';
 
 
-    public function image()
+    public function images()
     {
-        return $this->belongsTo(File::class,'image_id');
+        return $this->hasMany(TeacherImage::class,'teacher_id');
     }
 
     public function getPositionAttribute($value)

@@ -20,7 +20,7 @@ class CourseController extends Controller
      */
     public function __construct(Course $courses,Request $request)
     {
-        if($request->hasHeader('Authorization')){
+        if($token = $request->bearerToken()){
             $this->middleware('auth:api');
         }
         $this->courses = $courses;
@@ -31,7 +31,7 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->courses->with(['category','image','teacher.image','attend'])->newQuery();
+        $query = $this->courses->with(['category','image','teacher.images.file','attend'])->newQuery();
         $wheres =$this->filter($request);
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
@@ -58,7 +58,7 @@ class CourseController extends Controller
     public function show($id)
     {
         //
-        $course = $this->courses->with(['category','image','teacher.image','attend'])->where('course_id',$id)->firstOrFail();
+        $course = $this->courses->with(['category','image','teacher.images.file','attend'])->where('course_id',$id)->firstOrFail();
         $course = new \App\Http\Resources\Course($course);
         return $this->renderSuccess('',$course);
     }
@@ -121,7 +121,7 @@ class CourseController extends Controller
     public function export(Request $request)
     {
         $tileArray=['课程ID','标题','分类名称','教师名称','报名人数','课程人数','地点'];
-        $query = $this->courses->with(['category','image','teacher.image'])->newQuery();
+        $query = $this->courses->with(['category'])->newQuery();
         $wheres =$this->filter($request);
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
