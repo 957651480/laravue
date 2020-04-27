@@ -128,7 +128,7 @@
           type="success"
           @click="submitForm"
         >
-          Submit
+          保存
         </el-button>
       </div>
     </el-form>
