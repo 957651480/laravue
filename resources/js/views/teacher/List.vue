@@ -97,8 +97,8 @@
             <span>填写后按回车</span>
           </el-form-item>
           <el-form-item label="教师图片:" prop="images">
-
            <multiple-image :fileList="newTeacher.images" @changFiles="changFiles"></multiple-image>
+           <span>传入三张图片:建议第一张尺寸为64*64,第二张尺寸为132*88,第三张尺寸为343*176</span>
           </el-form-item>
           <el-form-item label="简介:" prop="introduction">
             <el-input type="textarea" v-model="newTeacher.introduction"></el-input>
@@ -211,6 +211,14 @@ export default {
       });
     },
     createTeacher() {
+      if(this.newTeacher.images.length<3){
+        this.$message({
+          message: '至少传入三张图片',
+          type: 'error',
+          duration: 5 * 1000,
+        });
+        return false;
+      }
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           this.teacherCreating = true;
