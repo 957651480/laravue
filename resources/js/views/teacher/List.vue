@@ -33,7 +33,7 @@
           <el-image
             style="width: 80px; height: 80px"
             :src="scope.row.images[0].url"
-            :preview-src-list="scope.row.images.forEach(item=>{return item.url})"
+            :preview-src-list="showImageList(scope.row.images)"
           ></el-image>
         </template>
       </el-table-column>
@@ -303,7 +303,14 @@ export default {
       },
       changFiles(fileList){
         this.newTeacher.images= fileList;
+      },
+    showImageList(imageList){
+      let tmpList = [];
+      for (let i = 0;i < imageList.length;i++){
+        tmpList[i]=imageList[i].url;
       }
+      return tmpList;
+    }
   },
 };
 </script>
