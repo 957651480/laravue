@@ -6,13 +6,12 @@
  * @package Laravue
  * @version 1.0
  */
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Laravue\JsonResponse;
+use App\Http\Controllers\Controller;
 use App\User;
 use Arr;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Http;
@@ -32,23 +31,24 @@ class AuthController extends Controller
     {
         $credentials = $request->only('name', 'password');
         if (!Auth::attempt($credentials)) {
-            return response()->json(new JsonResponse([], 'login_error'), Response::HTTP_UNAUTHORIZED);
+            return $this->renderError('用户账号或密码有误');
         }
         $user = $request->user();
         $token = $user->createToken('api');
         $user->token = $token->plainTextToken;
-        return $this->renderSuccess('',new UserResource($user),['Authorization', $token->plainTextToken]);
+        return $this->renderSuccess('',new UserResource($user),['Authorization'=>$token->plainTextToken]);
     }
 
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
-        return response()->json((new JsonResponse())->success([]), Response::HTTP_OK);
+        return $this->renderSuccess();
     }
 
-    public function user()
+    public function user(Request $request)
     {
-        return new UserResource(Auth::user());
+        $user = $request->user();
+        return new UserResource($user);
     }
 
     public function wxLogin(Request $request)

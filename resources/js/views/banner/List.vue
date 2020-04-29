@@ -75,13 +75,12 @@
             >
               <img v-if="newBanner.image_url" :src="newBanner.image_url" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              <span>建议传入尺寸为344*146</span>
             </el-upload>
           </el-form-item>
           <el-form-item label="类型:" prop="type_id">
             <el-select
               v-model="newBanner.type_id"
-              placeholder="选择教师"
+              placeholder="选择类型"
             >
               <el-option
                 v-for="item in types"
@@ -138,13 +137,13 @@ export default {
       dialogFormVisible: false,
       rules: {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
-        type_id: [{ required: true, message: '分类必须', trigger: 'blur' }],
+        type_id: [{ required: true, message: '类型必须', trigger: 'blur' }],
         image_id: [{ required: true, message: '图片必填', trigger: 'blur' }],
       },
       isEdit: false,
       myHeaders: { Authorization: 'Bearer ' + getToken() },
       //
-      types:[{type_id:10,name:'首页'},{type_id:10,name:'楼盘'}]
+      types:[{type_id:10,name:'首页'},{type_id:20,name:'楼盘'}]
     };
   },
   computed: {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,6 +18,7 @@ class Banner extends JsonResource
         return [
             'banner_id'=>(integer)$this->banner_id,
             'title'=>(string)$this->title,
+            'type_id'=>(integer)$this->type_id,
             'image_id'=>(integer)$this->image_id,
             'image_url'=>(string)$image->url??'',
             'show'=>(integer)$this->show,

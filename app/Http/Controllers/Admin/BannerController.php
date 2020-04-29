@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Banner;
-use App\Http\Resources\BannerCollection;
+use App\Http\Resources\Admin\BannerCollection;
 use Arr;
 use Illuminate\Http\Request;
 
@@ -42,8 +43,8 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         //
-        $form  = $request->all();
-        $data =Arr::only($form,['title','image_id','show','sort']);
+
+        $data = $this->validateBanner($request);
         $this->banners->create($data);
         return $this->renderSuccess();
     }
@@ -77,5 +78,22 @@ class BannerController extends Controller
         $banner = $this->banners->where('banner_id',$id)->firstOrFail();
         $banner->delete();
         return $this->renderSuccess();
+    }
+
+    protected function validateBanner(Request $request)
+    {
+        return $this->validate($request,[
+            'title'=>'required',
+            'type_id'=>'required',
+            'image_id'=>'required',
+            'show'=>'sometimes',
+            'sort'=>'sometimes'
+            ],
+            [
+            'title.required'=>'标题必填',
+            'type_id.required'=>'类型必填',
+            'image_id.required'=>'图片必传',
+            ]
+        );
     }
 }

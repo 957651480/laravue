@@ -15,11 +15,33 @@ use \App\Laravue\JsonResponse;
 |
 */
 
-Route::post('auth/login', 'AuthController@login');
+
 Route::post('auth/wxlogin', 'AuthController@wxLogin');
+//后台路由
+Route::prefix('admin/')->namespace('Admin')->group(function ()
+{
+    //登入和登出
+    Route::post('auth/login', 'AuthController@login');
+
+
+    Route::group(['middleware' => 'auth:api'], function ()
+    {
+        Route::post('auth/logout', 'AuthController@logout');
+        //轮播图
+        Route::get('banners', 'BannerController@index');
+        Route::post('banners/create', 'BannerController@store');
+        Route::get('banners/detail/{id}', 'BannerController@show');
+        Route::post('banners/update/{id}', 'BannerController@update');
+        Route::get('banners/delete/{id}', 'BannerController@destroy');
+
+        Route::get('auth/user', 'AuthController@user');
+
+
+    });
+
+});
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('auth/user', 'AuthController@user');
-    Route::post('auth/logout', 'AuthController@logout');
+
     Route::get('users', 'UserController@index')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
     Route::post('users', 'UserController@store')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
     Route::get('users/{user}', 'UserController@show')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
