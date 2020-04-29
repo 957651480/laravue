@@ -82,6 +82,7 @@ class RegionController extends Controller
             'name'=>'required',
             'parent_id'=>'sometimes',
             'level'=>'sometimes',
+            'pinyin'=>'sometimes',
             'show'=>'sometimes',
             'sort'=>'sometimes'
         ]

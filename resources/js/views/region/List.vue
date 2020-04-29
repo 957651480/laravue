@@ -65,6 +65,17 @@
           <el-form-item label="名称:" prop="name">
             <el-input v-model="newRegion.name" />
           </el-form-item>
+          <el-form-item label="拼音码:" prop="pinyin">
+            <el-input v-model="newRegion.pinyin" />
+          </el-form-item>
+          <el-form-item label="状态:" prop="show">
+            <el-radio v-model="newRegion.show" :label="10">显示</el-radio>
+            <el-radio v-model="newRegion.show" :label="20">隐藏</el-radio>
+          </el-form-item>
+          <el-form-item label="排序:" prop="sort">
+            <el-input-number v-model="newRegion.sort"></el-input-number>
+            <span>排序越大越靠前</span>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false;isEdit=false">
@@ -223,6 +234,7 @@ export default {
         name: '',
         parent_id:0,
         level:1,
+        pinyin:'',
         show:10,
         sort: 100,
       };
