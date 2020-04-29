@@ -7,8 +7,9 @@
  * @version 1.0
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\PermissionResource;
 use App\Http\Resources\UserResource;
 use App\Laravue\JsonResponse;
@@ -133,7 +134,7 @@ class UserController extends Controller
         if($name = $request->get('name')){
             $found = User::where('name', $name)->first();
             if ($found && $found->id !== $user->id) {
-                return  $this->renderError('用户名已存在');
+                return  $this->renderError('鐢ㄦ埛鍚嶅凡瀛樺湪');
             }
         }
         $form = $request->only(['name','nickName','open_id']);

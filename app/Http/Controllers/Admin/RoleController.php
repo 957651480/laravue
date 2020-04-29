@@ -6,8 +6,9 @@
  * @package Laravue
  * @version 1.0
  */
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\PermissionResource;
 use App\Laravue\Models\Permission;
 use Illuminate\Http\Request;
