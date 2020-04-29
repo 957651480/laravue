@@ -24,6 +24,7 @@ import teacherRoutes from "@/router/modules/teacher";
 import attendRoutes from "@/router/modules/attend";
 import regionRoutes from "@/router/modules/region";
 import houseRoutes from "@/router/modules/house";
+import parkingRoutes from "@/router/modules/parking";
 
 
 /**
@@ -112,6 +113,7 @@ export const constantRoutes = [
   elementUiRoutes,
   exampleRoutes,
   houseRoutes,
+  parkingRoutes,
   //categoryRoutes,
   regionRoutes,
   //teacherRoutes,

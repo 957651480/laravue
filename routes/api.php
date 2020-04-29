@@ -28,26 +28,26 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
     {
         Route::post('auth/logout', 'AuthController@logout');
         //轮播图
-        Route::get('banners', 'BannerController@index');
-        Route::post('banners/create', 'BannerController@store');
-        Route::get('banners/detail/{id}', 'BannerController@show');
-        Route::post('banners/update/{id}', 'BannerController@update');
-        Route::get('banners/delete/{id}', 'BannerController@destroy');
+        Route::get('banner', 'BannerController@index');
+        Route::post('banner/create', 'BannerController@store');
+        Route::get('banner/detail/{id}', 'BannerController@show');
+        Route::post('banner/update/{id}', 'BannerController@update');
+        Route::get('banner/delete/{id}', 'BannerController@destroy');
 
         //城市管理路由
-        Route::get('regions', 'RegionController@index');
-        Route::post('regions/create', 'RegionController@store');
-        Route::get('regions/detail/{id}', 'RegionController@show');
-        Route::post('regions/update/{id}', 'RegionController@update');
-        Route::get('regions/delete/{id}', 'RegionController@destroy');
+        Route::get('region', 'RegionController@index');
+        Route::post('region/create', 'RegionController@store');
+        Route::get('region/detail/{id}', 'RegionController@show');
+        Route::post('region/update/{id}', 'RegionController@update');
+        Route::get('region/delete/{id}', 'RegionController@destroy');
 
         //楼盘路由
-        Route::get('houses', 'HouseController@index');
-        Route::post('houses/create', 'HouseController@store');
-        Route::get('houses/detail/{id}', 'HouseController@show');
-        Route::post('houses/update/{id}', 'HouseController@update');
-        Route::get('houses/delete/{id}', 'HouseController@destroy');
-        Route::get('houses/export', 'HouseController@export');
+        Route::get('house', 'HouseController@index');
+        Route::post('house/create', 'HouseController@store');
+        Route::get('house/detail/{id}', 'HouseController@show');
+        Route::post('house/update/{id}', 'HouseController@update');
+        Route::get('house/delete/{id}', 'HouseController@destroy');
+        Route::get('house/export', 'HouseController@export');
 
         //教师路由
         Route::apiResource('teachers', 'TeacherController');

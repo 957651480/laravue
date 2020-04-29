@@ -2,46 +2,46 @@ import request from '@/utils/request';
 
 export function fetchList(query) {
   return request({
-    url: 'house',
+    url: 'parking',
     method: 'get',
     params: query,
   });
 }
 
-export function fetchHouse(id) {
+export function fetchParking(id) {
   return request({
-    url: 'house/detail/' + id,
+    url: 'parking/detail/' + id,
     method: 'get',
   });
 }
 
 
-export function createHouse(data) {
+export function createParking(data) {
   return request({
-    url: 'house/create',
+    url: 'parking/create',
     method: 'post',
     data,
   });
 }
 
-export function updateHouse(id,data) {
+export function updateParking(id,data) {
   return request({
-    url: 'house/update/'+id,
+    url: 'parking/update/'+id,
     method: 'post',
     data,
   });
 }
 
-export function deleteHouse(id) {
+export function deleteParking(id) {
   return request({
-    url: 'house/delete/' + id,
+    url: 'parking/delete/' + id,
     method: 'get',
   });
 }
 
-export function exportHouse() {
+export function exportParking() {
   return request({
-    url: 'house/export',
+    url: 'parking/export',
     method: 'get',
     responseType: "blob"
   });

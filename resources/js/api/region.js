@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 export function fetchList(query) {
   return request({
-    url: 'regions',
+    url: 'region',
     method: 'get',
     params: query,
   });
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchRegion(id) {
   return request({
-    url: 'regions/detail/' + id,
+    url: 'region/detail/' + id,
     method: 'get',
   });
 }
@@ -18,7 +18,7 @@ export function fetchRegion(id) {
 
 export function createRegion(data) {
   return request({
-    url: 'regions/create',
+    url: 'region/create',
     method: 'post',
     data,
   });
@@ -26,7 +26,7 @@ export function createRegion(data) {
 
 export function updateRegion(id,data) {
   return request({
-    url: 'regions/update/'+id,
+    url: 'region/update/'+id,
     method: 'post',
     data,
   });
@@ -34,7 +34,7 @@ export function updateRegion(id,data) {
 
 export function deleteRegion(id) {
   return request({
-    url: 'regions/delete/' + id,
+    url: 'region/delete/' + id,
     method: 'get',
   });
 }
