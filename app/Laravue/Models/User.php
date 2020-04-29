@@ -42,6 +42,14 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $display_name 显示名
+ * @property string $nickName 微信nickname
+ * @property string $open_id 微信openId
+ * @property string $avatarUrl 微信头像
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\User whereAvatarUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\User whereDisplayName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\User whereNickName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\User whereOpenId($value)
  */
 class User extends Authenticatable
 {

@@ -29,6 +29,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereSourceFilename($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\File onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\File withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Models\File withoutTrashed()
  */
 class File extends Model
 {

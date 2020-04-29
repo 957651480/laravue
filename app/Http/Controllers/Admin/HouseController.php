@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Course;
+use App\Http\Controllers\Controller;
+use App\Models\House;
 use App\Http\Resources\AdminCourse;
 use App\Http\Resources\AdminCourseCollection;
 use App\Http\Resources\CourseCollection;
@@ -10,66 +11,33 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class CourseController extends Controller
+class HouseController extends Controller
 {
     /**
-     * @var Course
+     * @var House
      */
-    protected $courses;
+    protected $service;
 
     /**
      * CourseController constructor.
-     * @param Course $courses
+     * @param House $house
      */
-    public function __construct(Course $courses,Request $request)
+    public function __construct(House $house)
     {
-        if($token = $request->bearerToken()){
-            $this->middleware('auth:api');
-        }
-        $this->courses = $courses;
-    }
-
-
-    public function adminIndex(Request $request)
-    {
-        $query = $this->courses->with(['category','image','teacher.images.file'])->newQuery();
-        $wheres =$this->filter($request);
-        $query->when($wheres,function ($query)use($wheres){
-            $query->where($wheres);
-        });
-        $paginate = $query->latest()->paginate($request->get('limit'));
-
-        $data =[
-            'total'=>$paginate->total(),
-            'list'=>new AdminCourseCollection($paginate)
-        ];
-        return $this->renderSuccess('',$data);
-    }
-
-    public function adminShow(Request $request,$id)
-    {
-        //
-        $query = $this->courses->with(['category','image','teacher.images.file'])->newQuery();
-        $course = $query->where('course_id',$id)->firstOrFail();
-        $course = new AdminCourse($course);
-        return $this->renderSuccess('',$course);
+        $this->service = $house;
     }
 
 
     public function index(Request $request)
     {
         //
-        $query = $this->courses->with(['category','image','teacher.images.file'])->newQuery();
+        $query = $this->service->with([])->newQuery();
         $wheres =$this->filter($request);
 
-        $user = $request->user();
-        $query->when($user,function ($query)use($user){
-            $query->leftJoin('attends','attends.course_id','courses.course_id');
-        });
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
         });
-        $paginate = $query->latest('courses.created_at')->paginate($request->get('limit'));
+        $paginate = $query->latest('created_at')->paginate($request->get('limit'));
 
         $data =[
             'total'=>$paginate->total(),
@@ -83,7 +51,7 @@ class CourseController extends Controller
         //
         $form  = $request->all();
         $data = Arr::only($form,['title','desc','category_id','content','address','date','times','number','teacher_id']);
-        $this->courses->create($data);
+        $this->service->create($data);
         return $this->renderSuccess();
     }
 
@@ -91,7 +59,7 @@ class CourseController extends Controller
     public function show(Request $request,$id)
     {
         //
-        $query = $this->courses->with(['category','image','teacher.images.file'])->newQuery();
+        $query = $this->service->with(['category','image','teacher.images.file'])->newQuery();
 
         $user = $request->user();
         $query->when($user,function ($query)use($user){
@@ -109,7 +77,7 @@ class CourseController extends Controller
         $form  = $request->all();
         $course_id = Arr::pull($form,'course_id');
 
-        $course = $this->courses->where('course_id',$course_id)->firstOrFail();
+        $course = $this->service->where('course_id',$course_id)->firstOrFail();
         $data = Arr::only($form,['title','desc','content','address','date','times','number','teacher_id']);
         $course->update($data);
         return $this->renderSuccess();
@@ -119,7 +87,7 @@ class CourseController extends Controller
     public function destroy($id)
     {
         //
-        $course = $this->courses->with(['attends'])->where('course_id',$id)->firstOrFail();
+        $course = $this->service->with(['attends'])->where('course_id',$id)->firstOrFail();
         DB::transaction(function ()use($course){
             $course->delete();
             foreach ($course->attends as $attend){
@@ -130,41 +98,11 @@ class CourseController extends Controller
         return $this->renderSuccess();
     }
 
-    public function myCourseList(Request $request)
-    {
-        $query = $this->courses->with(['category','teacher.images'])->newQuery();
-        $wheres =$this->filter($request);
-        $user = $request->user();
-        $query->join('attends','attends.course_id','courses.course_id');
-        $query->where('attends.user_id','=',$user->id);
-        $query->when($wheres,function ($query)use($wheres){
-            $query->where($wheres);
-        });
-        $paginate = $query->latest('courses.created_at')->paginate($request->get('limit'));
-
-        $data =[
-            'total'=>$paginate->total(),
-            'list'=>new CourseCollection($paginate)
-        ];
-        return $this->renderSuccess('',$data);
-    }
-
-    public function myCourseDetail(Request $request,$id)
-    {
-        $query = $this->courses->with(['category','teacher.images','attends']);
-        $user = $request->user();
-        $query->join('attends','attends.course_id','courses.course_id');
-        $query->where('attends.user_id','=',$user->id);
-        $course = $query->where('courses.course_id',$id)->firstOrFail();
-
-        $course = new \App\Http\Resources\Course($course);
-        return $this->renderSuccess('',$course);
-    }
 
     public function export(Request $request)
     {
         $tileArray=['课程ID','标题','分类名称','教师名称','报名人数','课程人数','地点'];
-        $query = $this->courses->with(['category'])->newQuery();
+        $query = $this->service->with(['category'])->newQuery();
         $wheres =$this->filter($request);
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);

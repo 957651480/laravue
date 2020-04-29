@@ -41,6 +41,16 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::post('regions/update/{id}', 'RegionController@update');
         Route::get('regions/delete/{id}', 'RegionController@destroy');
 
+        //楼盘路由
+        Route::get('houses', 'HouseController@index');
+        Route::post('houses/create', 'HouseController@store');
+        Route::get('houses/detail/{id}', 'HouseController@show');
+        Route::post('houses/update/{id}', 'HouseController@update');
+        Route::get('houses/delete/{id}', 'HouseController@destroy');
+        Route::get('houses/export', 'HouseController@export');
+
+        //教师路由
+        Route::apiResource('teachers', 'TeacherController');
         Route::get('auth/user', 'AuthController@user');
 
 
@@ -61,15 +71,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
     Route::post('file/upload', 'FileController@upload');
 
-    //课程路由
-    Route::post('courses/create', 'CourseController@store');
-    Route::post('courses/update/{id}', 'CourseController@update');
-    Route::get('courses/delete/{id}', 'CourseController@destroy');
-    Route::get('courses/export', 'CourseController@export');
 
-    //课程路由
-    Route::get('courses/admin/list', 'CourseController@adminIndex');
-    Route::get('courses/admin/detail/{id}', 'CourseController@adminShow');
+
+
     //我报名的课程
     Route::get('courses/mine', 'CourseController@myCourseList');
     Route::get('courses/mine/detail/{id}', 'CourseController@myCourseDetail');
@@ -91,9 +95,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('attends/join/{id}', 'AttendController@join');
     Route::get('attends/delete/{id}', 'AttendController@destroy');
 });
-//课程路由
-Route::get('courses', 'CourseController@index');
-Route::get('courses/detail/{id}', 'CourseController@show');
+
 //分类路由
 Route::get('categories','CategoryController@index');
 Route::get('categories/detail/{id}','CategoryController@show');

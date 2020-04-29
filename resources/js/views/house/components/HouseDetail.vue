@@ -138,14 +138,14 @@
 <script>
 import Tinymce from '@/components/Tinymce';
 import Upload from '@/components/Upload/SingleImage';
-import { fetchCourse,createCourse,updateCourse } from '@/api/course';
-const categoryResource = new Resource('categories');
-const teacherResource = new Resource('teachers');
+import {fetchHouser, createHouser, updateHouser, fetchHouse, createHouse, updateHouse} from '@/api/house';
+
+
 import {getToken} from "@/utils/auth";
 import { parseTime } from '@/utils';
 import Resource from "@/api/resource";
 const defaultForm = {
-  course_id: undefined,
+  house_id: undefined,
   title: '',
   desc: '',
   content: '',
@@ -160,7 +160,7 @@ const defaultForm = {
 };
 
 export default {
-  name: 'CourseDetail',
+  name: 'HouseDetail',
   components: {
     Tinymce,
     Upload,
@@ -206,15 +206,13 @@ export default {
     } else {
       this.postForm = Object.assign({}, defaultForm);
     }
-    this.getRemoteCategoryList();
-    this.getRemoteTeacherList();
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     this.tempRoute = Object.assign({}, this.$route);
   },
   methods: {
     fetchData(id) {
-      fetchCourse(id)
+      fetchHouse(id)
         .then(response => {
           this.postForm = response.data;
           let times = this.postForm.times;
@@ -242,10 +240,6 @@ export default {
           console.log(err);
         });
     },
-    /*handleSuccess(response, file, fileList){
-      this.postForm.image_id = response.file_id;
-      this.postForm.image_url = response.url;
-    },*/
     setTagsViewTitle() {
       const title =
         this.lang === 'zh'
@@ -288,8 +282,8 @@ export default {
         }
         this.loading = true;
         if(this.isEdit){
-          let course_id = this.postForm.course_id;
-          updateCourse(course_id,this.postForm).then(response => {
+          let house_id = this.postForm.house_id;
+          updateHouse(house_id,this.postForm).then(response => {
 
             this.$message({
               message:response.msg,
@@ -302,8 +296,8 @@ export default {
           }).catch(() => {
           })
         }else {
-          createCourse(this.postForm).then(response => {
-
+          createHouse(this.postForm).then(response =>
+          {
             this.$message({
               message:response.msg,
               type: 'success',
@@ -318,26 +312,6 @@ export default {
         this.loading = false;
       });
     },
-    async getRemoteCategoryList(){
-      const { data } = await categoryResource.list({limit:100});
-      this.categories = data.list;
-    },
-    async getRemoteTeacherList(){
-        const { data } = await teacherResource.list({limit:100});
-        this.teachers = data.list;
-    },
-    //添加时间段
-    addTime(){
-      this.postForm.times.push({})
-    },
-    //删除时间段
-    deleteTime(index){
-      if(index===0){
-        this.$alert('不能删除第一项');
-        return false;
-      }
-      this.postForm.times.splice(index,1);
-    }
   },
 };
 </script>

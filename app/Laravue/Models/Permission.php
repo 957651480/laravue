@@ -38,6 +38,8 @@ use Illuminate\Database\Query\Builder;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\Permission whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\Permission whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $display_name 显示名
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\Permission whereDisplayName($value)
  */
 class Permission extends \Spatie\Permission\Models\Permission
 {

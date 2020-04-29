@@ -19,11 +19,11 @@ import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 import errorRoutes from './modules/error';
 import exampleRoutes from './modules/example';
-import courseRoutes from './modules/course';
 import categoryRoutes from './modules/category';
 import teacherRoutes from "@/router/modules/teacher";
 import attendRoutes from "@/router/modules/attend";
 import regionRoutes from "@/router/modules/region";
+import houseRoutes from "@/router/modules/house";
 
 
 /**
@@ -111,11 +111,11 @@ export const constantRoutes = [
   },
   elementUiRoutes,
   exampleRoutes,
-  courseRoutes,
-  categoryRoutes,
+  houseRoutes,
+  //categoryRoutes,
   regionRoutes,
-  teacherRoutes,
-  attendRoutes,
+  //teacherRoutes,
+  //attendRoutes,
   {
     path: '/banner',
     component: Layout,

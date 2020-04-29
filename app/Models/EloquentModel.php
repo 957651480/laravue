@@ -9,7 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class EloquentModel
+ *
  * @package App\Models
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\EloquentModel newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\EloquentModel newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\EloquentModel query()
+ * @mixin \Eloquent
  */
 class EloquentModel extends Model
 {

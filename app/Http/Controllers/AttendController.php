@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attend;
-use App\Models\Course;
+use App\Models\House;
 use App\Exceptions\ApiException;
 use App\Http\Resources\AttendCollection;
 use Arr;
@@ -114,7 +114,7 @@ class AttendController extends Controller
                 ['course_id','=',$id],
                 ['attend_number','<','number'],
             ];
-            $course = Course::where($courseWheres)->sharedLock()->first();
+            $course = House::where($courseWheres)->sharedLock()->first();
             throw_unless($course,ApiException::class,'该课程报名人数已满');
 
 

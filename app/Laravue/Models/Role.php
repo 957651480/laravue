@@ -34,6 +34,8 @@ use Spatie\Permission\Models\Permission;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\Role whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\Role whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $display_name 显示名
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Laravue\Models\Role whereDisplayName($value)
  */
 class Role extends \Spatie\Permission\Models\Role
 {

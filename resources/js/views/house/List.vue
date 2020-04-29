@@ -129,8 +129,8 @@ import waves from '@/directive/waves';
 import axios from "axios";
 import {getToken} from "@/utils/auth";
 
-import {deleteCourse} from "@/api/course";
-import { fetchList } from '@/api/course';
+import {deleteHouse} from "@/api/house";
+import { fetchList } from '@/api/house';
 
 const categoryResource = new Resource('categories');
 
@@ -155,7 +155,6 @@ export default {
   },
   created() {
     this.getList();
-    this.getCategory();
   },
   methods: {
     async getList() {
@@ -169,16 +168,12 @@ export default {
       this.total=data.total;
       this.loading = false;
     },
-    async getCategory() {
-      const { data } = await categoryResource.list(this.query);
-      this.categories = data.list;
-    },
     handleFilter() {
       this.query.page = 1;
       this.getList();
     },
     handleDelete(id) {
-      deleteCourse(id).then(response => {
+      deleteHouse(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',
