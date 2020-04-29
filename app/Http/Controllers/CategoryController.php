@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
+use App\Models\Category;
 use App\Http\Resources\CategoryCollection;
 use Arr;
 use Illuminate\Http\Request;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Course;
+use App\Models\Course;
 use App\Http\Resources\AdminCourse;
 use App\Http\Resources\AdminCourseCollection;
 use App\Http\Resources\CourseCollection;

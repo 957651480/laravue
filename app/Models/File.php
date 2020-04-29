@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+/**
+ * App\Models\File
+ *
+ * @property int $file_id
+ * @property string $filename 文件名称
+ * @property string $source_filename 源文件名
+ * @property string $extension 文件名扩展名
+ * @property int $size 文件大小
+ * @property string $mime_type 文件格式
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $url
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereExtension($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereFileId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereMimeType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereSourceFilename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\File whereUpdatedAt($value)
+ * @mixin \Eloquent
+ */
+class File extends Model
+{
+    use SoftDeletes;
+    //
+    protected $guarded = [];
+    protected $primaryKey='file_id';
+    protected $casts = [
+        'id'=>'integer',
+        'filename'=>'string',
+        'source_filename'=>'string',
+        'extension'=>'string',
+        'size'=>'integer',
+        'mime_type'=>'string',
+    ];
+    protected $appends=[
+        'url'
+    ];
+
+    public function getUrlAttribute()
+    {
+        return sprintf("%s/%s",url('uploads'),$this->filename);
+    }
+}

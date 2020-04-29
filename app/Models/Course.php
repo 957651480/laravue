@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * App\Course
+ * App\Models\Course
  *
  * @property int $course_id 课程id
  * @property string $title 标题
@@ -17,19 +17,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $address 地点
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\File $image
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereAddress($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereContent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereCourseId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereEndTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereImageId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereStartTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Course whereUpdatedAt($value)
+ * @property-read \App\Models\File $image
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereCourseId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereEndTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereImageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereStartTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Course whereUpdatedAt($value)
  * @mixin \Eloquent
  *
  */

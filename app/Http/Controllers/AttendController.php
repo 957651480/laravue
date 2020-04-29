@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Attend;
-use App\Course;
+use App\Models\Attend;
+use App\Models\Course;
 use App\Exceptions\ApiException;
 use App\Http\Resources\AttendCollection;
 use Arr;

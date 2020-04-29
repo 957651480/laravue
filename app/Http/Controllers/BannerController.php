@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Banner;
+use App\Models\Banner;
 use App\Http\Resources\BannerCollection;
 use Arr;
 use Illuminate\Http\Request;

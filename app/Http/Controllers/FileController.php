@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\File;
+use App\Models\File;
 use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;

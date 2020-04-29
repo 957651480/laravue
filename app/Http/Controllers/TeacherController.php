@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TeacherCollection;
-use App\Teacher;
+use App\Models\Teacher;
 use Arr;
 use Illuminate\Http\Request;
 
