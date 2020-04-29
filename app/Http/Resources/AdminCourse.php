@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Course extends JsonResource
+class AdminCourse extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,22 +15,8 @@ class Course extends JsonResource
      */
     public function toArray($request)
     {
-        $attended =0;
-        $time_id = [];
-        /**
-         * @var Collection $attends
-         */
-        $attends = $this->attends;
-        $user = $request->user();
-        if($user&&$attends){
-            $attend = $attends->first(function ($attend)use($user){
-                return $attend->user_id==$user->id;
-            });
-            if($attend){
-                $attended=1;
-                $time_id = $attend->time_id;
-            }
-        }
+
+
 
         $teacher_image_url=[];
         $category = $this->category;
@@ -53,9 +39,7 @@ class Course extends JsonResource
             'teacher_position' => $teacher ? (array)$teacher->position : '',
             'teacher_image_url' => $teacher_image_url,
             'date'=>$this->date,
-            'time_id'=>$time_id,
             'times' => $this->times,
-            'attended'=>$attended,
             'attend_number' => (integer)$this->attend_number,
             'number' => (integer)$this->number,
             'address' => (string)$this->address,

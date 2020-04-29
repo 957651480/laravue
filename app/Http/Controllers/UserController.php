@@ -20,6 +20,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Validator;
 
 /**
@@ -129,29 +130,24 @@ class UserController extends Controller
         ) {
             return response()->json(['error' => 'Permission denied'], 403);
         }*/
-
-        $validator = Validator::make($request->all(), $this->getValidationRules(false));
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
-        } else {
-            /*$email = $request->get('email');
-            $found = User::where('email', $email)->first();
+        if($name = $request->get('name')){
+            $found = User::where('name', $name)->first();
             if ($found && $found->id !== $user->id) {
-                return response()->json(['error' => 'Email has been taken'], 403);
-            }*/
-            $form = $request->only(['name','nickName','open_id']);
-            if($password = $request->get('password')){
-                $form['password'] =Hash::make($password);
+                return  $this->renderError('用户名已存在');
             }
-            $form['avatarUrl']=$request->get('avatar');
-            if($form = array_filter($form)){
-                foreach ($form as $key => $value) {
-                    $user->$key=$value;
-                }
-            }
-            $user->save();
-            return new UserResource($user);
         }
+        $form = $request->only(['name','nickName','open_id']);
+        if($password = $request->get('password')){
+            $form['password'] =Hash::make($password);
+        }
+        $form['avatarUrl']=$request->get('avatar');
+        if($form = array_filter($form)){
+            foreach ($form as $key => $value) {
+                $user->$key=$value;
+            }
+        }
+        $user->save();
+        return new UserResource($user);
     }
 
     /**
@@ -232,12 +228,7 @@ class UserController extends Controller
     private function getValidationRules($isNew = true)
     {
         return [
-            'name' => 'required',
-            'email' => $isNew ? 'required|email|unique:users' : 'required|email',
-            'roles' => [
-                'required',
-                'array'
-            ],
+            'name' => $isNew ? 'required|name|unique:users' : 'required|name',
         ];
     }
 }

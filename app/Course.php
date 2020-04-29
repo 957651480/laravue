@@ -56,9 +56,9 @@ class Course extends Model
         return $this->belongsTo(Teacher::class,'teacher_id');
     }
 
-    public function attend()
+    public function attends()
     {
-        return $this->hasOne(Attend::class,'course_id');
+        return $this->hasMany(Attend::class,'course_id');
     }
     public function getTimesAttribute($value)
     {

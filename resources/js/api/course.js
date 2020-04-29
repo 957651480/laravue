@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 export function fetchList(query) {
   return request({
-    url: 'courses/list',
+    url: 'courses/admin/list',
     method: 'get',
     params: query,
   });
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchCourse(id) {
   return request({
-    url: 'courses/detail/' + id,
+    url: 'courses/admin/detail/' + id,
     method: 'get',
   });
 }

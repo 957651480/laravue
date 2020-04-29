@@ -16,14 +16,17 @@ class Attend extends JsonResource
     public function toArray($request)
     {
         $user = $this->user;
-        $course = $this->course;
+        $times=[];
+        if($course = $this->course){
+            $times = Arr::only($course->times,$this->time_id);
+        }
 
         return [
             'attend_id'=>(integer)$this->attend_id,
             'grade'=>$this->grade,
             'class'=>$this->class,
             'student_name'=>$this->student_name,
-            'times'=>Arr::only($course->times,$this->time_id),
+            'times'=>$times,
             'user_id'=>$this->user_id,
             'user_nickName'=>$user->nickName??'',
             'user_avatarUrl'=>$user->avatarUrl??'',

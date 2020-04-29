@@ -84,6 +84,7 @@ class AuthController extends Controller
         {
             $user = new User();
             $user->open_id = $openid;
+            $user->name = $openid;
             $user->nickName = $userData['nickName'];
             $user->avatarUrl = $userData['avatarUrl'];
             $user->save();

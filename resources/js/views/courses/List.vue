@@ -130,8 +130,8 @@ import axios from "axios";
 import {getToken} from "@/utils/auth";
 
 import {deleteCourse} from "@/api/course";
+import { fetchList } from '@/api/course';
 
-const courseResource = new Resource('courses');
 const categoryResource = new Resource('categories');
 
 export default {
@@ -161,7 +161,7 @@ export default {
     async getList() {
       const { limit, page } = this.query;
       this.loading = true;
-      const { data } = await courseResource.list(this.query);
+      const { data } = await fetchList(this.query);
       this.list = data.list;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;

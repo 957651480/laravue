@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Course;
+use App\Http\Resources\AdminCourse;
+use App\Http\Resources\AdminCourseCollection;
 use App\Http\Resources\CourseCollection;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
@@ -27,16 +30,46 @@ class CourseController extends Controller
     }
 
 
-
-    public function index(Request $request)
+    public function adminIndex(Request $request)
     {
-        //
-        $query = $this->courses->with(['category','image','teacher.images.file','attend'])->newQuery();
+        $query = $this->courses->with(['category','image','teacher.images.file'])->newQuery();
         $wheres =$this->filter($request);
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
         });
         $paginate = $query->latest()->paginate($request->get('limit'));
+
+        $data =[
+            'total'=>$paginate->total(),
+            'list'=>new AdminCourseCollection($paginate)
+        ];
+        return $this->renderSuccess('',$data);
+    }
+
+    public function adminShow(Request $request,$id)
+    {
+        //
+        $query = $this->courses->with(['category','image','teacher.images.file'])->newQuery();
+        $course = $query->where('course_id',$id)->firstOrFail();
+        $course = new AdminCourse($course);
+        return $this->renderSuccess('',$course);
+    }
+
+
+    public function index(Request $request)
+    {
+        //
+        $query = $this->courses->with(['category','image','teacher.images.file'])->newQuery();
+        $wheres =$this->filter($request);
+
+        $user = $request->user();
+        $query->when($user,function ($query)use($user){
+            $query->leftJoin('attends','attends.course_id','courses.course_id');
+        });
+        $query->when($wheres,function ($query)use($wheres){
+            $query->where($wheres);
+        });
+        $paginate = $query->latest('courses.created_at')->paginate($request->get('limit'));
 
         $data =[
             'total'=>$paginate->total(),
@@ -55,10 +88,16 @@ class CourseController extends Controller
     }
 
 
-    public function show($id)
+    public function show(Request $request,$id)
     {
         //
-        $course = $this->courses->with(['category','image','teacher.images.file','attend'])->where('course_id',$id)->firstOrFail();
+        $query = $this->courses->with(['category','image','teacher.images.file'])->newQuery();
+
+        $user = $request->user();
+        $query->when($user,function ($query)use($user){
+            $query->leftJoin('attends','attends.course_id','courses.course_id');
+        });
+        $course = $query->where('courses.course_id',$id)->firstOrFail();
         $course = new \App\Http\Resources\Course($course);
         return $this->renderSuccess('',$course);
     }
@@ -80,23 +119,28 @@ class CourseController extends Controller
     public function destroy($id)
     {
         //
-        $course = $this->courses->where('course_id',$id)->firstOrFail();
-        $course->delete();
+        $course = $this->courses->with(['attends'])->where('course_id',$id)->firstOrFail();
+        DB::transaction(function ()use($course){
+            $course->delete();
+            foreach ($course->attends as $attend){
+                $attend->delete();
+            }
+        });
+
         return $this->renderSuccess();
     }
 
     public function myCourseList(Request $request)
     {
-        $query = $this->courses->with(['category','image','teacher.image','attend'])->newQuery();
+        $query = $this->courses->with(['category','teacher.images'])->newQuery();
         $wheres =$this->filter($request);
-        $user_id = $request->user()->id;
-        $query->whereHas('attend',function ($query)use($user_id){
-            $query->where('user_id', '=', $user_id);
-        });
+        $user = $request->user();
+        $query->join('attends','attends.course_id','courses.course_id');
+        $query->where('attends.user_id','=',$user->id);
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
         });
-        $paginate = $query->latest()->paginate($request->get('limit'));
+        $paginate = $query->latest('courses.created_at')->paginate($request->get('limit'));
 
         $data =[
             'total'=>$paginate->total(),
@@ -107,12 +151,11 @@ class CourseController extends Controller
 
     public function myCourseDetail(Request $request,$id)
     {
-        $user_id = $request->user()->id;
-        $query = $this->courses->with(['category','image','teacher.image','attend']);
-        $query->whereHas('attend',function ($query)use($user_id){
-            $query->where('user_id', '=', $user_id);
-        });
-        $course = $query->where('course_id',$id)->firstOrFail();
+        $query = $this->courses->with(['category','teacher.images','attends']);
+        $user = $request->user();
+        $query->join('attends','attends.course_id','courses.course_id');
+        $query->where('attends.user_id','=',$user->id);
+        $course = $query->where('courses.course_id',$id)->firstOrFail();
 
         $course = new \App\Http\Resources\Course($course);
         return $this->renderSuccess('',$course);
