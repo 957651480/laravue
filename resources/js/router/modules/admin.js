@@ -28,12 +28,12 @@ const adminRoutes = {
       meta: { title: 'UserList', icon: 'user',noCache: true, permissions: ['manage user'] },
     },
     /** Role and permission */
-    /*{
+    {
       path: 'roles',
       component: () => import('@/views/role-permission/List'),
       name: 'RoleList',
       meta: { title: 'rolePermission', icon: 'role', permissions: ['manage permission'] },
-    },*/
+    },
   ],
 };
 

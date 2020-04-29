@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\AdminHouseResource;
 use App\Models\House;
-use App\Http\Resources\AdminCourse;
-use App\Http\Resources\AdminCourseCollection;
-use App\Http\Resources\CourseCollection;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -41,7 +39,7 @@ class HouseController extends Controller
 
         $data =[
             'total'=>$paginate->total(),
-            'list'=>new CourseCollection($paginate)
+            'list'=>AdminHouseResource::collection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }
@@ -66,7 +64,7 @@ class HouseController extends Controller
             $query->leftJoin('attends','attends.course_id','courses.course_id');
         });
         $course = $query->where('courses.course_id',$id)->firstOrFail();
-        $course = new \App\Http\Resources\Course($course);
+        $course = new AdminHouseResource($course);
         return $this->renderSuccess('',$course);
     }
 

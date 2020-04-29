@@ -10,6 +10,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\AdminUserResource;
 use App\Http\Resources\PermissionResource;
 use App\Http\Resources\UserResource;
 use App\Laravue\JsonResponse;
@@ -33,12 +34,7 @@ class UserController extends Controller
 {
     const ITEM_PER_PAGE = 15;
 
-    /**
-     * Display a listing of the user resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response|ResourceCollection
-     */
+
     public function index(Request $request)
     {
         $searchParams = $request->all();
@@ -57,7 +53,7 @@ class UserController extends Controller
         $paginator = $userQuery->paginate($limit);
         $data =[
             'total'=>$paginator->total(),
-            'list'=>UserResource::collection($paginator)
+            'list'=>AdminUserResource::collection($paginator)
         ];
         return $this->renderSuccess('',$data);
     }

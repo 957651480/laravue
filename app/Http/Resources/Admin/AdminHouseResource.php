@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Admin;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Course extends JsonResource
+class AdminHouseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

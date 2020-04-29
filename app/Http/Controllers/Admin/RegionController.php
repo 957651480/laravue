@@ -36,7 +36,7 @@ class RegionController extends Controller
         $paginator = $query->paginate();
         $data =[
             'total'=>$paginator->total(),
-            'list'=>new AdminRegionResourceCollection($paginator)
+            'list'=>AdminRegionResource::collection($paginator)
         ];
         return $this->renderSuccess('',$data);
     }
