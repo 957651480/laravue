@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
-use App\Http\Resources\Admin\BannerCollection;
+use App\Http\Resources\Admin\AdminBannerResourceCollection;
 use Arr;
 use Illuminate\Http\Request;
 
@@ -34,7 +34,7 @@ class BannerController extends Controller
             ->paginate($request->get('limit'));
         $data =[
             'total'=>$paginate->total(),
-            'list'=>new BannerCollection($paginate)
+            'list'=>new AdminBannerResourceCollection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }
@@ -43,18 +43,12 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         //
-
         $data = $this->validateBanner($request);
         $this->banners->create($data);
         return $this->renderSuccess();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
@@ -64,9 +58,8 @@ class BannerController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $banner = $this->banners->where('banner_id',$id)->firstOrFail();
-        $form  = $request->all();
-        $data =Arr::only($form,['title','image_id','show','sort']);
+        $banner = $this->banners->getModelByIdOrFail($id);
+        $data = $this->validateBanner($request);
         $banner->update($data);
         return $this->renderSuccess();
     }
@@ -75,7 +68,7 @@ class BannerController extends Controller
     public function destroy($id)
     {
         //
-        $banner = $this->banners->where('banner_id',$id)->firstOrFail();
+        $banner = $this->banners->getModelByIdOrFail($id);
         $banner->delete();
         return $this->renderSuccess();
     }

@@ -4,7 +4,7 @@ namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class BannerCollection extends ResourceCollection
+class AdminBannerResourceCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.

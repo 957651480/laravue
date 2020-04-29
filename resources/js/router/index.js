@@ -23,6 +23,7 @@ import courseRoutes from './modules/course';
 import categoryRoutes from './modules/category';
 import teacherRoutes from "@/router/modules/teacher";
 import attendRoutes from "@/router/modules/attend";
+import regionRoutes from "@/router/modules/region";
 
 
 /**
@@ -112,6 +113,7 @@ export const constantRoutes = [
   exampleRoutes,
   courseRoutes,
   categoryRoutes,
+  regionRoutes,
   teacherRoutes,
   attendRoutes,
   {

@@ -34,6 +34,13 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::post('banners/update/{id}', 'BannerController@update');
         Route::get('banners/delete/{id}', 'BannerController@destroy');
 
+        //城市管理路由
+        Route::get('regions', 'RegionController@index');
+        Route::post('regions/create', 'RegionController@store');
+        Route::get('regions/detail/{id}', 'RegionController@show');
+        Route::post('regions/update/{id}', 'RegionController@update');
+        Route::get('regions/delete/{id}', 'RegionController@destroy');
+
         Route::get('auth/user', 'AuthController@user');
 
 
