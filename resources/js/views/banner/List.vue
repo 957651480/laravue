@@ -78,6 +78,19 @@
               <span>建议传入尺寸为344*146</span>
             </el-upload>
           </el-form-item>
+          <el-form-item label="类型:" prop="type_id">
+            <el-select
+              v-model="newBanner.type_id"
+              placeholder="选择教师"
+            >
+              <el-option
+                v-for="item in types"
+                :key="item.type_id"
+                :label="item.name"
+                :value="item.type_id"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="状态:" prop="show">
             <el-radio v-model="newBanner.show" :label="10">显示</el-radio>
             <el-radio v-model="newBanner.show" :label="20">隐藏</el-radio>
@@ -124,11 +137,14 @@ export default {
       newBanner: {},
       dialogFormVisible: false,
       rules: {
-        title: [{ required: true, message: '辩题必须', trigger: 'blur' }],
+        title: [{ required: true, message: '标题必须', trigger: 'blur' }],
+        type_id: [{ required: true, message: '分类必须', trigger: 'blur' }],
         image_id: [{ required: true, message: '图片必填', trigger: 'blur' }],
       },
       isEdit: false,
       myHeaders: { Authorization: 'Bearer ' + getToken() },
+      //
+      types:[{type_id:10,name:'首页'},{type_id:10,name:'楼盘'}]
     };
   },
   computed: {
@@ -234,6 +250,7 @@ export default {
     resetNewBanner() {
       this.newBanner = {
         title: '',
+        type_id:10,
         image_id:null,
         image_url:'',
         show: 10,

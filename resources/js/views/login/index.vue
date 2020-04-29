@@ -60,8 +60,8 @@ export default {
     };
     return {
       loginForm: {
-        name: '',
-        password: '',
+        name: 'admin',
+        password: 'admin',
       },
       loginRules: {
         name: [{ required: true, trigger: 'blur'}],
