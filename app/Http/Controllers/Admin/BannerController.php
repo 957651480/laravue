@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\AdminBannerResource;
 use App\Models\Banner;
 use App\Http\Resources\Admin\AdminBannerResourceCollection;
 use Arr;
@@ -34,7 +35,7 @@ class BannerController extends Controller
             ->paginate($request->get('limit'));
         $data =[
             'total'=>$paginate->total(),
-            'list'=>new AdminBannerResourceCollection($paginate)
+            'list'=>AdminBannerResource::collection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }

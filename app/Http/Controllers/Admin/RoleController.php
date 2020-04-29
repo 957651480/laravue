@@ -23,13 +23,29 @@ use App\Http\Resources\RoleResource;
 class RoleController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var Role
      */
-    public function index()
+    protected $service;
+
+    /**
+     * RoleController constructor.
+     * @param Role $service
+     */
+    public function __construct(Role $service)
     {
-        return RoleResource::collection(Role::all());
+        $this->service = $service;
+    }
+
+
+    public function index(Request $request)
+    {
+        $query = $this->service->newQuery();
+        $paginate = $query->latest()->paginate($request->get('limit'));
+        $data =[
+            'total'=>$paginate->total(),
+            'list'=>RoleResource::collection($paginate)
+        ];
+        return $this->renderSuccess('',$data);
     }
 
     /**

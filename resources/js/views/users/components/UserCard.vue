@@ -1,5 +1,5 @@
 <template>
-  <el-card >
+  <el-card v-if="user.name">
     <div class="user-profile">
       <div class="user-avatar box-center">
         <pan-thumb :image="user.avatar" :height="'100px'" :width="'100px'" :hoverable="false" />
@@ -12,7 +12,7 @@
           {{ getRole() }}
         </div>
       </div>
-      <!--<div class="box-social">
+      <div class="box-social">
         <el-table :data="social" :show-header="false">
           <el-table-column prop="name" label="Name" />
           <el-table-column label="Count" align="left" width="100">
@@ -21,7 +21,7 @@
             </template>
           </el-table-column>
         </el-table>
-      </div>-->
+      </div>
       <div class="user-follow">
         <el-button type="primary" style="width: 100%;">
           用户头像

@@ -225,7 +225,7 @@ class UserController extends Controller
     private function getValidationRules($isNew = true)
     {
         return [
-            'name' => $isNew ? 'required|name|unique:users' : 'required|name',
+            'name' => $isNew ? 'required|unique:users' : 'required',
         ];
     }
 }

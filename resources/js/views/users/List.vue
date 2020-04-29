@@ -1,19 +1,19 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="query.keyword" placeholder="请输入用户昵称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <!--<el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in roles" :key="item" :label="item | uppercaseFirst" :value="item" />
-      </el-select>-->
+      <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
+        <el-option v-for="(item,key) in roles" :key="key" :label="item.display_name" :value="item.role_id" />
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
-      </el-button>-->
-      <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      </el-button>
+      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
-      </el-button>-->
+      </el-button>
     </div>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
@@ -29,57 +29,28 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="微信昵称">
-        <template slot-scope="scope">
-          <span>{{ scope.row.nickName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="微信OPENID">
-        <template slot-scope="scope">
-          <span>{{ scope.row.open_id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="微信头像">
-        <template slot-scope="scope">
-          <el-image
-            style="width: 80px; height: 80px"
-            :src="scope.row.avatar"
-            :preview-src-list="[scope.row.avatar]"
-          ></el-image>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="注册时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.created_at }}</span>
-        </template>
-      </el-table-column>
-      <!--<el-table-column align="center" label="更新时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.updated_at }}</span>
-        </template>
-      </el-table-column>-->
-      <!--<el-table-column align="center" label="邮箱">
+      <el-table-column align="center" label="邮箱">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
-      </el-table-column>-->
+      </el-table-column>
 
-      <!--<el-table-column align="center" label="Role" width="120">
+      <el-table-column align="center" label="角色" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.roles.join(', ') }}</span>
+          <el-button icon="el-icon-view" @click="viewUserRole(scope.row)">查看角色</el-button>
         </template>
-      </el-table-column>-->
+      </el-table-column>
 
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
-          <router-link  :to="'/administrator/users/edit/'+scope.row.id">
+          <router-link v-if="!scope.row.roles.includes('admin')" :to="'/administrator/users/edit/'+scope.row.id">
             <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit">
-              详情
+              编辑
             </el-button>
           </router-link>
-          <!--<el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
+          <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
             Permissions
-          </el-button>-->
+          </el-button>
           <el-button v-if="scope.row.roles.includes('visitor')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
             删除
           </el-button>
@@ -127,16 +98,16 @@
               <el-option v-for="item in nonAdminRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
             </el-select>
           </el-form-item>
-          <el-form-item :label="$t('user.name')" prop="name">
+          <el-form-item label="用户名" prop="name">
             <el-input v-model="newUser.name" />
           </el-form-item>
-          <el-form-item :label="$t('user.email')" prop="email">
+          <el-form-item label="邮箱" prop="email">
             <el-input v-model="newUser.email" />
           </el-form-item>
-          <el-form-item :label="$t('user.password')" prop="password">
+          <el-form-item label="密码" prop="password">
             <el-input v-model="newUser.password" show-password />
           </el-form-item>
-          <el-form-item :label="$t('user.confirmPassword')" prop="confirmPassword">
+          <el-form-item label="确认密码" prop="confirmPassword">
             <el-input v-model="newUser.confirmPassword" show-password />
           </el-form-item>
         </el-form>
@@ -159,8 +130,9 @@ import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
-import checkPermission from '@/utils/permission'; // Permission checking
-
+import checkPermission from '@/utils/permission';
+import role from '@/api/role';
+const roleResource = new Resource('roles');
 const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
@@ -188,7 +160,7 @@ export default {
         keyword: '',
         role: '',
       },
-      roles: ['admin', 'manager', 'editor', 'user', 'visitor'],
+      roles:[],
       nonAdminRoles: ['editor', 'user', 'visitor'],
       newUser: {},
       dialogFormVisible: false,
@@ -286,6 +258,7 @@ export default {
   created() {
     this.resetNewUser();
     this.getList();
+    this.getRoleList();
     if (checkPermission(['manage permission'])) {
       this.getPermissions();
     }
@@ -457,6 +430,13 @@ export default {
         this.dialogPermissionLoading = false;
         this.dialogPermissionVisible = false;
       });
+    },
+    viewUserRole(data) {
+      debugger
+    },
+    async getRoleList() {
+      const { data } = await roleResource.list({limit:100});
+      this.roles = data.list;
     },
   },
 };

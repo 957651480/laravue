@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        /*$userList = [
+        $userList = [
             "demo",
         ];
 
@@ -33,6 +33,6 @@ class UsersTableSeeder extends Seeder
 
             $role = Role::findByName($roleName);
             $user->syncRoles($role);
-        }*/
+        }
     }
 }

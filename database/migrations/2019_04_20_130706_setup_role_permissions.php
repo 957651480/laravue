@@ -21,7 +21,7 @@ class SetupRolePermissions extends Migration
             ['name'=>'manager','display_name'=>'管理员','guard_name'=>'api'],
             ['name'=>'editor','display_name'=>'编辑员','guard_name'=>'api'],
             ['name'=>'user','display_name'=>'用户','guard_name'=>'api'],
-            ['name'=>'visitor','display_name'=>'访客','guard_name'=>'api'],
+            ['name'=>'visitor','display_name'=>'合伙人','guard_name'=>'api'],
         ];
 
         foreach ($roles as $role) {
