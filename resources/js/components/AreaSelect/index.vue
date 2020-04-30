@@ -1,22 +1,24 @@
 <template>
 <div class="area-select">
-  <el-form-item label="地址:" :label-width="'100px'" prop="region">
-    <el-select v-model="regionData.province" placeholder="请选择省" class="address_select" @change="chooseCity(regionData.province)" size="small">
-      <el-option value="0" v-show="showDefault">{{title}}</el-option>
-      <el-option v-for="item in provinces" :key="item.region_id" :label="item.name" :value="item.region_id">
-      </el-option>
-    </el-select>
-    <el-select v-model="regionData.city" placeholder="请选择市" class="address_select" @change="chooseDistrict(regionData.city)" size="small">
-      <el-option value="0" v-show="showDefault">{{title}}</el-option>
-      <el-option v-for="item in cities" :key="item.region_id" :label="item.name" :value="item.region_id">
-      </el-option>
-    </el-select>
-    <el-select v-model="regionData.district" placeholder="请选择区" class="address_select" size="small">
-      <el-option value="0" v-show="showDefault">{{title}}</el-option>
-      <el-option v-for="item in districts" :key="item.region_id" :label="item.name" :value="item.region_id">
-      </el-option>
-    </el-select>
-  </el-form-item>
+  <span>省:</span>
+  <el-select v-model="regionData.province" placeholder="请选择省" class="address_select" @change="chooseProvince(regionData.province)" size="small">
+    <el-option value="0" v-show="showDefault">{{title}}</el-option>
+    <el-option v-for="item in provinces" :key="item.region_id" :label="item.name" :value="item.region_id">
+    </el-option>
+  </el-select>
+  <span>市:</span>
+  <el-select v-model="regionData.city" placeholder="请选择市" class="address_select" @change="chooseCity(regionData.city)" size="small">
+    <el-option value="0" v-show="showDefault">{{title}}</el-option>
+    <el-option v-for="item in cities" :key="item.region_id" :label="item.name" :value="item.region_id">
+    </el-option>
+  </el-select>
+  <span>区:</span>
+  <el-select v-model="regionData.district" placeholder="请选择区" class="address_select" @change="chooseDistrict(regionData.district)" size="small">
+    <el-option value="0" v-show="showDefault">{{title}}</el-option>
+    <el-option v-for="item in districts" :key="item.region_id" :label="item.name" :value="item.region_id">
+    </el-option>
+  </el-select>
+
 </div>
 </template>
 
@@ -73,7 +75,8 @@
     getDistrict(id){
       this.getRegion('districts',{parent_id:id});
     },
-    chooseCity(id) {
+    chooseProvince(id) {
+
       this.resetCity();
       this.resetDistrict();
       if(this.showDefault){
@@ -82,13 +85,19 @@
       this.getCity(id);
       this.updateData();
     },
-    chooseDistrict(id) {
+    chooseCity(id) {
+
       this.resetDistrict();
       if(this.showDefault){
         if(id===0)return false;
       }
+      this.getDistrict(id);
       this.updateData();
-      this.getDistrict(id)
+    },
+    chooseDistrict(id)
+    {
+      this.updateData();
+      this.$forceUpdate();
     },
     getRegion(key,query={}){
       var _this= this;
