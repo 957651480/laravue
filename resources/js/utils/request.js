@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Message } from 'element-ui';
+import {Message} from 'element-ui';
 import { getToken, setToken } from '@/utils/auth';
 import store from "@/store";
 
@@ -29,12 +29,8 @@ service.interceptors.request.use(
 // response pre-processing
 service.interceptors.response.use(
   response => {
+    let res = response.data;
     if (response.status !== 200) {
-      Message({
-        message: response.msg || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      });
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
       /*if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
@@ -49,15 +45,18 @@ service.interceptors.response.use(
           })
         })
       }*/
-      return Promise.reject(new Error(response.msg || 'Error'))
-    } else {
-
-      if (response.headers.authorization) {
-        setToken(response.headers.authorization);
-        response.data.token = response.headers.authorization;
-      }
-      return response.data;
+      return Promise.reject(new Error(res.msg || 'Error'))
     }
+    if(res.code!==200){
+      Message(res.msg);
+      return Promise.reject(new Error(res.msg || 'Error'))
+    }
+    if (response.headers.authorization) {
+      setToken(response.headers.authorization);
+      response.data.token = response.headers.authorization;
+    }
+    return response.data;
+
   },
   error => {
     /*let message = error.msg;
