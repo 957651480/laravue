@@ -5,6 +5,7 @@
        :http-request="uploadImage"
        accept="image/*"
        list-type="picture-card"
+       :limit="limit"
        :on-success="handleImagesSuccess"
        :on-preview="handleImagePreview"
        :on-remove="handleImageRemove"
@@ -30,6 +31,10 @@
           return [];
       },
     },
+    limit:{
+        type:String,
+        default:'—'
+    }
   },
   data() {
     return {
@@ -87,7 +92,7 @@
     },
     handleLimitTip: function(files, fileList){
       this.$message({
-        message: '只能上传一张图片',
+        message: `只能上传${this.limit}张图片`,
         type: 'warning'
       });
     }
