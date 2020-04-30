@@ -29,6 +29,9 @@ class RegionController extends Controller
     {
         //
         $query = $this->service->newQuery();
+        $query->when($request->has('parent_id'),function ($query)use($request){
+            $query->whereParentId($request->get('parent_id'));
+        });
         $paginator = $query->paginate($request->get('limit'));
         $data =[
             'total'=>$paginator->total(),

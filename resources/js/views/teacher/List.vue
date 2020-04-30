@@ -97,7 +97,7 @@
             <span>填写后按回车</span>
           </el-form-item>
           <el-form-item label="教师图片:" prop="images">
-           <multiple-image :fileList="newTeacher.images" @changFiles="changFiles"></multiple-image>
+           <upload-image :fileList="newTeacher.images" @changFiles="changFiles"></upload-image>
            <span>至少传入三张图片:建议第一张缩略图尺寸为64*64,第二张课程列表尺寸为132*88,第三张课程详情尺寸为343*176</span>
           </el-form-item>
           <el-form-item label="简介:" prop="introduction">
@@ -124,14 +124,14 @@ import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import { fetchList, updateTeacher, createTeacher, deleteTeacher } from '@/api/teacher';
 import {getToken} from "@/utils/auth";
-import MultipleImage from "@/components/Upload/MultipleImage";
+import UploadImage from "@/components/Upload/UploadImage";
 
 const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
 export default {
   name: 'TeacherList',
-  components: {MultipleImage, Pagination },
+  components: {UploadImage, Pagination },
   directives: { waves },
   data() {
     return {

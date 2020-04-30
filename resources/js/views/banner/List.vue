@@ -66,16 +66,7 @@
             <el-input v-model="newBanner.title" />
           </el-form-item>
           <el-form-item label="图片:" prop="image_id">
-            <el-upload
-              class="avatar-uploader"
-              :show-file-list="false"
-              action="api/file/upload"
-              :on-success="handleSuccess"
-              :headers="myHeaders"
-            >
-              <img v-if="newBanner.image_url" :src="newBanner.image_url" class="avatar">
-              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+            <upload-image :image-list="newBanner.images"  @updateImageList="updateImageList"></upload-image>
           </el-form-item>
           <el-form-item label="类型:" prop="type_id">
             <el-select
@@ -117,10 +108,11 @@ import Pagination from '@/components/Pagination'; // Secondary package based on 
 import waves from '@/directive/waves'; // Waves directive
 import { fetchList, updateBanner, createBanner, deleteBanner } from '@/api/banner';
 import {getToken} from "@/utils/auth";
+import UploadImage from "@/components/Upload/UploadImage";
 
 export default {
   name: 'BannerList',
-  components: { Pagination },
+  components: {UploadImage, Pagination },
   directives: { waves },
   data() {
     return {
@@ -138,7 +130,7 @@ export default {
       rules: {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
         type_id: [{ required: true, message: '类型必须', trigger: 'blur' }],
-        image_id: [{ required: true, message: '图片必填', trigger: 'blur' }],
+        images: [{ required: true, message: '图片必填', trigger: 'blur' }],
       },
       isEdit: false,
       myHeaders: { Authorization: 'Bearer ' + getToken() },
@@ -250,8 +242,7 @@ export default {
       this.newBanner = {
         title: '',
         type_id:10,
-        image_id:null,
-        image_url:'',
+        images:[],
         show: 10,
         sort: 100,
       };
@@ -260,8 +251,8 @@ export default {
       this.newBanner.image_id = response.file_id;
       this.newBanner.image_url = response.url;
     },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => v[j]));
+    updateImageList(data){
+      this.newBanner.images=data;
     },
   },
 };

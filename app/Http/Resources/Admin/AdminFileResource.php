@@ -22,6 +22,7 @@ class AdminFileResource extends JsonResource
             'extension'=>(string)$this->extension,
             'size'=>(integer)$this->size,
             'mime_type'=>(string)$this->mime_type,
+            'url'=>(string)$this->url,
             'created_at'=>(string)$this->created_at,
             'updated_at'=>(string)$this->updated_at,
         ];

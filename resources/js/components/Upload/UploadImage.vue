@@ -1,14 +1,14 @@
 <template>
- <div class="multiple-image">
+ <div class="upload-image">
      <el-upload
        :action="'imagesUpload'"
        :http-request="uploadImage"
        accept="image/*"
-       :limit="8"
        list-type="picture-card"
        :on-success="handleImagesSuccess"
        :on-preview="handleImagePreview"
        :on-remove="handleImageRemove"
+       :on-exceed="handleLimitTip"
        :file-list="fileList">
        <i class="el-icon-plus"></i>
      </el-upload>
@@ -22,7 +22,7 @@
   import {uploadFile} from "@/api/file";
 
   export default {
-  name: 'MultipleImage',
+  name: 'UploadImage',
   props: {
     imageList: {
       type:Array,
@@ -85,6 +85,12 @@
       }
       return isJpg;
     },
+    handleLimitTip: function(files, fileList){
+      this.$message({
+        message: '只能上传一张图片',
+        type: 'warning'
+      });
+    }
   },
 };
 </script>

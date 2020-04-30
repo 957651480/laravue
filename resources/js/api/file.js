@@ -44,3 +44,12 @@ export function deleteTeacher(id) {
     method: 'delete',
   });
 }
+
+
+export function uploadFile(data) {
+  return request({
+    url: 'file/upload',
+    method: 'post',
+    data,
+  });
+}
