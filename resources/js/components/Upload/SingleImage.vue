@@ -1,68 +1,95 @@
 <template>
-  <div class="upload-container">
+  <div class="single-image">
     <el-upload
-      :data="additionalData"
-      :multiple="false"
-      :show-file-list="false"
-      :on-success="handleImageSuccess"
-      class="image-uploader"
-      drag
-      action="https://httpbin.org/post"
-    >
-      <i class="el-icon-upload" />
-      <div class="el-upload__text">
-        Drag files here or <em>Click to upload</em>
-      </div>
+      :action="'imageUpload'"
+      :http-request="uploadImage"
+      accept="image/*"
+      :limit="1"
+      list-type="picture-card"
+      :on-success="handleImagesSuccess"
+      :on-preview="handleImagePreview"
+      :on-remove="handleImageRemove"
+      :on-exceed="handleLimitTip"
+      :file-list="[image]">
+      <i class="el-icon-plus"></i>
     </el-upload>
-    <div class="image-preview image-app-preview">
-      <div v-show="imageUrl.length>1" class="image-preview-wrapper">
-        <img :src="imageUrl">
-        <div class="image-preview-action">
-          <i class="el-icon-delete" @click="rmImage" />
-        </div>
-      </div>
-    </div>
-    <div class="image-preview">
-      <div v-show="imageUrl.length>1" class="image-preview-wrapper">
-        <img :src="imageUrl">
-        <div class="image-preview-action">
-          <i class="el-icon-delete" @click="rmImage" />
-        </div>
-      </div>
-    </div>
+    <el-dialog :visible.sync="dialogVisible" append-to-body>
+      <img width="100%" :src.sync="dialogImageUrl" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import {uploadFile} from "@/api/file";
 export default {
-  name: 'SingleImageUpload3',
+  name: 'SingleImage',
   props: {
-    value: {
-      type: String,
-      default: '',
+    imageObject: {
+      type:Object,
+      default:function () {
+        return {};
+      },
     },
   },
   data() {
     return {
-      tempUrl: '',
-      additionalData: {},
+      dialogImageUrl: '',
+      dialogVisible: false,
+      image:this.imageObject,
     };
   },
-  computed: {
-    imageUrl() {
-      return this.value;
-    },
-  },
   methods: {
-    rmImage() {
-      this.emitInput('');
+    //【内容图删除事件】
+    handleImageRemove: function (file, fileList) {
+      this.image=file;
+      this.$emit('updateImage',this.image);
     },
-    emitInput(val) {
-      this.$emit('input', val);
+
+    //【内容图片预览事件】
+    handleImagePreview: function (file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
-    handleImageSuccess(file) {
-      this.emitInput(file.files.file);
+    handleImagesSuccess(response, file, fileList)
+    {
+      let {data} = response;
+      file = Object.assign(file,{file_id:data.file_id,name:data.name,url:data.url});
+      this.image=file;
+      this.$emit('updateImage',this.image);
     },
+    //上传内容图
+    uploadImage: function (file) {
+      var fd = new FormData();
+      fd.append('file', file.file);
+      uploadFile(fd).then((response)=>{
+        file.onSuccess(response);
+      }).catch(({msg})=>{
+        file.onError()
+      });
+    },
+
+    //内容图上传前的大小 格式的校验
+    uploadImageBefore: function (file) {
+      var fileType = file.type;
+      var isJpg = false;
+      if (fileType === 'image/jpeg' || fileType === 'image/png' || fileType === 'image/bmp') {
+        isJpg = true;
+      }
+
+      if (!isJpg) {
+        this.$message({
+          message: '上传的图标只能是jpg、png、bmp格式!',
+          type: 'warning'
+        });
+      }
+      return isJpg;
+    },
+    handleLimitTip: function(files, fileList){
+      this.$message({
+        message: '只能上传一张图片',
+        type: 'warning'
+      });
+    }
   },
 };
 </script>
