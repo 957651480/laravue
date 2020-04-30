@@ -31,3 +31,8 @@ function export_excel($fileName, $tileArray = [], $dataArray = [])
     flush();
     ob_end_clean();
 }
+
+function firstImageId($data){
+    $images = Arr::pull($data,'images');
+
+}

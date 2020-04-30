@@ -20,7 +20,7 @@ class AdminBannerResource extends JsonResource
             'title'=>(string)$this->title,
             'type_id'=>(integer)$this->type_id,
             'image_id'=>(integer)$this->image_id,
-            'image_url'=>(string)$image->url??'',
+            'images'=>[$image],
             'show'=>(integer)$this->show,
             'sort'=>(integer)$this->sort,
             'created_at'=>(string)$this->created_at,

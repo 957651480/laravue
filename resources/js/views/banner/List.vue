@@ -25,7 +25,12 @@
 
       <el-table-column align="center" label="图片">
         <template slot-scope="scope">
-          <img :src="scope.row.image_url" width="40" height="40" />
+          <el-image
+            style="width: 80px; height: 80px"
+            :src="scope.row.images[0].url"
+            :preview-src-list="showImageList(scope.row.images)"
+          ></el-image>
+
         </template>
       </el-table-column>
       <el-table-column align="center" label="状态">
@@ -107,7 +112,6 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import waves from '@/directive/waves'; // Waves directive
 import { fetchList, updateBanner, createBanner, deleteBanner } from '@/api/banner';
-import {getToken} from "@/utils/auth";
 import UploadImage from "@/components/Upload/UploadImage";
 
 export default {
@@ -130,10 +134,9 @@ export default {
       rules: {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
         type_id: [{ required: true, message: '类型必须', trigger: 'blur' }],
-        images: [{ required: true, message: '图片必填', trigger: 'blur' }],
+        image_id: [{ required: true, message: '图片必填', trigger: 'blur' }],
       },
       isEdit: false,
-      myHeaders: { Authorization: 'Bearer ' + getToken() },
       //
       types:[{type_id:10,name:'首页'},{type_id:20,name:'楼盘'}]
     };
@@ -194,6 +197,7 @@ export default {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           this.BannerCreating = true;
+          delete  this.newBanner.images;
           if (this.isEdit){
             let  id = this.newBanner.banner_id;
             updateBanner(id,this.newBanner)
@@ -242,18 +246,28 @@ export default {
       this.newBanner = {
         title: '',
         type_id:10,
+        image_id:0,
         images:[],
         show: 10,
         sort: 100,
       };
     },
-    handleSuccess(response, file, fileList){
-      this.newBanner.image_id = response.file_id;
-      this.newBanner.image_url = response.url;
-    },
     updateImageList(data){
-      this.newBanner.images=data;
+        if(data.length>0){
+            this.newBanner.images=data;
+            this.newBanner.image_id=data[0].file_id
+        }else {
+            this.newBanner.image_id=null;
+        }
     },
+
+    showImageList(imageList){
+        let tmpList = [];
+        for (let i = 0;i < imageList.length;i++){
+            tmpList[i]=imageList[i].url;
+        }
+        return tmpList;
+    }
   },
 };
 </script>
@@ -284,28 +298,5 @@ export default {
     .clear-left {
       clear: left;
     }
-  }
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
   }
 </style>

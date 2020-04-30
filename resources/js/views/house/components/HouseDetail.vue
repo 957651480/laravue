@@ -26,7 +26,7 @@
         <el-form-item label="图片:" prop="images">
           <upload-image :image-list="postForm.images"  @updateImageList="updateImageList"></upload-image>
         </el-form-item>
-        <el-form-item label="区域:" prop="region">
+        <el-form-item label="区域:" prop="regionData">
           <area-select :region-data="postForm.regionData" @updateRegionData="updateRegionData"></area-select>
         </el-form-item>
         <el-form-item label="住户数:" prop="household">
@@ -86,7 +86,7 @@ export default {
       rules: {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
-        region: [{ required: true, message: '请填写授课时间段', trigger: 'blur' }],
+          regionData: [{ required: true, message: '请填写授课时间段', trigger: 'blur' }],
         household: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         images: [{ required: true, message: '请填写地点', trigger: 'blur' }],
         content: [{ required: true, message: '请填写课程详情', trigger: 'blur' }],
@@ -152,7 +152,7 @@ export default {
               duration: 5 * 1000,
             });
             this.$router.push({
-              path: '/course',
+              path: '/house',
             });
           }).catch(() => {
           })
@@ -165,7 +165,7 @@ export default {
               duration: 5 * 1000,
             });
             this.$router.push({
-              path: '/course',
+              path: '/house',
             });
           }).catch(() => {
           });

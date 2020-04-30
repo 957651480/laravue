@@ -71,9 +71,6 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
 Route::group(['middleware' => 'auth:api'], function () {
 
 
-
-
-
     //我报名的课程
     Route::get('courses/mine', 'CourseController@myCourseList');
     Route::get('courses/mine/detail/{id}', 'CourseController@myCourseDetail');
@@ -83,10 +80,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('categories/update/{id}', 'CategoryController@update');
     Route::get('categories/delete/{id}', 'CategoryController@destroy');
 
-    //轮播图路由
-    Route::post('banners/create', 'BannerController@store');
-    Route::post('banners/update/{id}', 'BannerController@update');
-    Route::get('banners/delete/{id}', 'BannerController@destroy');
     //教师路由
     Route::apiResource('teachers', 'TeacherController');
     //报名列表
