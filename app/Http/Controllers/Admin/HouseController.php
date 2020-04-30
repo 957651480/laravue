@@ -31,7 +31,6 @@ class HouseController extends Controller
         //
         $query = $this->service->with([])->newQuery();
         $wheres =$this->filter($request);
-
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
         });
@@ -47,8 +46,7 @@ class HouseController extends Controller
     public function store(Request $request)
     {
         //
-        $form  = $request->all();
-        $data = Arr::only($form,['title','desc','category_id','content','address','date','times','number','teacher_id']);
+        $data = $this->validateHouse($request);
         $this->service->create($data);
         return $this->renderSuccess();
     }
@@ -57,13 +55,7 @@ class HouseController extends Controller
     public function show(Request $request,$id)
     {
         //
-        $query = $this->service->with(['category','image','teacher.images.file'])->newQuery();
-
-        $user = $request->user();
-        $query->when($user,function ($query)use($user){
-            $query->leftJoin('attends','attends.course_id','courses.course_id');
-        });
-        $course = $query->where('courses.course_id',$id)->firstOrFail();
+        $course = $this->service->getModelByIdOrFail($id);
         $course = new AdminHouseResource($course);
         return $this->renderSuccess('',$course);
     }
@@ -72,27 +64,17 @@ class HouseController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $form  = $request->all();
-        $course_id = Arr::pull($form,'course_id');
-
-        $course = $this->service->where('course_id',$course_id)->firstOrFail();
-        $data = Arr::only($form,['title','desc','content','address','date','times','number','teacher_id']);
-        $course->update($data);
+        $data = $this->validateHouse($request);
+        $model = $this->service->getModelByIdOrFail($id);
+        $model->update($data);
         return $this->renderSuccess();
     }
 
 
     public function destroy($id)
     {
-        //
-        $course = $this->service->with(['attends'])->where('course_id',$id)->firstOrFail();
-        DB::transaction(function ()use($course){
-            $course->delete();
-            foreach ($course->attends as $attend){
-                $attend->delete();
-            }
-        });
-
+        $model = $this->service->getModelByIdOrFail($id);
+        $model->delete();
         return $this->renderSuccess();
     }
 
@@ -124,6 +106,22 @@ class HouseController extends Controller
     }
 
 
+    protected function validateHouse(Request $request)
+    {
+        return $this->validate($request,[
+            'name'=>'required',
+            'desc'=>'sometimes',
+            'city_id'=>'required',
+            'images'=>'required',
+        ],
+            [
+                'name.required'=>'楼盘必填',
+                'desc.sometimes'=>'标题必填',
+                'city_id.required'=>'区域必填',
+                'images.required'=>'图片必传',
+            ]
+        );
+    }
 
     protected function filter(Request $request)
     {

@@ -46,31 +46,12 @@
             ></el-image>
         </template>
       </el-table-column>
-      <el-table-column min-width="80px" label="报名人数">
+      <el-table-column min-width="80px" label="住户数">
         <template slot-scope="scope">
-          <span>{{ scope.row.attend_number }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="80px" label="课程限定人数">
-        <template slot-scope="scope">
-            <span>{{ scope.row.number }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="80px" label="授课日期">
-        <template slot-scope="scope">
-          <span>{{ scope.row.date }}</span>
+          <span>{{ scope.row.household }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="时间段">
-        <template slot-scope="scope">
-          <div v-for="item in scope.row.times" >
-            <span>开始时间:{{ item.start_time  }}</span>
-            <span>结束时间:{{ item.end_time }}</span>
-          </div>
-
-        </template>
-      </el-table-column>
       <el-table-column width="180px" align="center" label="地址">
         <template slot-scope="scope">
           <span>{{ scope.row.address }}</span>

@@ -39,12 +39,11 @@ class EloquentModel extends Model
     /**
      * @param $id
      * @return \Illuminate\Database\Eloquent\Model|object|static|null
-     * @throws ApiException
-     * @throws \Throwable
+     * @throws @ApiException
      */
-    public function getModelByIdOrFail($id)
+    public function getModelByIdOrFail($id,$with=[])
     {
-        $model = $this->getModelById($id);
+        $model = $this->getModelById($id,$with);
         throw_unless($model,ApiException::class,'数据不存在');
         return $model;
     }
