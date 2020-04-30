@@ -27,7 +27,7 @@
       </el-table-column>
       <el-table-column align="center" label="合并名称">
         <template slot-scope="scope">
-          <span>{{ scope.row.parent_id }}</span>
+          <span>{{ scope.row.merger_name }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="层级">
@@ -123,7 +123,7 @@ export default {
       regionCreating: false,
       query: {
         page: 1,
-        limit: 15,
+        limit: 10,
         keyword: '',
       },
       newRegion: {},

@@ -24,16 +24,12 @@ class RegionController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function index()
+
+    public function index(Request $request)
     {
         //
         $query = $this->service->newQuery();
-        $paginator = $query->paginate();
+        $paginator = $query->paginate($request->get('limit'));
         $data =[
             'total'=>$paginator->total(),
             'list'=>AdminRegionResource::collection($paginator)
