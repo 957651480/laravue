@@ -14,7 +14,7 @@ class CreateRegionsTable extends Migration
     public function up()
     {
         Schema::create('regions', function (Blueprint $table) {
-            $table->integerIncrements('id')->comment('地区id');
+            $table->integerIncrements('region_id')->comment('地区id');
             $table->string('short_name')->default('')->comment('短名称');
             $table->string('name')->default('')->comment('名称');
             $table->string('merger_name')->default('')->comment('合并名称');

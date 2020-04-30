@@ -20,7 +20,12 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="父Id">
+      <el-table-column align="center" label="简称">
+        <template slot-scope="scope">
+          <span>{{ scope.row.short_name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="合并名称">
         <template slot-scope="scope">
           <span>{{ scope.row.parent_id }}</span>
         </template>
@@ -30,18 +35,26 @@
           <span>{{ scope.row.level }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column align="center" label="创建时间">
+      <el-table-column align="center" label="拼音码">
         <template slot-scope="scope">
-          <span>{{ scope.row.created_at }}</span>
+          <span>{{ scope.row.pinyin }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="更新时间">
+      <el-table-column align="center" label="长途区号">
         <template slot-scope="scope">
-          <span>{{ scope.row.updated_at }}</span>
+          <span>{{ scope.row.code }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column align="center" label="邮编">
+        <template slot-scope="scope">
+          <span>{{ scope.row.zip_code }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="首字母">
+        <template slot-scope="scope">
+          <span>{{ scope.row.first }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
           <el-button v-show="showChildAdd(scope.row)" type="primary" size="small" icon="el-icon-plus" @click="handleChildAdd(scope.row)">
