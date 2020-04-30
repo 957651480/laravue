@@ -1,52 +1,88 @@
 <template>
- <div>
-   <el-upload
-     action="/api/file/upload"
-     list-type="picture-card"
-     :file-list="this.fileList"
-     :on-preview="handlePictureCardPreview"
-     :on-success="handleSuccess"
-     :headers="headers"
-     :on-remove="handleRemove">
-     <i class="el-icon-plus"></i>
-   </el-upload>
-   <el-dialog :visible.sync="dialogVisible">
-     <img width="100%" :src="dialogImageUrl" alt="">
-   </el-dialog>
+ <div class="multiple-image">
+     <el-upload
+       :action="'imagesUpload'"
+       :http-request="uploadImage"
+       accept="image/*"
+       list-type="picture-card"
+       :on-success="handleImagesSuccess"
+       :on-preview="handleImagePreview"
+       :on-remove="handleImageRemove"
+       :file-list="imageList">
+       <i class="el-icon-plus"></i>
+     </el-upload>
+     <el-dialog :visible.sync="dialogVisible" append-to-body>
+       <img width="100%" :src.sync="dialogImageUrl" />
+     </el-dialog>
  </div>
 </template>
 
 <script>
-    import {getToken} from "@/utils/auth";
-export default {
+  import {uploadFile} from "@/api/file";
+
+  export default {
   name: 'MultipleImage',
   props: {
-    fileList: {
+    imageList: {
       type:Array,
-      default: [],
+      default:function () {
+          return [];
+      },
     },
   },
   data() {
     return {
       dialogImageUrl: '',
       dialogVisible: false,
-        headers: { Authorization: 'Bearer ' + getToken() }
     };
   },
   methods: {
-    handleRemove(file, fileList) {
-      this.fileList=fileList;
-        this.$emit('changFiles',this.fileList);
-    },
-      handleSuccess(response, file, fileList){
-        debugger
 
-          this.fileList.push({name:response.name,file_id: response.file_id, url: response.url, uid: this.fileList.length});
-      },
-    handlePictureCardPreview(file) {
+    //【内容图删除事件】
+    handleImageRemove: function (file, fileList) {
+      this.imageList=fileList;
+      this.$emit('updateImageList',this.imageList);
+    },
+
+    //【内容图片预览事件】
+    handleImagePreview: function (file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
-    }
+    },
+    handleImagesSuccess(response, file, fileList)
+    {
+      let {data} = response;
+      file = Object.assign(file,{file_id:data.file_id,name:data.name,url:data.url});
+      this.imageList=fileList;
+      this.$emit('updateImageList',this.imageList);
+    },
+    //上传内容图
+    uploadImage: function (file) {
+      var fd = new FormData();
+      fd.append('file', file.file);
+      uploadFile(fd).then((response)=>{
+        file.onSuccess(response);
+      }).catch(({msg})=>{
+        file.onError()
+      });
+    },
+
+    //内容图上传前的大小 格式的校验
+    uploadImageBefore: function (file) {
+      var fileType = file.type;
+      var isJpg = false;
+      if (fileType === 'image/jpeg' || fileType === 'image/png' || fileType === 'image/bmp') {
+        isJpg = true;
+      }
+
+      if (!isJpg) {
+        this.$message({
+          message: '上传的图标只能是jpg、png、bmp格式!',
+          type: 'warning'
+        });
+      }
+      return isJpg;
+    },
   },
 };
 </script>

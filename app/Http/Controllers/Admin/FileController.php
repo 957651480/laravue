@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\AdminFileResource;
 use App\Models\File;
 use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
@@ -51,7 +53,6 @@ class FileController extends Controller
                 'mime_type'=>$uploadFile->getClientMimeType(),
                 'size'=>$uploadFile->getSize()
         ]);
-        $file->name=$file->source_filename;
-        return $file->setVisible(['file_id','filename','name','url']);
+        return $this->renderSuccess('',new AdminFileResource($file));
     }
 }
