@@ -4,11 +4,12 @@
        :action="'imagesUpload'"
        :http-request="uploadImage"
        accept="image/*"
+       :limit="8"
        list-type="picture-card"
        :on-success="handleImagesSuccess"
        :on-preview="handleImagePreview"
        :on-remove="handleImageRemove"
-       :file-list="imageList">
+       :file-list="fileList">
        <i class="el-icon-plus"></i>
      </el-upload>
      <el-dialog :visible.sync="dialogVisible" append-to-body>
@@ -34,14 +35,15 @@
     return {
       dialogImageUrl: '',
       dialogVisible: false,
+      fileList:this.imageList
     };
   },
   methods: {
 
     //【内容图删除事件】
     handleImageRemove: function (file, fileList) {
-      this.imageList=fileList;
-      this.$emit('updateImageList',this.imageList);
+      this.fileList=fileList;
+      this.$emit('updateImageList',this.fileList);
     },
 
     //【内容图片预览事件】
@@ -53,8 +55,8 @@
     {
       let {data} = response;
       file = Object.assign(file,{file_id:data.file_id,name:data.name,url:data.url});
-      this.imageList=fileList;
-      this.$emit('updateImageList',this.imageList);
+      this.fileList=fileList;
+      this.$emit('updateImageList',this.fileList);
     },
     //上传内容图
     uploadImage: function (file) {
