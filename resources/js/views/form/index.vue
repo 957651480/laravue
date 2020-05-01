@@ -94,7 +94,6 @@ export default {
 
     handleSuccess(response, file, fileList){
       this.form.file_id = response.id;
-      debugger;
     },
 
     onSubmit() {

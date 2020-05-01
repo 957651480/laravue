@@ -19,9 +19,22 @@ class CreateHousesTable extends Migration
             $table->string('desc')->default('')->comment('楼盘简介');
             $table->string('content')->default('')->comment('详情');
             $table->string('household')->default(0)->comment('住户数量');
-            $table->integer('city_id')->default(0)->comment('城市关联id');
+            $table->integer('region_id')->default(0)->comment('区域关联id');
             $table->softDeletes();
             $table->timestamps();
+        });
+        Schema::create('house_image', function (Blueprint $table)  {
+            $table->unsignedInteger('house_id');
+            $table->unsignedInteger('image_id');
+            $table->timestamps();
+            $table->index(['house_id','image_id'], 'house_image_id');
+
+            $table->foreign('house_id')
+                ->references('house_id')
+                ->on('houses')
+                ->onDelete('cascade');
+            $table->primary(['house_id', 'image_id'],
+                'house_image_id');
         });
     }
 

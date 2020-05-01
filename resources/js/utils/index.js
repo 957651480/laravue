@@ -371,3 +371,13 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ');
   }
 }
+
+
+export function arrayColumn(array,key)
+{
+  let tmpList = [];
+  for (let i = 0;i < array.length;i++){
+    tmpList[i]=array[i][key];
+  }
+  return tmpList;
+}

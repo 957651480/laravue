@@ -28,7 +28,7 @@
           <el-image
             style="width: 80px; height: 80px"
             :src="scope.row.images[0].url"
-            :preview-src-list="showImageList(scope.row.images)"
+            :preview-src-list="showImageList(scope.row.images,'url')"
           ></el-image>
 
         </template>
@@ -260,7 +260,6 @@ export default {
             this.newBanner.image_id=null;
         }
     },
-
     showImageList(imageList){
         let tmpList = [];
         for (let i = 0;i < imageList.length;i++){

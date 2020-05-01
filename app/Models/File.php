@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Collection\FileCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -52,6 +53,11 @@ class File extends Model
     protected $appends=[
         'url'
     ];
+
+    public function newCollection(array $models = [])
+    {
+        return new FileCollection($models);
+    }
 
     public function getUrlAttribute()
     {

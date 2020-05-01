@@ -48,4 +48,8 @@ class EloquentModel extends Model
         return $model;
     }
 
+    public function getCacheKey()
+    {
+        return get_called_class();
+    }
 }

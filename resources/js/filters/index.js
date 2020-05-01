@@ -44,11 +44,3 @@ export function toThousandFilter(num) {
 export function uppercaseFirst(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-export function showImageList(array,key)
-{
-  let tmpList = [];
-  for (let i = 0;i < imageList.length;i++){
-    tmpList[i]=imageList[i].url;
-  }
-  return tmpList;
-}

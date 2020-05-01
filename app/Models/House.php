@@ -14,12 +14,24 @@ class House extends EloquentModel
 
     public function images()
     {
-        return $this->belongsTo(File::class,'image_id');
+        return $this->belongsToMany(File::class,'house_image','house_id','image_id');
     }
 
-    public function attends()
+    public function region()
     {
-        return $this->hasMany(Attend::class,'course_id');
+        return $this->belongsTo(Region::class,'region_id');
     }
 
+    public function regionObject()
+    {
+        /**
+         * @var Region $region
+         */
+        $region = $this->region;
+        if(!$region){
+            return [];
+        }
+        $all = $region->fetchAll();
+        return $region->getParentsObjectWithKey($all,$this->region_id);
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminHouseResource;
 use App\Models\House;
@@ -29,7 +30,7 @@ class HouseController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->service->with([])->newQuery();
+        $query = $this->service->with(['images','region'])->newQuery();
         $wheres =$this->filter($request);
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
@@ -46,8 +47,10 @@ class HouseController extends Controller
     public function store(Request $request)
     {
         //
-        $data = $this->validateHouse($request);
-        $this->service->create($data);
+        $data = $this->validateHouse($request->all());
+        $images = Arr::pull($data,'images');
+        $model = $this->service->create($data);
+        $model->images()->sync($images);
         return $this->renderSuccess();
     }
 
@@ -64,8 +67,10 @@ class HouseController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $data = $this->validateHouse($request);
+        $data = $this->validateHouse($request->all());
+        $images = Arr::pull($data,'images');
         $model = $this->service->getModelByIdOrFail($id);
+        $model->images()->sync($images);
         $model->update($data);
         return $this->renderSuccess();
     }
@@ -106,21 +111,23 @@ class HouseController extends Controller
     }
 
 
-    protected function validateHouse(Request $request)
+    protected function validateHouse($from)
     {
-        return $this->validate($request,[
+        $validator = \Validator::make($from,[
             'name'=>'required',
             'desc'=>'sometimes',
-            'city_id'=>'required',
+            'region_id'=>'required',
             'images'=>'required',
         ],
             [
-                'name.required'=>'楼盘必填',
+                'name.required'=>'楼盘名称必填',
                 'desc.sometimes'=>'标题必填',
-                'city_id.required'=>'区域必填',
+                'region_id.required'=>'区域必填',
                 'images.required'=>'图片必传',
             ]
         );
+        throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
+        return $validator->getData();
     }
 
     protected function filter(Request $request)

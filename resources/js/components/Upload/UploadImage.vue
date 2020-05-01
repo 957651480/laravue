@@ -10,7 +10,7 @@
        :on-preview="handleImagePreview"
        :on-remove="handleImageRemove"
        :on-exceed="handleLimitTip"
-       :file-list="fileList">
+       :file-list="imageList">
        <i class="el-icon-plus"></i>
      </el-upload>
      <el-dialog :visible.sync="dialogVisible" append-to-body>
@@ -40,9 +40,20 @@
     return {
       dialogImageUrl: '',
       dialogVisible: false,
-      fileList:this.imageList
     };
   },
+  /*computed:{
+      fileList: {
+          // getter
+          get: function () {
+              return this.imageList;
+          },
+          // setter
+          set: function (newValue) {
+              this.imageList=newValue;
+          }
+      },
+  },*/
   methods: {
 
     //【内容图删除事件】

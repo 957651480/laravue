@@ -83,6 +83,7 @@
         if(id===0)return false;
       }
       this.getCity(id);
+      this.setRegionId(id);
       this.updateData();
     },
     chooseCity(id) {
@@ -92,11 +93,13 @@
         if(id===0)return false;
       }
       this.getDistrict(id);
+      this.setRegionId(id);
       this.updateData();
     },
     chooseDistrict(id)
     {
       this.updateData();
+      this.setRegionId(id);
       this.$forceUpdate();
     },
     getRegion(key,query={}){
@@ -107,6 +110,9 @@
         _this[key]=data.list;
       })
     },
+    setRegionId(id){
+        this.regionData.region_id=id;
+    },
     resetCity(){
       this.cities=[];
       this.regionData.city=null;
@@ -116,7 +122,7 @@
       this.regionData.district=null;
     },
     updateData(){
-      this.$emit("getRegionData", this.regionData);
+      this.$emit("updateRegionData", this.regionData);
     },
   },
   created() {

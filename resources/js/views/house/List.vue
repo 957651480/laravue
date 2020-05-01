@@ -20,10 +20,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="200px" label="标题">
+      <el-table-column min-width="200px" label="楼盘名称">
         <template slot-scope="{row}">
           <router-link :to="'/house/edit/'+row.house_id" class="link-type">
-            <span>{{ row.title }}</span>
+            <span>{{ row.name }}</span>
           </router-link>
         </template>
       </el-table-column>
@@ -41,8 +41,8 @@
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
-            :src="scope.row.teacher_image_url[0]"
-            :preview-src-list="scope.row.teacher_image_url"
+            :src="scope.row.image_list[0].url"
+            :preview-src-list="showImageList(scope.row.image_list)"
             ></el-image>
         </template>
       </el-table-column>
@@ -79,11 +79,8 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import Resource from '@/api/resource';
 import waves from '@/directive/waves';
-import axios from "axios";
-import {getToken} from "@/utils/auth";
 
-import {deleteHouse} from "@/api/house";
-import { fetchList } from '@/api/house';
+import { fetchList,deleteHouse } from '@/api/house';
 
 const categoryResource = new Resource('categories');
 
@@ -103,7 +100,6 @@ export default {
         category_id:''
       },
       categories:[],
-      myHeaders: { Authorization: 'Bearer ' + getToken() },
     };
   },
   created() {
@@ -175,6 +171,13 @@ export default {
                 reject(error);
             });
     },
+    showImageList(imageList){
+        let tmpList = [];
+        for (let i = 0;i < imageList.length;i++){
+            tmpList[i]=imageList[i].url;
+        }
+        return tmpList;
+    }
   },
 };
 </script>

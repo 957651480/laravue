@@ -432,7 +432,7 @@ export default {
       });
     },
     viewUserRole(data) {
-      debugger
+
     },
     async getRoleList() {
       const { data } = await roleResource.list({limit:100});

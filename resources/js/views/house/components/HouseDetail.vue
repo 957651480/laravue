@@ -3,9 +3,9 @@
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
       <div class="createPost-main-container">
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="标题:" prop="title">
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="楼盘名称:" prop="name">
           <el-input
-            v-model="postForm.title"
+            v-model="postForm.name"
             :rows="1"
             type="textarea"
             class="article-textarea"
@@ -13,21 +13,21 @@
             placeholder="请输入标题"
           />
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="简介:" prop="desc">
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="楼盘简介:" prop="desc">
           <el-input
             v-model="postForm.desc"
             :rows="1"
             type="textarea"
             class="article-textarea"
             autosize
-            placeholder="简介"
+            placeholder="请输入楼盘简介"
           />
         </el-form-item>
         <el-form-item label="图片:" prop="images">
-          <upload-image :image-list="postForm.images"  @updateImageList="updateImageList"></upload-image>
+          <upload-image :image-list="image_list"  @updateImageList="updateImageList"></upload-image>
         </el-form-item>
-        <el-form-item label="区域:" prop="regionData">
-          <area-select :region-data="postForm.regionData" @updateRegionData="updateRegionData"></area-select>
+        <el-form-item label="区域:" prop="region_id">
+          <area-select :region-data="regionData" @updateRegionData="updateRegionData"></area-select>
         </el-form-item>
         <el-form-item label="住户数:" prop="household">
             <el-input-number v-model="postForm.household"></el-input-number>
@@ -55,15 +55,15 @@ import {fetchHouse, createHouse, updateHouse} from '@/api/house';
 import AreaSelect from "@/components/AreaSelect/index";
 import UploadImage from "@/components/Upload/UploadImage";
 import SingleImage from "@/components/Upload/SingleImage";
+import {arrayColumn} from "@/utils";
 const defaultForm = {
   house_id: undefined,
-  title: '',
+  name: '',
   desc: '',
   content: '',
   household:1,
-  image:{},
   images:[],
-  regionData:{}
+  region_id:null
 };
 
 export default {
@@ -84,14 +84,16 @@ export default {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       rules: {
-        title: [{ required: true, message: '标题必须', trigger: 'blur' }],
+        name: [{ required: true, message: '标题必须', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
-          regionData: [{ required: true, message: '请填写授课时间段', trigger: 'blur' }],
+        region_id: [{ required: true, message: '请选择地区', trigger: 'blur' }],
         household: [{ required: true, message: '请填写人数', trigger: 'blur' }],
-        images: [{ required: true, message: '请填写地点', trigger: 'blur' }],
+        images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         content: [{ required: true, message: '请填写课程详情', trigger: 'blur' }],
       },
       tempRoute: {},
+      image_list:[],
+      regionData:{}
     };
   },
   computed: {
@@ -115,7 +117,18 @@ export default {
     fetchData(id) {
       fetchHouse(id)
         .then(response => {
-          this.postForm = response.data;
+
+          let data = response.data;
+          this.postForm.house_id=data.house_id;
+          this.postForm.name=data.name;
+          this.postForm.desc=data.desc;
+          this.postForm.images=data.images;
+          this.postForm.household=data.household;
+          this.postForm.region_id=data.region_id;
+          this.postForm.content = data.content;
+
+          this.regionData=data.region;
+          this.image_list=data.image_list;
           // Set tagsview title
           this.setTagsViewTitle();
         })
@@ -167,7 +180,8 @@ export default {
             this.$router.push({
               path: '/house',
             });
-          }).catch(() => {
+          }).catch((error) => {
+              debugger
           });
         }
         this.loading = false;
@@ -175,10 +189,13 @@ export default {
     },
 
     updateImageList(data){
-      this.postForm.images=data;
+      this.image_list=data;
+      debugger
+      this.postForm.images=arrayColumn(data,'file_id');
     },
     updateRegionData(data) {
-      this.postForm.regionData=data;
+      this.regionData=data;
+      this.postForm.region_id=data.region_id
     }
   },
 };

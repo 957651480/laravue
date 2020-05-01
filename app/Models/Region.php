@@ -44,6 +44,80 @@ class Region extends EloquentModel
     protected $primaryKey='region_id';
 
 
+    public function fetchAll()
+    {
+        $cache_key = $this->getCacheKey();
+        if($data = \Cache::get($cache_key)){
+            return $data;
+        }
+        if($data = $this->all(['region_id','name','parent_id','level'])->toArray()){
+            \Cache::forever($cache_key,$data);
+        }
+        return $data;
+    }
+
+    //获取某分类的直接子分类
+    public function fetchSons($regions, $parent_id=0){
+        $sons=array();
+        foreach($regions as $item){
+            if($item['parent_id']==$parent_id)
+                $sons[]=$item;
+        }
+        return $sons;
+    }
+
+    //获取某个分类的所有子分类
+    public function fetchSubs($regions,$parent_id=0,$level=1){
+        $subs=array();
+        foreach($regions as $item){
+            if($item['parent_id']==$parent_id){
+                $item['level']=$level;
+                $subs[]=$item;
+                $subs=array_merge($subs,$this->fetchSubs($regions,$item['categoryId'],$level+1));
+
+            }
+        }
+        return $subs;
+    }
+
+    //获取祖先
+    public function getParents($regions, $parent_id){
+        $tree=array();
+        while($parent_id != 0){
+            foreach($regions as $item){
+                if($item['region_id']==$parent_id){
+                    $tree[]=$item;
+                    $parent_id=$item['parent_id'];
+                    break;
+                }
+            }
+        }
+        return $tree;
+    }
+
+    public function getKeyByLevel($level)
+    {
+        $levels=[
+            1=>'province',
+            2=>'city',
+            3=>'district',
+        ];
+        return $levels[$level]??'';
+    }
+    public function getParentsObjectWithKey($regions, $parent_id){
+        $tree=array();
+        while($parent_id != 0){
+            foreach($regions as $item){
+                if($item['region_id']==$parent_id){
+                    $tree[$this->getKeyByLevel($item['level'])]=$item['region_id'];
+                    $parent_id=$item['parent_id'];
+                    break;
+                }
+            }
+        }
+        return $tree;
+    }
+
     public function childRegion() {
         return $this->hasMany('App\Models\Region', 'parent_id', 'id');
     }
@@ -52,4 +126,6 @@ class Region extends EloquentModel
     {
         return $this->childRegion()->with('childRegion');
     }
+
+
 }

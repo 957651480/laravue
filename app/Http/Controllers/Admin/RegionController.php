@@ -28,6 +28,7 @@ class RegionController extends Controller
     public function index(Request $request)
     {
         //
+        $Kk=$this->service->fetchAll();
         $query = $this->service->newQuery();
         $query->when($request->has('parent_id'),function ($query)use($request){
             $query->whereParentId($request->get('parent_id'));
