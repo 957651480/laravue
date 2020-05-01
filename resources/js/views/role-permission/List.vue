@@ -13,9 +13,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="left" :label="$t('table.description')">
+      <el-table-column align="left" label="描述">
         <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
+          <span>{{ scope.row.display_name }}</span>
         </template>
       </el-table-column>
 
@@ -28,13 +28,13 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" :title="'Edit Permissions - ' + currentRole.name">
+    <el-dialog :visible.sync="dialogVisible" :title="'编辑权限 - ' + currentRole.display_name">
       <div v-loading="dialogLoading" class="form-container">
         <div class="permissions-container">
           <div class="block">
             <el-form :model="currentRole" label-width="80px" label-position="top">
-              <el-form-item label="Menus">
-                <el-tree ref="menuPermissions" :data="menuPermissions" :default-checked-keys="permissionKeys(roleMenuPermissions)" :props="permissionProps" show-checkbox node-key="id" class="permission-tree" />
+              <el-form-item label="菜单权限">
+                <el-tree ref="menuPermissions" :data="menuPermissions"  :default-checked-keys="permissionKeys(roleMenuPermissions)" :props="permissionProps" show-checkbox node-key="id" class="permission-tree" />
               </el-form-item>
             </el-form>
           </div>
@@ -85,7 +85,7 @@ export default {
       otherPermissions: [],
       permissionProps: {
         children: 'children',
-        label: 'name',
+        label: 'display_name',
         disabled: 'disabled',
       },
     };
@@ -119,7 +119,7 @@ export default {
     async getRoles() {
       this.loading = true;
       const { data } = await roleResource.list({});
-      this.list = data;
+      this.list = data.list;
       this.list.forEach((role, index) => {
         role['index'] = index + 1;
         role['description'] = this.$t('roles.description.' + role.name);
@@ -150,11 +150,11 @@ export default {
     },
 
     normalizeMenuPermission(permission) {
-      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name.substring(10)) };
+      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name.substring(10)),display_name:permission.display_name };
     },
 
     normalizePermission(permission) {
-      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name), disabled: permission.name === 'manage permission' };
+      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name), disabled: permission.name === 'manage permission',display_name:permission.display_name };
     },
 
     permissionKeys(permissions) {

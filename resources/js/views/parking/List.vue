@@ -2,116 +2,60 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="query.category_id" placeholder="选择分类" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in categories" :key="item.category_id" :label="item.name | uppercaseFirst" :value="item.category_id" />
-      </el-select>
-
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+        {{ $t('table.add') }}
       </el-button>
     </div>
-    <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
+
+    <el-table v-loading="tableLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.course_id }}</span>
+          <span>{{ scope.row.banner_id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="200px" label="标题">
-        <template slot-scope="{row}">
-          <router-link :to="'/course/edit/'+row.course_id" class="link-type">
-            <span>{{ row.title }}</span>
-          </router-link>
+      <el-table-column align="center" label="标题">
+        <template slot-scope="scope">
+          <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" label="分类">
-        <template slot-scope="{row}">
-            <span>{{ row.category_name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="100px" label="课程教师">
-        <template slot-scope="{row}">
-          <span>{{ row.teacher_name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="200px" label="教师图片">
+
+      <el-table-column align="center" label="图片">
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
-            :src="scope.row.teacher_image_url[0]"
-            :preview-src-list="scope.row.teacher_image_url"
-            ></el-image>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="80px" label="报名人数">
-        <template slot-scope="scope">
-          <span>{{ scope.row.attend_number }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="80px" label="课程限定人数">
-        <template slot-scope="scope">
-            <span>{{ scope.row.number }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="80px" label="授课日期">
-        <template slot-scope="scope">
-          <span>{{ scope.row.date }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="180px" align="center" label="时间段">
-        <template slot-scope="scope">
-          <div v-for="item in scope.row.times" >
-            <span>开始时间:{{ item.start_time  }}</span>
-            <span>结束时间:{{ item.end_time }}</span>
-          </div>
+            :src="scope.row.images[0].url"
+            :preview-src-list="showImageList(scope.row.images,'url')"
+          ></el-image>
 
         </template>
       </el-table-column>
-      <el-table-column width="180px" align="center" label="地址">
+      <el-table-column align="center" label="状态">
         <template slot-scope="scope">
-          <span>{{ scope.row.address }}</span>
-        </template>
-      </el-table-column>
-      <!--<el-table-column width="180px" align="center" label="Date">
-        <template slot-scope="scope">
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.show===10?'显示':'隐藏' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="Author">
+      <el-table-column align="center" label="创建时间">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column width="100px" label="Importance">
+      <el-table-column align="center" label="更新时间">
         <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" />
+          <span>{{ scope.row.updated_at }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column class-name="status-col" label="Status" width="110">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>-->
-
-
 
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
-          <router-link :to="'/course/edit/'+scope.row.course_id">
-            <el-button type="primary" size="small" icon="el-icon-edit">
-              编辑
-            </el-button>
-          </router-link>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.course_id)">
+          <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">
+            编辑
+          </el-button>
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.banner_id)">
             删除
           </el-button>
         </template>
@@ -119,61 +63,125 @@
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
+
+    <el-dialog v-model="isEdit" title="增加/编辑轮播图" :visible.sync="dialogFormVisible">
+      <div v-loading="BannerCreating" class="form-container">
+        <el-form ref="userForm" :rules="rules" :model="newBanner" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item label="名称:" prop="title">
+            <el-input v-model="newBanner.title" />
+          </el-form-item>
+          <el-form-item label="图片:" prop="image_id">
+            <upload-image :image-list="newBanner.images"  @updateImageList="updateImageList"></upload-image>
+          </el-form-item>
+          <el-form-item label="类型:" prop="type_id">
+            <el-select
+              v-model="newBanner.type_id"
+              placeholder="选择类型"
+            >
+              <el-option
+                v-for="item in types"
+                :key="item.type_id"
+                :label="item.name"
+                :value="item.type_id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态:" prop="show">
+            <el-radio v-model="newBanner.show" :label="10">显示</el-radio>
+            <el-radio v-model="newBanner.show" :label="20">隐藏</el-radio>
+          </el-form-item>
+          <el-form-item label="排序:" prop="sort">
+            <el-input-number v-model="newBanner.sort"></el-input-number>
+            <span>排序越大越靠前</span>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false;isEdit=false">
+            {{ $t('table.cancel') }}
+          </el-button>
+          <el-button type="primary" @click="createBanner()">
+            {{ $t('table.confirm') }}
+          </el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import Resource from '@/api/resource';
-import waves from '@/directive/waves';
-import axios from "axios";
-import {getToken} from "@/utils/auth";
-
-import {deleteParking} from "@/api/parking";
-import { fetchList } from '@/api/house';
-
-const categoryResource = new Resource('categories');
+import waves from '@/directive/waves'; // Waves directive
+import { fetchList, updateBanner, createBanner, deleteBanner } from '@/api/banner';
+import UploadImage from "@/components/Upload/UploadImage";
 
 export default {
-  name: 'ParkingList',
-  components: { Pagination },
+  name: 'BannerList',
+  components: {UploadImage, Pagination },
   directives: { waves },
   data() {
     return {
       list: null,
       total: 0,
-      downloading: false,
+      tableLoading: true,
+      BannerCreating: false,
       query: {
         page: 1,
         limit: 15,
         keyword: '',
-        category_id:''
       },
-      categories:[],
-      myHeaders: { Authorization: 'Bearer ' + getToken() },
+      newBanner: {},
+      dialogFormVisible: false,
+      rules: {
+        title: [{ required: true, message: '标题必须', trigger: 'blur' }],
+        type_id: [{ required: true, message: '类型必须', trigger: 'blur' }],
+        image_id: [{ required: true, message: '图片必填', trigger: 'blur' }],
+      },
+      isEdit: false,
+      //
+      types:[{type_id:10,name:'首页'},{type_id:20,name:'楼盘'}]
     };
   },
+  computed: {
+  },
   created() {
+    this.resetNewBanner();
     this.getList();
   },
   methods: {
     async getList() {
       const { limit, page } = this.query;
-      this.loading = true;
+      this.tableLoading = true;
       const { data } = await fetchList(this.query);
       this.list = data.list;
       this.list.forEach((element, index) => {
         element['index'] = (page - 1) * limit + index + 1;
       });
-      this.total=data.total;
-      this.loading = false;
+      this.total = data.total;
+      this.tableLoading = false;
     },
     handleFilter() {
       this.query.page = 1;
       this.getList();
     },
+    handleCreate() {
+      this.resetNewBanner();
+      this.dialogFormVisible = true;
+      this.$nextTick(() => {
+        this.$refs['userForm'].clearValidate();
+      });
+    },
+    handleEdit(data){
+      this.newBanner = data;
+      this.isEdit = true;
+      this.dialogFormVisible = true;
+    },
     handleDelete(id) {
-      deleteParking(id).then(response => {
+      this.$confirm('确定删除吗?', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }).then(() => {
+        deleteBanner(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',
@@ -182,57 +190,112 @@ export default {
         }).catch(error => {
           console.log(error);
         });
-
+      }).catch(() => {
+      });
     },
-    handleDownload() {
-      this.downloading = true;
-
-        axios
-            .get("/api/courses/export", {
-                params: this.query,
-                headers:this.myHeaders,
-                responseType : "blob" // 1.首先设置responseType对象格式为 blob:
-            })
-            .then(
-                res => {
-                    //resolve(res)
-                    let blob = new Blob([res.data], {
-                        type: "application/vnd.ms-excel"
-                    }); // 2.获取请求返回的response对象中的blob 设置文件类型，这里以excel为例
-                    let url = window.URL.createObjectURL(blob); // 3.创建一个临时的url指向blob对象
-
-                    // 4.创建url之后可以模拟对此文件对象的一系列操作，例如：预览、下载
-                    let a = document.createElement("a");
-                    a.href = url;
-                    a.download = "课程.csv";
-                    a.click();
-                    // 5.释放这个临时的对象url
-                    window.URL.revokeObjectURL(url);
-                    this.$message({
-                        type: 'success',
-                        message: '已导出',
-                    });
-                    this.downloading = false;
-                },
-                err => {
-                    resolve(err.response);
-                }
-            )
-            .catch(error => {
-                reject(error);
-            });
+    createBanner() {
+      this.$refs['userForm'].validate((valid) => {
+        if (valid) {
+          this.BannerCreating = true;
+          delete  this.newBanner.images;
+          if (this.isEdit){
+            let  id = this.newBanner.banner_id;
+            updateBanner(id,this.newBanner)
+              .then(response => {
+                this.$message({
+                  message: '成功',
+                  type: 'success',
+                  duration: 5 * 1000,
+                });
+                this.resetNewBanner();
+                this.dialogFormVisible = false;
+                this.handleFilter();
+              })
+              .catch(error => {
+                console.log(error);
+              })
+              .finally(() => {
+                this.BannerCreating = false;
+              });
+          } else {
+            createBanner(this.newBanner)
+              .then(response => {
+                this.$message({
+                  message: '成功',
+                  type: 'success',
+                  duration: 5 * 1000,
+                });
+                this.resetNewBanner();
+                this.dialogFormVisible = false;
+                this.handleFilter();
+              })
+              .catch(error => {
+                console.log(error);
+              })
+              .finally(() => {
+                this.BannerCreating = false;
+              });
+          }
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
+    resetNewBanner() {
+      this.newBanner = {
+        title: '',
+        type_id:10,
+        image_id:0,
+        images:[],
+        show: 10,
+        sort: 100,
+      };
+    },
+    updateImageList(data){
+        if(data.length>0){
+            this.newBanner.images=data;
+            this.newBanner.image_id=data[0].file_id
+        }else {
+            this.newBanner.image_id=null;
+        }
+    },
+    showImageList(imageList){
+        let tmpList = [];
+        for (let i = 0;i < imageList.length;i++){
+            tmpList[i]=imageList[i].url;
+        }
+        return tmpList;
+    }
   },
 };
 </script>
 
-<style scoped>
-.edit-input {
-  padding-right: 100px;
-}
-.cancel-btn {
-  position: absolute;
-  right: 15px;
-  top: 10px;
-}
+<style lang="scss" scoped>
+  .edit-input {
+    padding-right: 100px;
+  }
+  .cancel-btn {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+  }
+  .dialog-footer {
+    text-align: left;
+    padding-top: 0;
+    margin-left: 150px;
+  }
+  .app-container {
+    flex: 1;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
+    .block {
+      float: left;
+      min-width: 250px;
+    }
+    .clear-left {
+      clear: left;
+    }
+  }
 </style>
