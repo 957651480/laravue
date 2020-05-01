@@ -15,7 +15,7 @@ class CreateParkingTable extends Migration
     {
         Schema::create('parking', function (Blueprint $table) {
             $table->integerIncrements('parking_id')->comment('车位id');
-            $table->string('title')->default('')->comment('标题');
+            $table->string('code')->default('')->comment('车位编号');
             $table->softDeletes();
             $table->timestamps();
         });

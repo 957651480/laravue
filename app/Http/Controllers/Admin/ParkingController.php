@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminParkingResource;
 use App\Models\Parking;
@@ -23,21 +24,25 @@ class ParkingController extends Controller
         $this->service = $service;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    public function index(Request $request)
     {
         //
+        $query = $this->service->newQuery();
+        $paginate = $query->latest()
+            ->paginate($request->get('limit'));
+        $data =[
+            'total'=>$paginate->total(),
+            'list'=>AdminParkingResource::collection($paginate)
+        ];
+        return $this->renderSuccess('',$data);
     }
 
 
     public function store(Request $request)
     {
         //
-        $data = $this->validateParking($request);
+        $data = $this->validateParking($request->all());
         $this->service->create($data);
         return $this->renderSuccess();
     }
@@ -68,16 +73,17 @@ class ParkingController extends Controller
     }
 
 
-    protected function validateParking(Request $request)
+    protected function validateParking($form)
     {
-        return $this->validate($request,[
-            'title'=>'required',
-            'show'=>'sometimes',
-            'sort'=>'sometimes'
+
+        $validator = \Validator::make($form,[
+            'code'=>'required',
         ],
             [
-                'title.required'=>'标题必填',
+                'code.required'=>'车位号必填',
             ]
         );
+        throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
+        return $validator->getData();
     }
 }

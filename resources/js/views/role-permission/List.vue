@@ -3,11 +3,11 @@
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.index }}</span>
+          <span>{{ scope.row.role_id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="150" align="center" :label="$t('table.name')">
+      <el-table-column width="150" align="center" label="角色名">
         <template slot-scope="scope">
           <span>{{ scope.row.name | uppercaseFirst }}</span>
         </template>
@@ -19,9 +19,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="checkPermission(['manage permission'])" align="center" label="Actions" width="200">
+      <el-table-column v-if="checkPermission(['manage permission'])" align="center" label="操作" width="200">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.name !== 'admin'" v-permission="['manage permission']" type="primary" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
+          <el-button v-if="scope.row.name !== 'admin'" v-permission="['manage permission']" type="primary" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.role_id)">
             {{ $t('permission.editPermission') }}
           </el-button>
         </template>
@@ -92,7 +92,7 @@ export default {
   },
   computed: {
     currentRole() {
-      const found = this.list.find(role => role.id === this.currentRoleId);
+      const found = this.list.find(role => role.role_id === this.currentRoleId);
       if (found === undefined) {
         return { name: '', permissions: [] };
       }
@@ -176,9 +176,9 @@ export default {
       const checkedPermissions = checkedMenu.concat(checkedOther);
       this.dialogLoading = true;
 
-      roleResource.update(this.currentRole.id, { permissions: checkedPermissions }).then(response => {
+      roleResource.update(this.currentRole.role_id, { permissions: checkedPermissions }).then(response => {
         this.$message({
-          message: 'Permissions has been updated successfully',
+          message: '权限更新成功',
           type: 'success',
           duration: 5 * 1000,
         });

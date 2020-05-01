@@ -2,8 +2,8 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="query.keyword" :placeholder="$t('table.keyword')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="query.role" :placeholder="$t('table.role')" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="(item,key) in roles" :key="key" :label="item.display_name" :value="item.role_id" />
+      <el-select v-model="query.role_id" placeholder="请选择权限" clearable style="width: 90px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in roles" :key="item.role_id" :label="item.display_name" :value="item.role_id" />
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
@@ -37,7 +37,7 @@
 
       <el-table-column align="center" label="角色" width="120">
         <template slot-scope="scope">
-          <el-button icon="el-icon-view" @click="viewUserRole(scope.row)">查看角色</el-button>
+          <span>{{ normalizeUserRoleName(scope.row.roles) }}</span>
         </template>
       </el-table-column>
 
@@ -49,7 +49,7 @@
             </el-button>
           </router-link>
           <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
-            Permissions
+            编辑权限
           </el-button>
           <el-button v-if="scope.row.roles.includes('visitor')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
             删除
@@ -60,19 +60,19 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
 
-    <el-dialog :visible.sync="dialogPermissionVisible" :title="'Edit Permissions - ' + currentUser.name">
+    <el-dialog :visible.sync="dialogPermissionVisible" :title="'编辑权限 - ' + currentUser.name">
       <div v-if="currentUser.name" v-loading="dialogPermissionLoading" class="form-container">
         <div class="permissions-container">
           <div class="block">
             <el-form :model="currentUser" label-width="80px" label-position="top">
-              <el-form-item label="Menus">
+              <el-form-item label="菜单权限">
                 <el-tree ref="menuPermissions" :data="normalizedMenuPermissions" :default-checked-keys="permissionKeys(userMenuPermissions)" :props="permissionProps" show-checkbox node-key="id" class="permission-tree" />
               </el-form-item>
             </el-form>
           </div>
           <div class="block">
             <el-form :model="currentUser" label-width="80px" label-position="top">
-              <el-form-item label="Permissions">
+              <el-form-item label="管理权限">
                 <el-tree ref="otherPermissions" :data="normalizedOtherPermissions" :default-checked-keys="permissionKeys(userOtherPermissions)" :props="permissionProps" show-checkbox node-key="id" class="permission-tree" />
               </el-form-item>
             </el-form>
@@ -90,12 +90,12 @@
       </div>
     </el-dialog>
 
-    <el-dialog :title="'Create new user'" :visible.sync="dialogFormVisible">
+    <el-dialog :title="'新建用户'" :visible.sync="dialogFormVisible">
       <div v-loading="userCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item :label="$t('user.role')" prop="role">
-            <el-select v-model="newUser.role" class="filter-item" placeholder="Please select role">
-              <el-option v-for="item in nonAdminRoles" :key="item" :label="item | uppercaseFirst" :value="item" />
+          <el-form-item label="用户角色" prop="role">
+            <el-select v-model="newUser.role" class="filter-item" placeholder="请选择角色">
+              <el-option v-for="item in nonAdminRoles" :key="item.role_id" :label="item.display_name" :value="item.role_id" />
             </el-select>
           </el-form-item>
           <el-form-item label="用户名" prop="name">
@@ -158,10 +158,10 @@ export default {
         page: 1,
         limit: 15,
         keyword: '',
-        role: '',
+        role_id: null,
       },
       roles:[],
-      nonAdminRoles: ['editor', 'user', 'visitor'],
+      nonAdminRoles: [],
       newUser: {},
       dialogFormVisible: false,
       dialogPermissionVisible: false,
@@ -173,18 +173,18 @@ export default {
         rolePermissions: [],
       },
       rules: {
-        role: [{ required: true, message: 'Role is required', trigger: 'change' }],
-        name: [{ required: true, message: 'Name is required', trigger: 'blur' }],
+        role: [{ required: true, message: '角色必须', trigger: 'change' }],
+        name: [{ required: true, message: '用户名', trigger: 'blur' }],
         email: [
           { required: true, message: 'Email is required', trigger: 'blur' },
           { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
         ],
-        password: [{ required: true, message: 'Password is required', trigger: 'blur' }],
+        password: [{ required: true, message: '密码必须', trigger: 'blur' }],
         confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
       },
       permissionProps: {
         children: 'children',
-        label: 'name',
+        label: 'display_name',
         disabled: 'disabled',
       },
       permissions: [],
@@ -199,12 +199,14 @@ export default {
         tmp.push({
           id: permission.id,
           name: permission.name,
+          display_name: permission.display_name,
           disabled: true,
         });
       });
       const rolePermissions = {
         id: -1, // Just a faked ID
         name: 'Inherited from role',
+        display_name: '角色权限',
         disabled: true,
         children: this.classifyPermissions(tmp).menu,
       };
@@ -213,6 +215,7 @@ export default {
       const userPermissions = {
         id: 0, // Faked ID
         name: 'Extra menus',
+        display_name: '扩展权限',
         children: tmp,
         disabled: tmp.length === 0,
       };
@@ -225,12 +228,14 @@ export default {
         tmp.push({
           id: permission.id,
           name: permission.name,
+            display_name: permission.display_name,
           disabled: true,
         });
       });
       const rolePermissions = {
         id: -1,
         name: 'Inherited from role',
+        display_name: '角色权限',
         disabled: true,
         children: this.classifyPermissions(tmp).other,
       };
@@ -239,11 +244,13 @@ export default {
       const userPermissions = {
         id: 0,
         name: 'Extra permissions',
+        display_name: '扩展权限',
         children: tmp,
         disabled: tmp.length === 0,
       };
 
       return [rolePermissions, userPermissions];
+
     },
     userMenuPermissions() {
       return this.classifyPermissions(this.userPermissions).menu;
@@ -296,15 +303,15 @@ export default {
       });
     },
     handleDelete(id, name) {
-      this.$confirm('This will permanently delete user ' + name + '. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
+      this.$confirm('确定要删除用户名为' + name + '的用户吗?', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
         userResource.destroy(id).then(response => {
           this.$message({
             type: 'success',
-            message: 'Delete completed',
+            message: '删除成功',
           });
           this.handleFilter();
         }).catch(error => {
@@ -313,7 +320,7 @@ export default {
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: 'Delete canceled',
+          message: '删除取消',
         });
       });
     },
@@ -326,6 +333,7 @@ export default {
       this.currentUser = {
         id: found.id,
         name: found.name,
+        display_name: found.display_name,
         permissions: data,
       };
       this.dialogPermissionLoading = false;
@@ -343,7 +351,7 @@ export default {
             .store(this.newUser)
             .then(response => {
               this.$message({
-                message: 'New user ' + this.newUser.name + '(' + this.newUser.email + ') has been created successfully.',
+                message: '新用户' + this.newUser.name + '创建成功.',
                 type: 'success',
                 duration: 5 * 1000,
               });
@@ -369,7 +377,7 @@ export default {
         email: '',
         password: '',
         confirmPassword: '',
-        role: 'user',
+        role: null,
       };
     },
     handleDownload() {
@@ -407,12 +415,12 @@ export default {
     },
 
     normalizeMenuPermission(permission) {
-      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name.substring(10)), disabled: permission.disabled || false };
+      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name.substring(10)), disabled: permission.disabled || false,display_name:permission.display_name };
     },
 
     normalizePermission(permission) {
       const disabled = permission.disabled || permission.name === 'manage permission';
-      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name), disabled: disabled };
+      return { id: permission.id, name: this.$options.filters.uppercaseFirst(permission.name), disabled: disabled,display_name:permission.display_name  };
     },
 
     confirmPermission() {
@@ -423,7 +431,7 @@ export default {
 
       userResource.updatePermission(this.currentUserId, { permissions: checkedPermissions }).then(response => {
         this.$message({
-          message: 'Permissions has been updated successfully',
+          message: '权限更新成功',
           type: 'success',
           duration: 5 * 1000,
         });
@@ -437,7 +445,15 @@ export default {
     async getRoleList() {
       const { data } = await roleResource.list({limit:100});
       this.roles = data.list;
+      this.nonAdminRoles=data.list.filter(role => role.name!=='admin')
     },
+    normalizeUserRoleName(roles){
+        debugger
+        if(roles.length===0){
+            return '';
+        }
+        return roles[0].display_name
+    }
   },
 };
 </script>

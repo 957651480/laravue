@@ -9,6 +9,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminUserResource;
 use App\Http\Resources\PermissionResource;
@@ -17,6 +18,7 @@ use App\Laravue\JsonResponse;
 use App\Laravue\Models\Permission;
 use App\Laravue\Models\Role;
 use App\Laravue\Models\User;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
@@ -40,11 +42,11 @@ class UserController extends Controller
         $searchParams = $request->all();
         $userQuery = User::query();
         $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        $role = Arr::get($searchParams, 'role', '');
+        $role_id = Arr::get($searchParams, 'role_id', '');
         $keyword = Arr::get($searchParams, 'keyword', '');
         $has_open_id = Arr::get($searchParams,'has_open_id','');
-        if (!empty($role)) {
-            $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
+        if (!empty($role_id)) {
+            $userQuery->whereHas('roles', function($q) use ($role_id) { $q->where('id', $role_id); });
         }
         if (!empty($keyword)) {
             $userQuery->where('nickName', 'LIKE', '%' . $keyword . '%');
@@ -78,19 +80,21 @@ class UserController extends Controller
         );
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
-        } else {
+            return $this->renderError($validator->errors()->first());
+        }
+        $user = DB::transaction(function ()use($request) {
             $params = $request->all();
             $user = User::create([
                 'name' => $params['name'],
                 'email' => $params['email'],
                 'password' => Hash::make($params['password']),
             ]);
-            $role = Role::findByName($params['role']);
+            $role = Role::where('id',$params['role'])->first();
+            throw_unless($role,ApiException::class,'角色不存在');
             $user->syncRoles($role);
-
-            return new UserResource($user);
-        }
+            return $user;
+        });
+        return new UserResource($user);
     }
 
     /**

@@ -49,8 +49,12 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::get('house/delete/{id}', 'HouseController@destroy');
         Route::get('house/export', 'HouseController@export');
 
-        //教师路由
-        Route::apiResource('teachers', 'TeacherController');
+        //车位
+        Route::get('parking', 'ParkingController@index');
+        Route::post('parking/create', 'ParkingController@store');
+        Route::get('parking/detail/{id}', 'ParkingController@show');
+        Route::post('parking/update/{id}', 'ParkingController@update');
+        Route::get('parking/delete/{id}', 'ParkingController@destroy');
 
         Route::get('auth/user', 'AuthController@user');
         Route::get('users', 'UserController@index')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);

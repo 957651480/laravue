@@ -30,14 +30,14 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     let res = response.data;
-    if(res.code!==200){
+   /* if(res.code!==200){
       Message({
         message: res.msg || 'Error',
         type: 'error',
         duration: 5 * 1000
       });
       return Promise.reject(new Error(res.msg || 'Error'))
-    }
+    }*/
 
     if (response.headers.authorization) {
       setToken(response.headers.authorization);
