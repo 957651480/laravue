@@ -4,12 +4,9 @@ namespace App\Models;
 
 use App\Scopes\CityScope;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Parking extends EloquentModel
 {
-    //
-    use SoftDeletes;
     //
     protected $guarded = [];
     protected $table='parking';
