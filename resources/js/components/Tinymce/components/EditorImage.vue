@@ -12,7 +12,7 @@
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="api/file/upload"
+        action="api/admin/file/upload"
         :headers="myHeaders"
         list-type="picture-card"
       >
@@ -64,11 +64,12 @@ export default {
       this.dialogVisible = false;
     },
     handleSuccess(response, file) {
-      const file_id = file.file_id;
+      const uid = file.uid;
       const objKeyArr = Object.keys(this.listObj);
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
-        if (this.listObj[objKeyArr[i]].file_id === file_id) {
-          this.listObj[objKeyArr[i]].url = response.url;
+        if (this.listObj[objKeyArr[i]].uid === uid) {
+          let {data} = response;
+          this.listObj[objKeyArr[i]] = data;
           this.listObj[objKeyArr[i]].hasSuccess = true;
           return;
         }
