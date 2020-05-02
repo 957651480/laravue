@@ -61,7 +61,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','password','city_id'
+        'name', 'email', 'password','password','city_id','user_region'
     ];
 
     /**
@@ -87,6 +87,17 @@ class User extends Authenticatable
      * @var string
      */
     protected $guard_name = 'api';
+
+
+    public function setUserRegionAttribute($value)
+    {
+        $this->attributes['user_region'] = json_encode($value);
+    }
+
+    public function getUserRegionAttribute($value)
+    {
+        return json_decode($value,true);
+    }
 
     /**
      * @inheritdoc

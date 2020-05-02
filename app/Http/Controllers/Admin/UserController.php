@@ -68,29 +68,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            array_merge(
-                $this->getValidationRules(),
-                [
-                    'password' => ['required', 'min:6'],
-                    'confirmPassword' => 'same:password',
-                ]
-            )
-        );
 
-        if ($validator->fails()) {
-            return $this->renderError($validator->errors()->first());
-        }
-        $user = DB::transaction(function ()use($request) {
-            $params = $request->all();
-            $user = User::create([
-                'name' => $params['name'],
-                'email' => $params['email'],
-                'city_id'=>$params['region'][1]??0,
-                'password' => Hash::make($params['password']),
-            ]);
-            $role = Role::where('id',$params['role'])->first();
+        list($data,$role_id,$images) = $this->validateUser($request->all());
+        $user = DB::transaction(function ()use($data,$role_id) {
+            $user = User::create($data);
+            $role = Role::where('id',$role_id)->first();
             throw_unless($role,ApiException::class,'角色不存在');
             $user->syncRoles($role);
             return $user;
@@ -221,6 +203,30 @@ class UserController extends Controller
         } catch (\Exception $ex) {
             response()->json(['error' => $ex->getMessage()], 403);
         }
+    }
+
+
+    protected function validateUser($from)
+    {
+        $validator = \Validator::make($from,[
+            'name'=>'required',
+            'user_region'=>'sometimes',
+            'password' => ['required', 'min:6'],
+            'confirmPassword' => 'same:password',
+            'role_id'=>'sometimes'
+        ],
+            [
+                'name.required'=>'名称必填',
+                'house_region.required'=>'区域必填',
+            ]
+        );
+        throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
+        $data = $validator->getData();
+        $data['city_id'] = $data['user_region'][1]??0;
+        $images = Arr::pull($data,'images');
+        $role_id = Arr::pull($data,'role_id');
+        $confirmPassword = Arr::pull($data,'confirmPassword');
+        return [$data,$role_id,$images];
     }
 
     /**

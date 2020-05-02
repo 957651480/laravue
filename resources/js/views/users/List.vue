@@ -97,13 +97,13 @@
             <el-input v-model="newUser.name" />
           </el-form-item>
           <el-form-item label="用户角色" prop="role">
-            <el-select v-model="newUser.role" class="filter-item" placeholder="请选择角色" @change="chooseRole(newUser.role)">
+            <el-select v-model="newUser.role_id" class="filter-item" placeholder="请选择角色" @change="chooseRole(newUser.role_id)">
               <el-option v-for="item in nonAdminRoles" :key="item.role_id" :label="item.display_name" :value="item.role_id" />
             </el-select>
           </el-form-item>
-          <el-form-item v-show="showCity" label="绑定城市" prop="region">
+          <el-form-item v-show="showCity" label="绑定城市" prop="user_region">
             <el-cascader
-              v-model="newUser.region"
+              v-model="newUser.user_region"
               :props="optionProps"
               :options="regionTrees"
               ></el-cascader>
@@ -182,7 +182,7 @@ export default {
         rolePermissions: [],
       },
       rules: {
-        role: [{ required: true, message: '角色必须', trigger: 'change' }],
+          role_id: [{ required: true, message: '角色必须', trigger: 'change' }],
         name: [{ required: true, message: '用户名', trigger: 'blur' }],
         email: [
           { required: true, message: 'Email is required', trigger: 'blur' },
@@ -190,7 +190,7 @@ export default {
         ],
         password: [{ required: true, message: '密码必须', trigger: 'blur' }],
         confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
-        region: [{ required: true, message: '必须选择一个城市', trigger: 'blur' }],
+          user_region: [{ required: true, message: '必须选择一个城市', trigger: 'blur' }],
       },
       permissionProps: {
         children: 'children',
@@ -364,7 +364,6 @@ export default {
     createUser() {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
-          this.newUser.roles = [this.newUser.role];
           this.userCreating = true;
           userResource
             .store(this.newUser)
@@ -395,9 +394,9 @@ export default {
         name: '',
         email: '',
         password: '',
-        region:[],
+        user_region:[],
         confirmPassword: '',
-        role: null,
+        role_id: null,
       };
     },
     handleDownload() {
