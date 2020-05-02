@@ -74,15 +74,16 @@ class RoleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Role $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, $id)
     {
-        if ($role === null || $role->isAdmin()) {
+
+
+        $role = $this->service->getModelByIdOrFail($id);
+        if ($role->isAdmin()) {
             return response()->json(['error' => 'Role not found'], 404);
         }
-
         $permissionIds = $request->get('permissions', []);
         $permissions = Permission::allowed()->whereIn('id', $permissionIds)->get();
         $role->syncPermissions($permissions);

@@ -26,8 +26,12 @@
         <el-form-item label="图片:" prop="images">
           <upload-image :image-list="image_list"  @updateImageList="updateImageList"></upload-image>
         </el-form-item>
-        <el-form-item label="区域:" prop="region_id">
-          <area-select :region-data="regionData" @updateRegionData="updateRegionData"></area-select>
+        <el-form-item  label="区域" prop="house_region">
+          <el-cascader
+            v-model="postForm.house_region"
+            :props="optionProps"
+            :options="regionTrees"
+          ></el-cascader>
         </el-form-item>
         <el-form-item label="住户数:" prop="household">
             <el-input-number v-model="postForm.household"></el-input-number>
@@ -56,6 +60,7 @@ import AreaSelect from "@/components/AreaSelect/index";
 import UploadImage from "@/components/Upload/UploadImage";
 import SingleImage from "@/components/Upload/SingleImage";
 import {arrayColumn} from "@/utils";
+import {fetchTreeList} from "@/api/region";
 const defaultForm = {
   house_id: undefined,
   name: '',
@@ -63,7 +68,7 @@ const defaultForm = {
   content: '',
   household:1,
   images:[],
-  region_id:null
+  house_region:[]
 };
 
 export default {
@@ -86,14 +91,18 @@ export default {
       rules: {
         name: [{ required: true, message: '标题必须', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
-        region_id: [{ required: true, message: '请选择地区', trigger: 'blur' }],
+        house_region: [{ required: true, message: '请选择地区', trigger: 'blur' }],
         household: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         content: [{ required: true, message: '请填写课程详情', trigger: 'blur' }],
       },
       tempRoute: {},
       image_list:[],
-      regionData:{}
+      optionProps:{
+          value: 'region_id',
+          label: 'name',
+      },
+      regionTrees:[],
     };
   },
   computed: {
@@ -109,6 +118,7 @@ export default {
     } else {
       this.postForm = Object.assign({}, defaultForm);
     }
+    this.getRegionList();
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     this.tempRoute = Object.assign({}, this.$route);
@@ -124,10 +134,9 @@ export default {
           this.postForm.desc=data.desc;
           this.postForm.images=data.images;
           this.postForm.household=data.household;
+          this.postForm.house_region=data.house_region;
           this.postForm.region_id=data.region_id;
           this.postForm.content = data.content;
-
-          this.regionData=data.region;
           this.image_list=data.image_list;
           // Set tagsview title
           this.setTagsViewTitle();
@@ -193,10 +202,23 @@ export default {
       debugger
       this.postForm.images=arrayColumn(data,'file_id');
     },
-    updateRegionData(data) {
-      this.regionData=data;
-      this.postForm.region_id=data.region_id
-    }
+      async getRegionList() {
+          const { data } = await fetchTreeList();
+          this.regionTrees = this.getTreeData(data.list);
+      },
+      // 递归判断列表，把最后的children设为undefined
+      getTreeData(data){
+          for(let i=0;i<data.length;i++){
+              if(data[i].children.length<1){
+                  // children若为空数组，则将children设为undefined
+                  data[i].children=undefined;
+              }else {
+                  // children若不为空数组，则继续 递归调用 本方法
+                  this.getTreeData(data[i].children);
+              }
+          }
+          return data;
+      }
   },
 };
 </script>

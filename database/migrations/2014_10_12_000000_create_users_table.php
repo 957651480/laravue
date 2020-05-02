@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password')->default('')->comment('密码');
             $table->string('nickName')->default('')->comment('微信nickname');
             $table->string('open_id')->default('')->comment('微信openId');
+            $table->integer('city_id')->default(0)->comment('城市id');
             $table->string('avatarUrl')->default('')->comment('微信头像');
             $table->rememberToken();
             $table->timestamps();

@@ -8,6 +8,14 @@ export function fetchList(query) {
   });
 }
 
+export function fetchTreeList(query={}) {
+  return request({
+    url: 'region/tree_list',
+    method: 'get',
+    params: query,
+  });
+}
+
 export function fetchRegion(id) {
   return request({
     url: 'region/detail/' + id,

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Banner;
+use App\Models\House;
+use App\Observers\BannerObserver;
+use App\Observers\HouseObserver;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +28,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        Banner::observe(BannerObserver::class);
+        House::observe(HouseObserver::class);
     }
 }

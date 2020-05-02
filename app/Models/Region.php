@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Arr;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -56,6 +57,16 @@ class Region extends EloquentModel
         return $data;
     }
 
+    public function fetchLevelAll($need_level = 0)
+    {
+        $all_region = $this->fetchAll();
+        if($need_level){
+            $all_region = Arr::where($all_region, function ($value, $key) use($need_level){
+                return $value['level']<=$need_level;
+            });
+        }
+        return $all_region;
+    }
     //获取某分类的直接子分类
     public function fetchSons($regions, $parent_id=0){
         $sons=array();
@@ -66,15 +77,33 @@ class Region extends EloquentModel
         return $sons;
     }
 
-    //获取某个分类的所有子分类
-    public function fetchSubs($regions,$parent_id=0,$level=1){
-        $subs=array();
-        foreach($regions as $item){
-            if($item['parent_id']==$parent_id){
-                $item['level']=$level;
-                $subs[]=$item;
-                $subs=array_merge($subs,$this->fetchSubs($regions,$item['categoryId'],$level+1));
 
+    public function getTree($regions,$parent_id=0,$level=1)
+    {
+        $tree = array();
+        foreach($regions as $k => $v)
+        {
+            if($v['parent_id'] == $parent_id)
+            {        //父亲找到儿子
+                $v['children'] = $this->getTree($regions, $v['region_id'],$level+1);
+                $tree[] = $v;
+                unset($regions[$k]);
+            }
+        }
+        return $tree;
+    }
+    //获取某个分类的所有子分类
+    public function fetchSubs($regions,$parent_id=0,$level=1,$need_level=0){
+        static $subs=array();
+        foreach($regions as $key=>$item){
+            if($item['parent_id']==$parent_id)
+            {
+                $subs[]=$item;
+                if($need_level&&$level>=$need_level){
+                    continue;
+                }
+                unset($regions[$key]);
+                $this->fetchSubs($regions,$item['region_id'],$level);
             }
         }
         return $subs;

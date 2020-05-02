@@ -1,5 +1,6 @@
 <?php
 
+use App\Laravue\Models\User;
 use Illuminate\Database\Seeder;
 use App\Laravue\Acl;
 use App\Laravue\Models\Role;
@@ -13,26 +14,29 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $userList = [
-            "demo",
-        ];
 
-        foreach ($userList as $fullName) {
-            $name = str_replace(' ', '.', $fullName);
-            $roleName = \App\Laravue\Faker::randomInArray([
-                Acl::ROLE_MANAGER,
-                Acl::ROLE_EDITOR,
-                Acl::ROLE_USER,
-                Acl::ROLE_VISITOR,
-            ]);
-            $user = \App\Laravue\Models\User::create([
-                'name' => $fullName,
-                'email' => strtolower($name) . '@demo.com',
-                'password' => \Illuminate\Support\Facades\Hash::make('laravue'),
-            ]);
+        $admin = User::create([
+            'name' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => Hash::make('admin'),
+        ]);
+        $manager = User::create([
+            'name' => 'manager',
+            'email' => 'manager@manager.com',
+            'password' => Hash::make('admin'),
+        ]);
 
-            $role = Role::findByName($roleName);
-            $user->syncRoles($role);
-        }
+        $partner = User::create([
+            'name' => 'partner',
+            'email' => 'partner@partner.com',
+            'password' => Hash::make('admin'),
+        ]);
+
+        $adminRole = Role::findByName(\App\Laravue\Acl::ROLE_ADMIN);
+        $managerRole = Role::findByName(\App\Laravue\Acl::ROLE_MANAGER);
+        $partnerRole = Role::findByName(\App\Laravue\Acl::ROLE_PARTNER);
+        $admin->syncRoles($adminRole);
+        $manager->syncRoles($managerRole);
+        $partner->syncRoles($partnerRole);
     }
 }

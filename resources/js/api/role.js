@@ -15,3 +15,38 @@ class RoleResource extends Resource {
 }
 
 export { RoleResource as default };
+
+export function getRoles() {
+  return request({
+    url: '/roles',
+    method: 'get'
+  })
+}
+export function permissions(id) {
+  return request({
+    url: '/' + this.uri + '/' + id + '/permissions',
+    method: 'get',
+  });
+}
+export function createRole(data) {
+  return request({
+    url: 'roles/create',
+    method: 'post',
+    data,
+  });
+}
+
+export function updateRole(id,data) {
+  return request({
+    url: 'roles/update/'+id,
+    method: 'post',
+    data,
+  });
+}
+
+export function deleteRole(id) {
+  return request({
+    url: 'roles/delete/' + id,
+    method: 'get',
+  });
+}

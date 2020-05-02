@@ -36,6 +36,7 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
 
         //城市管理路由
         Route::get('region', 'RegionController@index');
+        Route::get('region/tree_list', 'RegionController@treeList');
         Route::post('region/create', 'RegionController@store');
         Route::get('region/detail/{id}', 'RegionController@show');
         Route::post('region/update/{id}', 'RegionController@update');
@@ -64,6 +65,9 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::delete('users/{user}', 'UserController@destroy')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
         Route::get('users/{user}/permissions', 'UserController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
         Route::put('users/{user}/permissions', 'UserController@updatePermissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
+
+        Route::post('roles/create','RoleController@store')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::post('roles/update/{id}', 'RoleController@update')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
         Route::apiResource('roles', 'RoleController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
         Route::get('roles/{role}/permissions', 'RoleController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
         Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);

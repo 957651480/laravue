@@ -93,13 +93,20 @@
     <el-dialog :title="'新建用户'" :visible.sync="dialogFormVisible">
       <div v-loading="userCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="newUser" label-position="left" label-width="150px" style="max-width: 500px;">
+          <el-form-item label="用户名" prop="name">
+            <el-input v-model="newUser.name" />
+          </el-form-item>
           <el-form-item label="用户角色" prop="role">
-            <el-select v-model="newUser.role" class="filter-item" placeholder="请选择角色">
+            <el-select v-model="newUser.role" class="filter-item" placeholder="请选择角色" @change="chooseRole(newUser.role)">
               <el-option v-for="item in nonAdminRoles" :key="item.role_id" :label="item.display_name" :value="item.role_id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="用户名" prop="name">
-            <el-input v-model="newUser.name" />
+          <el-form-item v-show="showCity" label="绑定城市" prop="region">
+            <el-cascader
+              v-model="newUser.region"
+              :props="optionProps"
+              :options="regionTrees"
+              ></el-cascader>
           </el-form-item>
           <el-form-item label="邮箱" prop="email">
             <el-input v-model="newUser.email" />
@@ -131,14 +138,16 @@ import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
 import permission from '@/directive/permission'; // Permission directive
 import checkPermission from '@/utils/permission';
+import { fetchTreeList } from '@/api/region';
 import role from '@/api/role';
+import AreaSelect from "@/components/AreaSelect/index";
 const roleResource = new Resource('roles');
 const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
 export default {
   name: 'UserList',
-  components: { Pagination },
+  components: {AreaSelect, Pagination },
   directives: { waves, permission },
   data() {
     var validateConfirmPassword = (rule, value, callback) => {
@@ -181,6 +190,7 @@ export default {
         ],
         password: [{ required: true, message: '密码必须', trigger: 'blur' }],
         confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
+        region: [{ required: true, message: '必须选择一个城市', trigger: 'blur' }],
       },
       permissionProps: {
         children: 'children',
@@ -190,6 +200,12 @@ export default {
       permissions: [],
       menuPermissions: [],
       otherPermissions: [],
+      showCity:false,
+      optionProps:{
+          value: 'region_id',
+          label: 'name',
+      },
+      regionTrees:[],
     };
   },
   computed: {
@@ -261,10 +277,12 @@ export default {
     userPermissions() {
       return this.currentUser.permissions.role.concat(this.currentUser.permissions.user);
     },
+
   },
   created() {
     this.resetNewUser();
     this.getList();
+    this.getCityList();
     this.getRoleList();
     if (checkPermission(['manage permission'])) {
       this.getPermissions();
@@ -298,6 +316,7 @@ export default {
     handleCreate() {
       this.resetNewUser();
       this.dialogFormVisible = true;
+
       this.$nextTick(() => {
         this.$refs['userForm'].clearValidate();
       });
@@ -376,6 +395,7 @@ export default {
         name: '',
         email: '',
         password: '',
+        region:[],
         confirmPassword: '',
         role: null,
       };
@@ -448,11 +468,32 @@ export default {
       this.nonAdminRoles=data.list.filter(role => role.name!=='admin')
     },
     normalizeUserRoleName(roles){
-        debugger
         if(roles.length===0){
             return '';
         }
         return roles[0].display_name
+    },
+    chooseRole(role_id){
+        if(role_id===3){
+            this.showCity=true;
+        }
+    },
+    async getCityList() {
+      const { data } = await fetchTreeList({need_level:2});
+      this.regionTrees = this.getTreeData(data.list);
+    },
+      // 递归判断列表，把最后的children设为undefined
+    getTreeData(data){
+        for(let i=0;i<data.length;i++){
+            if(data[i].children.length<1){
+                // children若为空数组，则将children设为undefined
+                data[i].children=undefined;
+            }else {
+                // children若不为空数组，则继续 递归调用 本方法
+                this.getTreeData(data[i].children);
+            }
+        }
+        return data;
     }
   },
 };

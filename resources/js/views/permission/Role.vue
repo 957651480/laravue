@@ -7,7 +7,7 @@
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
       <el-table-column align="center" label="Role Key" width="220">
         <template slot-scope="scope">
-          {{ scope.row.key }}
+          {{ scope.row.role_id }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="Role Name" width="220">
@@ -64,8 +64,12 @@
 <script>
 import path from 'path';
 import { deepClone } from '@/utils';
-import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role';
+
+
+
+import {  getRoles, createRole, deleteRole, updateRole } from '@/api/role';
 import i18n from '@/lang';
+import {asyncRoutes, constantRoutes} from "@/router";
 
 const defaultRole = {
   key: '',
@@ -80,6 +84,7 @@ export default {
       role: Object.assign({}, defaultRole),
       routes: [],
       rolesList: [],
+      serviceRoutes:[],
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false,
@@ -100,15 +105,16 @@ export default {
     this.getRoles();
   },
   methods: {
-    async getRoutes() {
-      const res = await getRoutes();
-      this.serviceRoutes = res.data;
-      const routes = this.generateRoutes(res.data);
+    getRoutes() {
+
+      const  routeList = deepClone([...constantRoutes, ...asyncRoutes]);
+      this.serviceRoutes = routeList;
+      const routes = this.generateRoutes(routeList);
       this.routes = this.i18n(routes);
     },
     async getRoles() {
       const res = await getRoles();
-      this.rolesList = res.data;
+      this.rolesList = res.data.list;
     },
     i18n(routes) {
       const app = routes.map(route => {
@@ -225,16 +231,17 @@ export default {
       this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys);
 
       if (isEdit) {
-        await updateRole(this.role.key, this.role);
+
+        await updateRole(this.role.role_id, this.role);
         for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].key === this.role.key) {
+          if (this.rolesList[index].role_id === this.role.role_id) {
             this.rolesList.splice(index, 1, Object.assign({}, this.role));
             break;
           }
         }
       } else {
-        const { data } = await addRole(this.role);
-        this.role.key = data.key;
+        const { data } = await createRole(this.role);
+        this.role.role_id = data.role_id;
         this.rolesList.push(this.role);
       }
 

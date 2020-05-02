@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminRegionResource;
 use App\Http\Resources\Admin\AdminRegionResourceCollection;
 use App\Models\Region ;
+use Arr;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
@@ -28,12 +29,15 @@ class RegionController extends Controller
     public function index(Request $request)
     {
         //
-        $Kk=$this->service->fetchAll();
+        $limit = (integer)$request->get('limit',15);
         $query = $this->service->newQuery();
         $query->when($request->has('parent_id'),function ($query)use($request){
             $query->whereParentId($request->get('parent_id'));
         });
-        $paginator = $query->paginate($request->get('limit'));
+        if($level = $request->get('level')){
+            $query->where('level',$level);
+        }
+        $paginator = $query->paginate($limit);
         $data =[
             'total'=>$paginator->total(),
             'list'=>AdminRegionResource::collection($paginator)
@@ -87,5 +91,14 @@ class RegionController extends Controller
             'sort'=>'sometimes'
         ]
         );
+    }
+
+    public function treeList(Request $request)
+    {
+        $need_level = $request->get('need_level',0);
+        $all_region = $this->service->fetchLevelAll($need_level);
+        $parent_id = $request->get('parent_id',0);
+        $list = $this->service->getTree($all_region,$parent_id);
+        return $this->renderSuccess('',['list'=>$list]);
     }
 }

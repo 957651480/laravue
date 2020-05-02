@@ -20,13 +20,12 @@ final class Acl
 {
     const ROLE_ADMIN = 'admin';
     const ROLE_MANAGER = 'manager';
-    const ROLE_EDITOR = 'editor';
-    const ROLE_USER = 'user';
-    const ROLE_VISITOR = 'visitor';
+    const ROLE_PARTNER = 'partner';
 
-    const PERMISSION_VIEW_MENU_ELEMENT_UI = 'view menu element ui';
+    const PERMISSION_VIEW_MENU_REGION_UI = 'view menu region ui';
+    const PERMISSION_VIEW_MENU_BANNER_UI = 'view menu banner ui';
     const PERMISSION_VIEW_MENU_PERMISSION = 'view menu permission';
-    const PERMISSION_VIEW_MENU_COMPONENTS = 'view menu components';
+   /* const PERMISSION_VIEW_MENU_COMPONENTS = 'view menu components';
     const PERMISSION_VIEW_MENU_CHARTS = 'view menu charts';
     const PERMISSION_VIEW_MENU_NESTED_ROUTES = 'view menu nested routes';
     const PERMISSION_VIEW_MENU_TABLE = 'view menu table';
@@ -36,7 +35,7 @@ final class Acl
     const PERMISSION_VIEW_MENU_EXCEL = 'view menu excel';
     const PERMISSION_VIEW_MENU_ZIP = 'view menu zip';
     const PERMISSION_VIEW_MENU_PDF = 'view menu pdf';
-    const PERMISSION_VIEW_MENU_I18N = 'view menu i18n';
+    const PERMISSION_VIEW_MENU_I18N = 'view menu i18n';*/
 
     const PERMISSION_USER_MANAGE = 'manage user';
     const PERMISSION_ARTICLE_MANAGE = 'manage article';

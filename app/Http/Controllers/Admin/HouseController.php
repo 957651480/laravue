@@ -47,10 +47,12 @@ class HouseController extends Controller
     public function store(Request $request)
     {
         //
-        $data = $this->validateHouse($request->all());
-        $images = Arr::pull($data,'images');
-        $model = $this->service->create($data);
-        $model->images()->sync($images);
+        DB::transaction(function ()use($request)
+        {
+            list($data,$images) = $this->validateHouse($request->all());
+            $model = $this->service->create($data);
+            $model->images()->sync($images);
+        });
         return $this->renderSuccess();
     }
 
@@ -67,11 +69,14 @@ class HouseController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $data = $this->validateHouse($request->all());
-        $images = Arr::pull($data,'images');
+        list($data,$images) = $this->validateHouse($request->all());
         $model = $this->service->getModelByIdOrFail($id);
-        $model->images()->sync($images);
-        $model->update($data);
+        //
+        DB::transaction(function ()use($model,$data,$images)
+        {
+            $model->images()->sync($images);
+            $model->update($data);
+        });
         return $this->renderSuccess();
     }
 
@@ -116,18 +121,21 @@ class HouseController extends Controller
         $validator = \Validator::make($from,[
             'name'=>'required',
             'desc'=>'sometimes',
-            'region_id'=>'required',
+            'house_region'=>'required',
             'images'=>'required',
         ],
             [
                 'name.required'=>'楼盘名称必填',
                 'desc.sometimes'=>'标题必填',
-                'region_id.required'=>'区域必填',
+                'house_region.required'=>'区域必填',
                 'images.required'=>'图片必传',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
-        return $validator->getData();
+        $data = $validator->getData();
+        $data['region_id'] =$data['house_region'][2];
+        $images = Arr::pull($data,'images');
+        return [$data,$images];
     }
 
     protected function filter(Request $request)

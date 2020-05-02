@@ -87,6 +87,7 @@ class UserController extends Controller
             $user = User::create([
                 'name' => $params['name'],
                 'email' => $params['email'],
+                'city_id'=>$params['region'][1]??0,
                 'password' => Hash::make($params['password']),
             ]);
             $role = Role::where('id',$params['role'])->first();
