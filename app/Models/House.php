@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\CityScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class House extends EloquentModel
@@ -10,6 +11,17 @@ class House extends EloquentModel
     //
     protected $guarded = [];
     protected $primaryKey='house_id';
+
+
+    /**
+     * 模型的「booted」方法
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new CityScope());
+    }
 
 
     public function images()
