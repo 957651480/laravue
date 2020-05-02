@@ -17,6 +17,7 @@ class CreateParkingTable extends Migration
             $table->integerIncrements('parking_id')->comment('车位id');
             $table->string('code')->default('')->comment('车位编号');
             $table->integer('city_id')->default(0)->comment('城市id');
+            $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();
             $table->timestamps();
         });

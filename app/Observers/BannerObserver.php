@@ -10,19 +10,22 @@ class BannerObserver
     /**
      * Handle the banner "creating" event.
      *
-     * @param  \App\Models\Banner  $banner
+     * @param Banner $banner
      * @return void
      */
     public function creating(Banner $banner)
     {
         //
-        $banner->city_id=auth()->user()->city_id;
+        if($user = auth()->user()){
+            $banner->city_id=$user->city_id;
+            $banner->author_id=$user->id;
+        }
     }
 
     /**
      * Handle the banner "created" event.
      *
-     * @param  \App\Models\Banner  $banner
+     * @param Banner $banner
      * @return void
      */
     public function created(Banner $banner)
@@ -33,7 +36,7 @@ class BannerObserver
     /**
      * Handle the banner "updated" event.
      *
-     * @param  \App\Models\Banner  $banner
+     * @param Banner $banner
      * @return void
      */
     public function updated(Banner $banner)
@@ -44,7 +47,7 @@ class BannerObserver
     /**
      * Handle the banner "deleted" event.
      *
-     * @param  \App\Models\Banner  $banner
+     * @param Banner $banner
      * @return void
      */
     public function deleted(Banner $banner)
@@ -55,7 +58,7 @@ class BannerObserver
     /**
      * Handle the banner "restored" event.
      *
-     * @param  \App\Models\Banner  $banner
+     * @param Banner $banner
      * @return void
      */
     public function restored(Banner $banner)
@@ -66,7 +69,7 @@ class BannerObserver
     /**
      * Handle the banner "force deleted" event.
      *
-     * @param  \App\Models\Banner  $banner
+     * @param Banner $banner
      * @return void
      */
     public function forceDeleted(Banner $banner)

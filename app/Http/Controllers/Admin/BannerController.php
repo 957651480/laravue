@@ -30,7 +30,7 @@ class BannerController extends Controller
     {
         //
         $query = $this->banners->newQuery();
-        $paginate = $query->with(['image'])->latest()
+        $paginate = $query->with(['image','city','author'])->latest()
             ->orderBy('sort','desc')
             ->paginate($request->get('limit'));
         $data =[

@@ -50,6 +50,14 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::get('house/delete/{id}', 'HouseController@destroy');
         Route::get('house/export', 'HouseController@export');
 
+        //资讯管理
+        Route::get('information', 'InformationController@index');
+        Route::post('information/create', 'InformationController@store');
+        Route::get('information/detail/{id}', 'InformationController@show');
+        Route::post('information/update/{id}', 'InformationController@update');
+        Route::get('information/delete/{id}', 'InformationController@destroy');
+
+
         //车位
         Route::get('parking', 'ParkingController@index');
         Route::post('parking/create', 'ParkingController@store');

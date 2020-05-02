@@ -14,11 +14,14 @@ class AdminParkingResource extends JsonResource
      */
     public function toArray($request)
     {
+        $author = $this->author;
         return [
             'parking_id'=>(integer)$this->parking_id,
             'title'=>(string)$this->title,
-            'created_at'=>(string)$this->created_at,
-            'updated_at'=>(string)$this->updated_at,
+            'author_id'=>(integer)$this->author_id,
+            'author_name'=>(string)optional($author)->name,
+            'created_at'=>(string)$this->created_at->toDateTimeString(),
+            'updated_at'=>(string)$this->updated_at->toDateTimeString(),
         ];
     }
 }

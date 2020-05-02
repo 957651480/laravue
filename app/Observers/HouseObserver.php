@@ -9,18 +9,21 @@ class HouseObserver
     /**
      * Handle the banner "creating" event.
      *
-     * @param  \App\Models\House  $house
+     * @param House $house
      * @return void
      */
     public function creating(House $house)
     {
         //
-        $house->city_id=auth()->user()->city_id;
+        if($user = auth()->user()){
+            $house->city_id=$user->city_id;
+            $house->author_id=$user->id;
+        }
     }
     /**
      * Handle the house "created" event.
      *
-     * @param  \App\Models\House  $house
+     * @param House $house
      * @return void
      */
     public function created(House $house)
@@ -31,7 +34,7 @@ class HouseObserver
     /**
      * Handle the house "updated" event.
      *
-     * @param  \App\Models\House  $house
+     * @param House $house
      * @return void
      */
     public function updated(House $house)
@@ -42,7 +45,7 @@ class HouseObserver
     /**
      * Handle the house "deleted" event.
      *
-     * @param  \App\Models\House  $house
+     * @param House $house
      * @return void
      */
     public function deleted(House $house)
@@ -53,7 +56,7 @@ class HouseObserver
     /**
      * Handle the house "restored" event.
      *
-     * @param  \App\Models\House  $house
+     * @param House $house
      * @return void
      */
     public function restored(House $house)
@@ -64,7 +67,7 @@ class HouseObserver
     /**
      * Handle the house "force deleted" event.
      *
-     * @param  \App\Models\House  $house
+     * @param House $house
      * @return void
      */
     public function forceDeleted(House $house)

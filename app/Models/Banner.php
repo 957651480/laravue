@@ -57,4 +57,14 @@ class Banner extends EloquentModel
     {
         return $this->belongsTo(File::class,'image_id');
     }
+
+    public function city()
+    {
+        return $this->belongsTo(Region::class,'city_id');
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(\App\Laravue\Models\User::class,'author_id');
+    }
 }

@@ -22,6 +22,7 @@ class CreateHousesTable extends Migration
             $table->integer('city_id')->default(0)->comment('城市id');
             $table->string('house_region')->default('[]')->comment('省市区选择的数据列表');
             $table->integer('region_id')->default(0)->comment('区域关联id');
+            $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -48,5 +49,6 @@ class CreateHousesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('houses');
+        Schema::dropIfExists('house_image');
     }
 }

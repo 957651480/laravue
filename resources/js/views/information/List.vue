@@ -16,14 +16,14 @@
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.house_id }}</span>
+          <span>{{ scope.row.information_id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column min-width="200px" label="楼盘名称">
+      <el-table-column min-width="200px" label="标题">
         <template slot-scope="{row}">
-          <router-link :to="'/house/edit/'+row.house_id" class="link-type">
-            <span>{{ row.name }}</span>
+          <router-link :to="'/information/edit/'+row.information_id" class="link-type">
+            <span>{{ row.title }}</span>
           </router-link>
         </template>
       </el-table-column>
@@ -32,7 +32,7 @@
             <span>{{ row.desc }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="200px" align="center" label="楼盘图片" >
+      <el-table-column min-width="200px" label="图片">
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
@@ -41,20 +41,10 @@
             ></el-image>
         </template>
       </el-table-column>
-      <el-table-column min-width="80px" label="住户数">
-        <template slot-scope="scope">
-          <span>{{ scope.row.household }}</span>
-        </template>
-      </el-table-column>
 
       <el-table-column width="180px" align="center" label="发布城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="180px" align="center" label="区域">
-        <template slot-scope="scope">
-          <span>{{ scope.row.region_merger_name }}</span>
         </template>
       </el-table-column>
       <el-table-column width="180px" align="center" label="作者">
@@ -69,12 +59,12 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
-          <router-link :to="'/house/edit/'+scope.row.house_id">
+          <router-link :to="'/information/edit/'+scope.row.information_id">
             <el-button type="primary" size="small" icon="el-icon-edit">
               编辑
             </el-button>
           </router-link>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.house_id)">
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.information_id)">
             删除
           </el-button>
         </template>
@@ -87,15 +77,13 @@
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import Resource from '@/api/resource';
 import waves from '@/directive/waves';
 
-import { fetchList,deleteHouse } from '@/api/house';
+import { fetchList,deleteInformation } from '@/api/information';
 
-const categoryResource = new Resource('categories');
 
 export default {
-  name: 'CourseList',
+  name: 'InformationList',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -132,7 +120,7 @@ export default {
       this.getList();
     },
     handleDelete(id) {
-      deleteHouse(id).then(response => {
+      deleteInformation(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',

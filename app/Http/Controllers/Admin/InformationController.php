@@ -4,33 +4,33 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\AdminHouseResource;
-use App\Models\House;
+use App\Http\Resources\Admin\AdminInformationResource;
+use App\Models\Information;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class HouseController extends Controller
+class InformationController extends Controller
 {
     /**
-     * @var House
+     * @var Information
      */
     protected $service;
 
     /**
-     * CourseController constructor.
-     * @param House $house
+     * InformationController constructor.
+     * @param Information $service
      */
-    public function __construct(House $house)
+    public function __construct(Information $service)
     {
-        $this->service = $house;
+        $this->service = $service;
     }
 
 
     public function index(Request $request)
     {
         //
-        $query = $this->service->with(['images','region','city','author'])->newQuery();
+        $query = $this->service->with(['images','city','author'])->newQuery();
         $wheres =$this->filter($request);
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
@@ -39,7 +39,7 @@ class HouseController extends Controller
 
         $data =[
             'total'=>$paginate->total(),
-            'list'=>AdminHouseResource::collection($paginate)
+            'list'=>AdminInformationResource::collection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }
@@ -49,7 +49,7 @@ class HouseController extends Controller
         //
         DB::transaction(function ()use($request)
         {
-            list($data,$images) = $this->validateHouse($request->all());
+            list($data,$images) = $this->validateInformation($request->all());
             $model = $this->service->create($data);
             $model->images()->sync($images);
         });
@@ -60,8 +60,8 @@ class HouseController extends Controller
     public function show(Request $request,$id)
     {
         //
-        $course = $this->service->getModelByIdOrFail($id,['images','region','city','author']);
-        $course = new AdminHouseResource($course);
+        $course = $this->service->getModelByIdOrFail($id,['images','city','author']);
+        $course = new AdminInformationResource($course);
         return $this->renderSuccess('',$course);
     }
 
@@ -69,7 +69,7 @@ class HouseController extends Controller
     public function update(Request $request, $id)
     {
         //
-        list($data,$images) = $this->validateHouse($request->all());
+        list($data,$images) = $this->validateInformation($request->all());
         $model = $this->service->getModelByIdOrFail($id);
         //
         DB::transaction(function ()use($model,$data,$images)
@@ -116,24 +116,23 @@ class HouseController extends Controller
     }
 
 
-    protected function validateHouse($from)
+    protected function validateInformation($from)
     {
         $validator = \Validator::make($from,[
-            'name'=>'required',
+            'title'=>'required',
             'desc'=>'sometimes',
-            'house_region'=>'required',
+            'content'=>'required',
             'images'=>'required',
         ],
             [
                 'name.required'=>'楼盘名称必填',
                 'desc.sometimes'=>'标题必填',
-                'house_region.required'=>'区域必填',
+                'content.required'=>'详情必填',
                 'images.required'=>'图片必传',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
         $data = $validator->getData();
-        $data['region_id'] =$data['house_region'][2];
         $images = Arr::pull($data,'images');
         return [$data,$images];
     }

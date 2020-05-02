@@ -21,6 +21,7 @@ class CreateBannersTable extends Migration
             $table->integer('city_id')->default(0)->comment('城市id');
             $table->integer('sort')->default(0)->comment('排序');
             $table->integer('show')->default(10)->comment('10显示 20隐藏');
+            $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();
             $table->timestamps();
         });

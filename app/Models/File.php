@@ -54,6 +54,10 @@ class File extends Model
         'url'
     ];
 
+    public function author()
+    {
+        return $this->belongsTo(\App\Laravue\Models\User::class,'author_id');
+    }
     public function newCollection(array $models = [])
     {
         return new FileCollection($models);

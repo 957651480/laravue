@@ -25,6 +25,7 @@ import attendRoutes from "@/router/modules/attend";
 import regionRoutes from "@/router/modules/region";
 import houseRoutes from "@/router/modules/house";
 import parkingRoutes from "@/router/modules/parking";
+import informationRoutes from "@/router/modules/information";
 
 
 /**
@@ -116,7 +117,8 @@ export const constantRoutes = [
   parkingRoutes,
   //categoryRoutes,
   regionRoutes,
-  //teacherRoutes,
+  teacherRoutes,
+  informationRoutes,
   //attendRoutes,
   {
     path: '/banner',

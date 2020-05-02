@@ -23,7 +23,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="图片">
+      <el-table-column align="center" label="图片" >
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
@@ -33,20 +33,25 @@
 
         </template>
       </el-table-column>
+      <el-table-column width="180px" align="center" label="发布城市">
+        <template slot-scope="scope">
+          <span>{{ scope.row.city_name }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="状态">
         <template slot-scope="scope">
           <span>{{ scope.row.show===10?'显示':'隐藏' }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column width="180px" align="center" label="作者">
+        <template slot-scope="scope">
+          <span>{{ scope.row.author_name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="更新时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.updated_at }}</span>
         </template>
       </el-table-column>
 
@@ -71,7 +76,7 @@
             <el-input v-model="newBanner.title" />
           </el-form-item>
           <el-form-item label="图片:" prop="image_id">
-            <upload-image :image-list="newBanner.images"  @updateImageList="updateImageList"></upload-image>
+            <upload-image :image-list="newBanner.images" :limit="1" @updateImageList="updateImageList"></upload-image>
           </el-form-item>
           <el-form-item label="类型:" prop="type_id">
             <el-select
