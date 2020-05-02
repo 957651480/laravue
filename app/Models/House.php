@@ -22,12 +22,12 @@ class House extends EloquentModel
         return $this->belongsTo(Region::class,'region_id');
     }
 
-    public function setRegionAttribute($value)
+    public function setHouseRegionAttribute($value)
     {
         $this->attributes['house_region'] = json_encode($value);
     }
 
-    public function getRegionAttribute($value)
+    public function getHouseRegionAttribute($value)
     {
         return json_decode($value,true);
     }
