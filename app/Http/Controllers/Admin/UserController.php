@@ -71,6 +71,7 @@ class UserController extends Controller
 
         list($data,$role_id,$images) = $this->validateUser($request->all());
         $user = DB::transaction(function ()use($data,$role_id) {
+            $data['password']=Hash::make($data['password']);
             $user = User::create($data);
             $role = Role::where('id',$role_id)->first();
             throw_unless($role,ApiException::class,'角色不存在');

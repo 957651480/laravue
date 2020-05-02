@@ -27,9 +27,9 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" label="分类">
+      <el-table-column min-width="100px" label="简介">
         <template slot-scope="{row}">
-            <span>{{ row.category_name }}</span>
+            <span>{{ row.desc }}</span>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" label="课程教师">
@@ -37,7 +37,7 @@
           <span>{{ row.teacher_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="200px" label="教师图片">
+      <el-table-column min-width="200px" label="楼盘图片">
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
@@ -52,9 +52,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="地址">
+      <el-table-column width="180px" align="center" label="区域">
         <template slot-scope="scope">
-          <span>{{ scope.row.address }}</span>
+          <span>{{ scope.row.region_merger_name }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="350">

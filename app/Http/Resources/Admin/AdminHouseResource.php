@@ -26,6 +26,7 @@ class AdminHouseResource extends JsonResource
             'household' => (integer)$this->household,
             'house_region'=>$this->house_region,
             'region_id'=>$this->region_id,
+            'region_merger_name'=>$this->region->merger_name,
             'images' => $this->images->fileIds(),
             'image_list' => $this->images,
             'address' => (string)$this->address,

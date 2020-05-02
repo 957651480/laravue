@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\CityScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -41,6 +42,16 @@ class Banner extends EloquentModel
     use SoftDeletes;
     protected $guarded = [];
     protected $primaryKey='banner_id';
+
+    /**
+     * 模型的「booted」方法
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new CityScope());
+    }
 
     public function image()
     {
