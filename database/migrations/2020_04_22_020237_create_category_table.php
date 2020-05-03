@@ -17,6 +17,8 @@ class CreateCategoryTable extends Migration
             $table->integerIncrements('category_id')->comment('分类id');
             $table->string('name')->default('')->comment('名称');
             $table->integer('sort')->default(0)->comment('排序');
+            $table->integer('city_id')->default(0)->comment('城市id');
+            $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -18,6 +18,7 @@ class CreateLotteryTable extends Migration
             $table->string('name')->default('')->comment('名字');
             $table->string('position')->default('[]')->comment('职位');
             $table->string('introduction')->default('')->comment('教师简介');
+            $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -26,6 +27,7 @@ class CreateLotteryTable extends Migration
             $table->string('name')->default('')->comment('奖品名称');
             $table->integer('number')->default(0)->comment('数量');
             $table->integer('probability')->default(0)->comment('概率');
+            $table->integer('author_id')->default(0)->comment('作者id');
             $table->timestamps();
         });
     }

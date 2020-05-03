@@ -21,6 +21,8 @@ class CreateAttendTable extends Migration
             $table->string('time_id')->default('[]')->comment('时间段id');
             $table->integer('course_id')->comment('课程id');
             $table->integer('user_id')->comment('用户id');
+            $table->integer('city_id')->default(0)->comment('城市id');
+            $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();
             $table->timestamps();
         });
