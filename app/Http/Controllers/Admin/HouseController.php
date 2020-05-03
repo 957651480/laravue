@@ -100,13 +100,9 @@ class HouseController extends Controller
         $courseCol = $query->get();
         $transform = $courseCol->transform(function ($course)
         {
-            $category = $course->category;
-            $teacher = $course->teacher;
             return [
                 'course_id' => (integer)$course->course_id,
                 'title'=>$course->title,
-                'category_name' => $category ? (string)$category->name : '',
-                'teacher_name' => $teacher ? (string)$teacher->name : '',
                 'attend_number' => (integer)$course->attend_number,
                 'number' => (integer)$course->number,
                 'address' => (string)$course->address,
