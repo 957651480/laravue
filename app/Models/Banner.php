@@ -41,6 +41,7 @@ class Banner extends EloquentModel
     //
     use SoftDeletes;
     protected $guarded = [];
+    protected $table='banner';
     protected $primaryKey='banner_id';
 
     /**

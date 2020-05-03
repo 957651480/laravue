@@ -70,14 +70,14 @@
 
     <el-dialog v-model="isEdit" title="增加/编辑教师" :visible.sync="dialogFormVisible">
       <div v-loading="teacherCreating" class="form-container">
-        <el-form ref="userForm" :rules="rules" :model="newTeacher" label-position="left" label-width="150px" style="max-width: 500px;">
+        <el-form ref="userForm" :rules="rules" :model="newLottery" label-position="left" label-width="150px" style="max-width: 500px;">
           <el-form-item label="教师名称:" prop="name">
-            <el-input v-model="newTeacher.name" />
+            <el-input v-model="newLottery.name" />
           </el-form-item>
           <el-form-item label="职位:" prop="position">
             <el-tag
               :key="tag"
-              v-for="tag in newTeacher.position"
+              v-for="tag in newLottery.position"
               closable
               :disable-transitions="false"
               @close="handleTagClose(tag)">
@@ -97,18 +97,18 @@
             <span>填写后按回车</span>
           </el-form-item>
           <el-form-item label="教师图片:" prop="images">
-           <upload-image :fileList="newTeacher.images" @changFiles="changFiles"></upload-image>
+           <upload-image :fileList="newLottery.images" @changFiles="changFiles"></upload-image>
            <span>至少传入三张图片:建议第一张缩略图尺寸为64*64,第二张课程列表尺寸为132*88,第三张课程详情尺寸为343*176</span>
           </el-form-item>
           <el-form-item label="简介:" prop="introduction">
-            <el-input type="textarea" v-model="newTeacher.introduction"></el-input>
+            <el-input type="textarea" v-model="newLottery.introduction"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false;isEdit=false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createTeacher()">
+          <el-button type="primary" @click="createLottery()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -122,7 +122,7 @@ import Pagination from '@/components/Pagination'; // Secondary package based on 
 import UserResource from '@/api/user';
 import Resource from '@/api/resource';
 import waves from '@/directive/waves'; // Waves directive
-import { fetchList, updateTeacher, createTeacher, deleteTeacher } from '@/api/teacher';
+import { fetchList, updateLottery, createLottery, deleteLottery } from '@/api/lottery';
 import {getToken} from "@/utils/auth";
 import UploadImage from "@/components/Upload/UploadImage";
 
@@ -130,7 +130,7 @@ const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
 export default {
-  name: 'TeacherList',
+  name: 'LotteryList',
   components: {UploadImage, Pagination },
   directives: { waves },
   data() {
@@ -145,7 +145,7 @@ export default {
         limit: 15,
         keyword: '',
       },
-      newTeacher: {},
+      newLottery: {},
       dialogFormVisible: false,
       rules: {
         name: [{ required: true, message: '教师名称必须', trigger: 'blur' }],
@@ -161,7 +161,7 @@ export default {
   computed: {
   },
   created() {
-    this.resetNewTeacher();
+    this.resetNewLottery();
     this.getList();
   },
   methods: {
@@ -181,14 +181,14 @@ export default {
       this.getList();
     },
     handleCreate() {
-      this.resetNewTeacher();
+      this.resetNewLottery();
       this.dialogFormVisible = true;
       this.$nextTick(() => {
         this.$refs['userForm'].clearValidate();
       });
     },
     handleEdit(data){
-      this.newTeacher = data;
+      this.newLottery = data;
       this.isEdit = true;
       this.dialogFormVisible = true;
     },
@@ -198,7 +198,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        deleteTeacher(id).then(response => {
+        deleteLottery(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',
@@ -210,8 +210,8 @@ export default {
       }).catch(() => {
       });
     },
-    createTeacher() {
-      if(this.newTeacher.images.length<3){
+    createLottery() {
+      if(this.newLottery.images.length<3){
         this.$message({
           message: '至少传入三张图片',
           type: 'error',
@@ -223,15 +223,15 @@ export default {
         if (valid) {
           this.teacherCreating = true;
           if (this.isEdit){
-            let  id = this.newTeacher.teacher_id;
-            updateTeacher(id,this.newTeacher)
+            let  id = this.newLottery.teacher_id;
+            updateLottery(id,this.newLottery)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetNewTeacher();
+                this.resetNewLottery();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -242,14 +242,14 @@ export default {
                 this.teacherCreating = false;
               });
           } else {
-            createTeacher(this.newTeacher)
+            createLottery(this.newLottery)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetNewTeacher();
+                this.resetNewLottery();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -266,8 +266,8 @@ export default {
         }
       });
     },
-    resetNewTeacher() {
-      this.newTeacher = {
+    resetNewLottery() {
+      this.newLottery = {
         name: '',
         position: [],
         images:[],
@@ -275,14 +275,14 @@ export default {
       };
     },
     handleSuccess(response, file, fileList){
-      this.newTeacher.image_id = response.file_id;
-      this.newTeacher.image_url = response.url;
+      this.newLottery.image_id = response.file_id;
+      this.newLottery.image_url = response.url;
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
     },
       handleTagClose(tag) {
-          this.newTeacher.position.splice(this.newTeacher.position.indexOf(tag), 1);
+          this.newLottery.position.splice(this.newLottery.position.indexOf(tag), 1);
           return false;
       },
 
@@ -296,13 +296,13 @@ export default {
       handleInputConfirm() {
           let inputValue = this.inputValue;
           if (inputValue) {
-              this.newTeacher.position.push(inputValue);
+              this.newLottery.position.push(inputValue);
           }
           this.inputVisible = false;
           this.inputValue = '';
       },
       changFiles(fileList){
-        this.newTeacher.images= fileList;
+        this.newLottery.images= fileList;
       },
     showImageList(imageList){
       let tmpList = [];

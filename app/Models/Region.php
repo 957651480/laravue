@@ -42,6 +42,7 @@ class Region extends EloquentModel
     use SoftDeletes;
     //
     protected $guarded = [];
+    protected $table='region';
     protected $primaryKey='region_id';
 
 

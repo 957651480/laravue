@@ -20,12 +20,12 @@ import adminRoutes from './modules/admin';
 import errorRoutes from './modules/error';
 import exampleRoutes from './modules/example';
 import categoryRoutes from './modules/category';
-import teacherRoutes from "@/router/modules/teacher";
 import attendRoutes from "@/router/modules/attend";
 import regionRoutes from "@/router/modules/region";
 import houseRoutes from "@/router/modules/house";
 import parkingRoutes from "@/router/modules/parking";
 import informationRoutes from "@/router/modules/information";
+import lotteryRoutes from "@/router/modules/lottery";
 
 
 /**
@@ -117,7 +117,7 @@ export const constantRoutes = [
   parkingRoutes,
   //categoryRoutes,
   regionRoutes,
-  teacherRoutes,
+  lotteryRoutes,
   informationRoutes,
   //attendRoutes,
   {

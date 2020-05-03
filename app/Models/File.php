@@ -41,15 +41,8 @@ class File extends Model
     use SoftDeletes;
     //
     protected $guarded = [];
+    protected $table='file';
     protected $primaryKey='file_id';
-    protected $casts = [
-        'id'=>'integer',
-        'filename'=>'string',
-        'source_filename'=>'string',
-        'extension'=>'string',
-        'size'=>'integer',
-        'mime_type'=>'string',
-    ];
     protected $appends=[
         'url'
     ];

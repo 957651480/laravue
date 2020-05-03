@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Teacher extends JsonResource
+class AdminLotteryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,7 +18,7 @@ class Teacher extends JsonResource
             return $image->file;
         });
         return [
-            'teacher_id'=>(integer)$this->teacher_id,
+            'lottery_id'=>(integer)$this->lottery_id,
             'name'=>(string)$this->name,
             'position'=>(array)$this->position,
             'images'=>$image,

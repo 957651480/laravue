@@ -8,6 +8,7 @@ class HouseImage extends Pivot
 {
     //
     protected $guarded = [];
+    protected $table='house_image';
     protected $primaryKey='house_image_id';
 
 

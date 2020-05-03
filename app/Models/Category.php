@@ -33,5 +33,6 @@ class Category extends Model
     use SoftDeletes;
     //
     protected $guarded = [];
+    protected $table='category';
     protected $primaryKey='category_id';
 }

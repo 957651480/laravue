@@ -43,6 +43,7 @@ class Attend extends Model
     //
     use SoftDeletes;
     protected $guarded = [];
+    protected $table='attend';
     protected $primaryKey='attend_id';
 
     public function course()

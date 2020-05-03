@@ -10,6 +10,7 @@ class House extends EloquentModel
     use SoftDeletes;
     //
     protected $guarded = [];
+    protected $table='house';
     protected $primaryKey='house_id';
 
 

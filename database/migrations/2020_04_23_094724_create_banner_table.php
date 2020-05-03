@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBannersTable extends Migration
+class CreateBannerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateBannersTable extends Migration
      */
     public function up()
     {
-        Schema::create('banners', function (Blueprint $table) {
+        Schema::create('banner', function (Blueprint $table) {
             $table->integerIncrements('banner_id')->comment('轮播图id');
             $table->string('title')->default('')->comment('标题');
             $table->integer('image_id')->default(0)->comment('文件id');
@@ -34,6 +34,6 @@ class CreateBannersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('banners');
+        Schema::dropIfExists('banner');
     }
 }

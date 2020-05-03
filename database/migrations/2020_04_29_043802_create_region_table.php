@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRegionsTable extends Migration
+class CreateRegionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateRegionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('regions', function (Blueprint $table) {
+        Schema::create('region', function (Blueprint $table) {
             $table->integerIncrements('region_id')->comment('地区id');
             $table->string('short_name')->default('')->comment('短名称');
             $table->string('name')->default('')->comment('名称');
@@ -38,6 +38,6 @@ class CreateRegionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('regions');
+        Schema::dropIfExists('region');
     }
 }

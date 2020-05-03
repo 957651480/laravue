@@ -57,6 +57,8 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::post('information/update/{id}', 'InformationController@update');
         Route::get('information/delete/{id}', 'InformationController@destroy');
 
+        //转盘路由
+        Route::apiResource('lottery', 'LotteryController');
 
         //车位
         Route::get('parking', 'ParkingController@index');

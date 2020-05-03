@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHousesTable extends Migration
+class CreateHouseTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateHousesTable extends Migration
      */
     public function up()
     {
-        Schema::create('houses', function (Blueprint $table) {
+        Schema::create('house', function (Blueprint $table) {
             $table->integerIncrements('house_id')->comment('楼盘id');
             $table->string('name')->default('')->comment('楼盘名称');
             $table->string('desc')->default('')->comment('楼盘简介');
@@ -34,7 +34,7 @@ class CreateHousesTable extends Migration
 
             $table->foreign('house_id')
                 ->references('house_id')
-                ->on('houses')
+                ->on('house')
                 ->onDelete('cascade');
             $table->primary(['house_id', 'image_id'],
                 'house_image_id');
@@ -48,7 +48,7 @@ class CreateHousesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('houses');
+        Schema::dropIfExists('house');
         Schema::dropIfExists('house_image');
     }
 }

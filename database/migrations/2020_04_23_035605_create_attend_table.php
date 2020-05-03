@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAttendsTable extends Migration
+class CreateAttendTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAttendsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attends', function (Blueprint $table) {
+        Schema::create('attend', function (Blueprint $table) {
             $table->integerIncrements('attend_id')->comment('报名id');
             $table->string('student_name')->default('')->comment('学生姓名');
             $table->string('grade')->default('')->comment('年级');
@@ -33,6 +33,6 @@ class CreateAttendsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attends');
+        Schema::dropIfExists('attend');
     }
 }
