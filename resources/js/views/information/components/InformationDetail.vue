@@ -24,7 +24,7 @@
           />
         </el-form-item>
         <el-form-item label="图片:" prop="images">
-          <upload-image :image-list="image_list"  @updateImageList="updateImageList"></upload-image>
+          <upload-image v-model="postForm.images" :image-list="image_list" ></upload-image>
         </el-form-item>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
@@ -168,12 +168,6 @@ export default {
         }
         this.loading = false;
       });
-    },
-
-    updateImageList(data){
-      this.image_list=data;
-      debugger
-      this.postForm.images=arrayColumn(data,'file_id');
     },
   },
 };
