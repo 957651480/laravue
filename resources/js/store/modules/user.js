@@ -11,6 +11,7 @@ const state = {
   introduction: '',
   roles: [],
   permissions: [],
+  city_id:null
 };
 
 const mutations = {
@@ -35,6 +36,9 @@ const mutations = {
   SET_PERMISSIONS: (state, permissions) => {
     state.permissions = permissions;
   },
+  SET_CITY_ID: (state, city_id) => {
+    state.city_id = city_id;
+  },
 };
 
 const actions = {
@@ -46,7 +50,6 @@ const actions = {
         .then(response => {
           commit('SET_TOKEN', response.data.token);
           setToken(response.data.token);
-          commit('SET_NAME', response.data.name);
           resolve();
         })
         .catch(error => {
@@ -66,18 +69,19 @@ const actions = {
             reject('Verification failed, please Login again.');
           }
 
-          const { roles, name, avatar, introduction, permissions, id } = data;
+          const { roles, name, avatar, introduction, permissions, id,city_id } = data;
           // roles must be a non-empty array
           if (!roles || roles.length <= 0) {
             reject('getInfo: roles must be a non-null array!');
           }
-
+          debugger
           commit('SET_ROLES', roles);
           commit('SET_PERMISSIONS', permissions);
           commit('SET_NAME', name);
           commit('SET_AVATAR', avatar);
           commit('SET_INTRODUCTION', introduction);
           commit('SET_ID', id);
+          commit('SET_CITY_ID', city_id);
           resolve(data);
         })
         .catch(error => {

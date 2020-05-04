@@ -32,7 +32,10 @@ function export_excel($fileName, $tileArray = [], $dataArray = [])
     ob_end_clean();
 }
 
-function firstImageId($data){
-    $images = Arr::pull($data,'images');
-
+function getUserCityId(){
+    $city_id =0;
+    if($user = auth()->user()){
+        $city_id=$user->city_id;
+    }
+    return $city_id;
 }

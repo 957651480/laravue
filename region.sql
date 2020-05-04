@@ -1,4 +1,4 @@
-INSERT INTO `tbl_regions` (`region_id`, `parent_id`, `short_name`, `name`, `merger_name`, `level`, `pinyin`, `code`, `zip_code`, `first`, `lng`, `lat`) VALUES
+INSERT INTO `tbl_region` (`region_id`, `parent_id`, `short_name`, `name`, `merger_name`, `level`, `pinyin`, `code`, `zip_code`, `first`, `lng`, `lat`) VALUES
 	(1, 0, '北京', '北京市', '中国,北京', 1, 'beijing', '', '', 'B', '116.405285', '39.904989'),
 	(2, 1, '北京', '北京市', '中国,北京,北京市', 2, 'beijing', '010', '100000', 'B', '116.405285', '39.904989'),
 	(3, 2, '东城', '东城区', '中国,北京,北京市,东城区', 3, 'dongcheng', '010', '100010', 'D', '116.41005', '39.93157'),

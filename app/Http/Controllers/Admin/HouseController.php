@@ -35,7 +35,9 @@ class HouseController extends Controller
         $limit = Arr::getInt($form,'limit',15);
         $keyword = Arr::getStringTrimAddSlashes($form,'keyword');
         $city_id = Arr::getInt($form,'city_id');
-
+        if($user_city_id = getUserCityId()){
+            $city_id = $user_city_id;
+        }
         $paginate = $this->service->likeTitle($keyword)->cityId($city_id)
             ->latest('created_at')->with(['images','region','city','author'])
             ->paginate($limit);
@@ -112,7 +114,7 @@ class HouseController extends Controller
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
         $data = Arr::only($validator->getData(),array_keys($rules));
-        $data['region_id'] =$data['house_region'][2];
+        $data['region_id'] = end($data['house_region']);
         $images = Arr::pull($data,'images');
         return [$data,$images];
     }

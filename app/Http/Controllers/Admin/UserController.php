@@ -13,7 +13,6 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminUserResource;
 use App\Http\Resources\PermissionResource;
-use App\Http\Resources\UserResource;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
@@ -74,7 +73,7 @@ class UserController extends Controller
             $user->syncRoles($role);
             return $user;
         });
-        return new UserResource($user);
+        return new AdminUserResource($user);
     }
 
     /**
@@ -85,7 +84,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $this->renderSuccess('',new UserResource($user));
+        return $this->renderSuccess('',new AdminUserResource($user));
     }
 
     /**
@@ -128,7 +127,7 @@ class UserController extends Controller
             }
         }
         $user->save();
-        return new UserResource($user);
+        return new AdminUserResource($user);
     }
 
     /**
@@ -160,7 +159,7 @@ class UserController extends Controller
         $newPermissionIds = array_diff($permissionIds, $rolePermissionIds);
         $permissions = Permission::allowed()->whereIn('id', $newPermissionIds)->get();
         $user->syncPermissions($permissions);
-        return new UserResource($user);
+        return new AdminUserResource($user);
     }
 
     /**

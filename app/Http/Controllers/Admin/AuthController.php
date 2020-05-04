@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\AdminUserResource;
 use App\User;
 use Arr;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class AuthController extends Controller
         $user = $request->user();
         $token = $user->createToken('api');
         $user->token = $token->plainTextToken;
-        return $this->renderSuccess('',new UserResource($user),['Authorization'=>$token->plainTextToken]);
+        return $this->renderSuccess('',new AdminUserResource($user),['Authorization'=>$token->plainTextToken]);
     }
 
     public function logout(Request $request)
@@ -48,7 +49,7 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = $request->user();
-        return $this->renderSuccess('',new UserResource($user));
+        return $this->renderSuccess('',new AdminUserResource($user));
     }
 
     public function wxLogin(Request $request)
@@ -94,7 +95,7 @@ class AuthController extends Controller
         $user = $request->user();
         $token = $user->createToken('api');
         $user->token = $token->plainTextToken;
-        return $this->renderSuccess('',new UserResource($user));
+        return $this->renderSuccess('',new AdminUserResource($user));
     }
 
 
