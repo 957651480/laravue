@@ -97,7 +97,10 @@ class RegionController extends Controller
     {
         $need_level = $request->get('need_level',0);
         $all_region = $this->service->fetchLevelAll($need_level);
-        $parent_id = $request->get('parent_id',0);
+        $parent_id = $request->get('parent_id');
+        if($city_id=getUserCityId()){
+            $parent_id=$city_id;
+        }
         $list = $this->service->getTree($all_region,$parent_id);
         return $this->renderSuccess('',['list'=>$list]);
     }
