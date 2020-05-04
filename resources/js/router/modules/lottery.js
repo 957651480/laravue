@@ -12,10 +12,23 @@ const lotteryRoutes = {
   },
   children: [
     {
+      path: 'create',
+      component: () => import('@/views/lottery/Create'),
+      name: 'CreateLottery',
+      meta: { title: '创建转盘', icon: 'edit' },
+    },
+    {
+      path: 'edit/:id(\\d+)',
+      component: () => import('@/views/lottery/Edit'),
+      name: 'EditLottery',
+      meta: { title: '编辑转盘', noCache: true },
+      hidden: true,
+    },
+    {
       path: 'list',
       component: () => import('@/views/lottery/List'),
       name: 'LotteryList',
-      meta: { title: '转盘列表', icon: 'list' },
+      meta: { title: '转盘列表', icon: 'list',noCache: true },
     },
   ],
 };

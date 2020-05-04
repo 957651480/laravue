@@ -119,6 +119,7 @@ class HouseController extends Controller
             'desc'=>'sometimes',
             'house_region'=>'required',
             'images'=>'required',
+            'content'=>'required',
         ];
         $validator = \Validator::make($from,$rules,
             [
@@ -126,6 +127,7 @@ class HouseController extends Controller
                 'desc.sometimes'=>'标题必填',
                 'house_region.required'=>'区域必填',
                 'images.required'=>'图片必传',
+                'content.required'=>'详情必须',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());

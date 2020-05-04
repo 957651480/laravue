@@ -16,13 +16,13 @@
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.lottery_id }}</span>
+          <span>{{ scope.row.auction_id }}</span>
         </template>
       </el-table-column>
 
       <el-table-column min-width="200px" label="标题">
         <template slot-scope="{row}">
-          <router-link :to="'/lottery/edit/'+row.lottery_id" class="link-type">
+          <router-link :to="'/auction/edit/'+row.auction_id" class="link-type">
             <span>{{ row.title }}</span>
           </router-link>
         </template>
@@ -59,12 +59,12 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
-          <router-link :to="'/lottery/edit/'+scope.row.lottery_id">
+          <router-link :to="'/auction/edit/'+scope.row.auction_id">
             <el-button type="primary" size="small" icon="el-icon-edit">
               编辑
             </el-button>
           </router-link>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.lottery_id)">
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.auction_id)">
             删除
           </el-button>
         </template>
@@ -79,11 +79,11 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import waves from '@/directive/waves';
 
-import { fetchList,deleteLottery } from '@/api/lottery';
+import { fetchList,deleteAuction } from '@/api/auction';
 
 
 export default {
-  name: 'LotteryList',
+  name: 'AuctionList',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -120,7 +120,7 @@ export default {
       this.getList();
     },
     handleDelete(id) {
-      deleteLottery(id).then(response => {
+      deleteAuction(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',

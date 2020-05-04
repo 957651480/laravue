@@ -14,14 +14,13 @@ class AdminLotteryResource extends JsonResource
      */
     public function toArray($request)
     {
-        $image = $this->images->map(function ($image){
-            return $image->file;
-        });
+
         return [
             'lottery_id'=>(integer)$this->lottery_id,
             'name'=>(string)$this->name,
             'position'=>(array)$this->position,
-            'images'=>$image,
+            'images' => $this->images->fileIds(),
+            'image_list' => $this->images,
             'introduction'=>(string)$this->introduction,
             'created_at'=>(string)$this->created_at,
             'updated_at'=>(string)$this->updated_at,

@@ -4,24 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\AdminLotteryResource;
-use App\Models\Lottery;
+use App\Http\Resources\Admin\AdminAuctionResource;
+use App\Models\Auction;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class LotteryController extends Controller
+class AuctionController extends Controller
 {
     /**
-     * @var Lottery
+     * @var Auction
      */
     protected $service;
 
     /**
-     * LotteryController constructor.
-     * @param Lottery $service
+     * AuctionController constructor.
+     * @param Auction $service
      */
-    public function __construct(Lottery $service)
+    public function __construct(Auction $service)
     {
         $this->service = $service;
     }
@@ -39,7 +39,7 @@ class LotteryController extends Controller
 
         $data =[
             'total'=>$paginate->total(),
-            'list'=>AdminLotteryResource::collection($paginate)
+            'list'=>AdminAuctionResource::collection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }
@@ -49,7 +49,7 @@ class LotteryController extends Controller
         //
         DB::transaction(function ()use($request)
         {
-            list($data,$images) = $this->validateLottery($request->all());
+            list($data,$images) = $this->validateAuction($request->all());
             $model = $this->service->create($data);
             $model->images()->sync($images);
         });
@@ -61,7 +61,7 @@ class LotteryController extends Controller
     {
         //
         $course = $this->service->getModelByIdOrFail($id,['images','city','author']);
-        $course = new AdminLotteryResource($course);
+        $course = new AdminAuctionResource($course);
         return $this->renderSuccess('',$course);
     }
 
@@ -69,7 +69,7 @@ class LotteryController extends Controller
     public function update(Request $request, $id)
     {
         //
-        list($data,$images) = $this->validateLottery($request->all());
+        list($data,$images) = $this->validateAuction($request->all());
         $model = $this->service->getModelByIdOrFail($id);
         //
         DB::transaction(function ()use($model,$data,$images)
@@ -89,8 +89,7 @@ class LotteryController extends Controller
     }
 
 
-
-    protected function validateLottery($from)
+    protected function validateAuction($from)
     {
         $rules=[
             'title'=>'required',

@@ -58,8 +58,18 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::get('information/delete/{id}', 'InformationController@destroy');
 
         //转盘路由
-        Route::apiResource('lottery', 'LotteryController');
+        Route::get('lottery', 'LotteryController@index');
+        Route::post('lottery/create', 'LotteryController@store');
+        Route::get('lottery/detail/{id}', 'LotteryController@show');
+        Route::post('lottery/update/{id}', 'LotteryController@update');
+        Route::get('lottery/delete/{id}', 'LotteryController@destroy');
 
+        //竞拍路由
+        Route::get('auction', 'AuctionController@index');
+        Route::post('auction/create', 'AuctionController@store');
+        Route::get('auction/detail/{id}', 'AuctionController@show');
+        Route::post('auction/update/{id}', 'AuctionController@update');
+        Route::get('auction/delete/{id}', 'AuctionController@destroy');
         //车位
         Route::get('parking', 'ParkingController@index');
         Route::post('parking/create', 'ParkingController@store');

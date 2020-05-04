@@ -26,6 +26,7 @@ import houseRoutes from "@/router/modules/house";
 import parkingRoutes from "@/router/modules/parking";
 import informationRoutes from "@/router/modules/information";
 import lotteryRoutes from "@/router/modules/lottery";
+import auctionRoutes from "@/router/modules/auction";
 
 
 /**
@@ -118,6 +119,7 @@ export const constantRoutes = [
   //categoryRoutes,
   regionRoutes,
   lotteryRoutes,
+  auctionRoutes,
   informationRoutes,
   //attendRoutes,
   {
