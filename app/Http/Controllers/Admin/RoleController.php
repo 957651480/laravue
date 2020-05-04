@@ -10,9 +10,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PermissionResource;
-use App\Laravue\Models\Permission;
+use App\Models\Permission;
 use Illuminate\Http\Request;
-use App\Laravue\Models\Role;
+use App\Models\Role;
 use App\Http\Resources\RoleResource;
 
 /**

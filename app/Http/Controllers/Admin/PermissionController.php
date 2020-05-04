@@ -11,7 +11,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PermissionResource;
 use Illuminate\Http\Request;
-use App\Laravue\Models\Permission;
+use App\Models\Permission;
 
 /**
  * Class PermissionController

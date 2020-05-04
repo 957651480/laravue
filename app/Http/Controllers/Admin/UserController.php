@@ -14,18 +14,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminUserResource;
 use App\Http\Resources\PermissionResource;
 use App\Http\Resources\UserResource;
-use App\Laravue\JsonResponse;
-use App\Laravue\Models\Permission;
-use App\Laravue\Models\Role;
+use App\Models\Permission;
+use App\Models\Role;
 use App\Laravue\Models\User;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
-use Validator;
 
 /**
  * Class UserController

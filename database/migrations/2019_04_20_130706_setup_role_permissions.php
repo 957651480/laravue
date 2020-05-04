@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
-use App\Laravue\Models\Role;
-use App\Laravue\Models\Permission;
+use App\Models\Role;
+use App\Models\Permission;
 use App\Laravue\Acl;
 
 class SetupRolePermissions extends Migration

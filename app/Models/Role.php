@@ -6,7 +6,7 @@
  * @package Laravue
  * @version
  */
-namespace App\Laravue\Models;
+namespace App\Models;
 
 use App\Exceptions\ApiException;
 use App\Laravue\Acl;

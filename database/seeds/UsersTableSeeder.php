@@ -2,8 +2,8 @@
 
 use App\Laravue\Models\User;
 use Illuminate\Database\Seeder;
-use App\Laravue\Acl;
-use App\Laravue\Models\Role;
+use App\Acl;
+use App\Models\Role;
 
 class UsersTableSeeder extends Seeder
 {

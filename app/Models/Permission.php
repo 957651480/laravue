@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-namespace App\Laravue\Models;
+namespace App\Models;
 use App\Laravue\Acl;
 use Illuminate\Database\Query\Builder;
 
