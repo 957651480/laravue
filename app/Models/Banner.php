@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Scopes\CityScope;
+use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -35,34 +35,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Banner withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Banner withoutTrashed()
  * @mixin \Eloquent
+ * @property int $city_id 城市id
+ * @property int $author_id 作者id
+ * @property-read \App\Models\User $author
+ * @property-read \App\Models\Region $city
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Banner whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Banner whereCityId($value)
  */
 class Banner extends EloquentModel
 {
     //
-    use SoftDeletes;
+    use SoftDeletes,CityTrait;
     protected $guarded = [];
     protected $table='banner';
     protected $primaryKey='banner_id';
-
-    /**
-     * 模型的「booted」方法
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::addGlobalScope(new CityScope());
-    }
 
     public function image()
     {
         return $this->belongsTo(File::class,'image_id');
     }
 
-    public function city()
-    {
-        return $this->belongsTo(Region::class,'city_id');
-    }
+
 
     public function author()
     {

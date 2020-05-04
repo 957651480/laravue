@@ -27,6 +27,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Category withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Category withoutTrashed()
  * @mixin \Eloquent
+ * @property int $city_id 城市id
+ * @property int $author_id 作者id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereAuthorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Category whereCityId($value)
  */
 class Category extends Model
 {

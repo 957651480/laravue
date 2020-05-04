@@ -12,6 +12,19 @@ const parkingRoutes = {
   },
   children: [
     {
+      path: 'create',
+      component: () => import('@/views/parking/Create'),
+      name: 'CreateParking',
+      meta: { title: '创建车位', icon: 'edit' },
+    },
+    {
+      path: 'edit/:id(\\d+)',
+      component: () => import('@/views/parking/Edit'),
+      name: 'EditParking',
+      meta: { title: '编辑车位', noCache: true },
+      hidden: true,
+    },
+    {
       path: 'list',
       component: () => import('@/views/parking/List'),
       name: 'ParkingList',

@@ -35,6 +35,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Region withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\Region withoutTrashed()
  * @mixin \Eloquent
+ * @property string $short_name 短名称
+ * @property string $merger_name 合并名称
+ * @property string $pinyin 拼音
+ * @property string $code 长途区号
+ * @property string $zip_code 邮编
+ * @property string $first 首字母
+ * @property string $lng 经度
+ * @property string $lat 纬度
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereFirst($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereLat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereLng($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereMergerName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region wherePinyin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereShortName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\Region whereZipCode($value)
  */
 class Region extends EloquentModel
 {
