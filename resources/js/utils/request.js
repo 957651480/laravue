@@ -16,7 +16,10 @@ service.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = 'Bearer ' + getToken(); // Set JWT token
     }
-
+    const city_id =store.getters.city_id;
+    if(city_id){
+      config.params['city_id']=city_id;
+    }
     return config;
   },
   error => {
