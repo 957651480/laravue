@@ -27,8 +27,8 @@
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
-            :src="scope.row.images[0].url"
-            :preview-src-list="showImageList(scope.row.images,'url')"
+            :src="scope.row.image_list[0].url"
+            :preview-src-list="showImageList(scope.row.image_list,'url')"
           ></el-image>
 
         </template>
@@ -75,8 +75,8 @@
           <el-form-item label="名称:" prop="title">
             <el-input v-model="newBanner.title" />
           </el-form-item>
-          <el-form-item label="图片:" prop="image_id">
-            <upload-image :image-list="newBanner.images" :limit="1" @updateImageList="updateImageList"></upload-image>
+          <el-form-item label="图片:" prop="images">
+            <upload-image v-model="newBanner.images" :limit="1" :image-list="newBanner.image_list"  ></upload-image>
           </el-form-item>
           <el-form-item label="类型:" prop="type_id">
             <el-select
@@ -121,7 +121,7 @@ import UploadImage from "@/components/Upload/UploadImage";
 
 export default {
   name: 'BannerList',
-  components: {UploadImage, Pagination },
+  components: { UploadImage, Pagination },
   directives: { waves },
   data() {
     return {
@@ -139,11 +139,11 @@ export default {
       rules: {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
         type_id: [{ required: true, message: '类型必须', trigger: 'blur' }],
-        image_id: [{ required: true, message: '图片必填', trigger: 'blur' }],
+          images: [{ required: true, message: '图片必填', trigger: 'blur' }],
       },
       isEdit: false,
       //
-      types:[{type_id:10,name:'首页'},{type_id:20,name:'楼盘'}]
+      types:[{type_id:10,name:'首页'},{type_id:20,name:'楼盘'}],
     };
   },
   computed: {
@@ -202,7 +202,6 @@ export default {
       this.$refs['userForm'].validate((valid) => {
         if (valid) {
           this.BannerCreating = true;
-          delete  this.newBanner.images;
           if (this.isEdit){
             let  id = this.newBanner.banner_id;
             updateBanner(id,this.newBanner)
@@ -248,22 +247,14 @@ export default {
       });
     },
     resetNewBanner() {
+
       this.newBanner = {
         title: '',
         type_id:10,
-        image_id:0,
         images:[],
         show: 10,
         sort: 100,
       };
-    },
-    updateImageList(data){
-        if(data.length>0){
-            this.newBanner.images=data;
-            this.newBanner.image_id=data[0].file_id
-        }else {
-            this.newBanner.image_id=null;
-        }
     },
     showImageList(imageList){
         let tmpList = [];

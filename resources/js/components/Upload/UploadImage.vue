@@ -10,7 +10,7 @@
        :on-preview="handleImagePreview"
        :on-remove="handleImageRemove"
        :on-exceed="handleLimitTip"
-       :file-list="imageList">
+       :file-list="fileList">
        <i class="el-icon-plus"></i>
      </el-upload>
      <el-dialog :visible.sync="dialogVisible" append-to-body>
@@ -25,41 +25,44 @@
   export default {
   name: 'UploadImage',
   props: {
-    imageList: {
+    value: {
       type:Array,
       default:function () {
           return [];
       },
     },
+    imageList: {
+        type:Array,
+        default:function () {
+            return [];
+        },
+    },
     limit:{
         type:Number,
         default:0
-    }
+    },
   },
   data() {
     return {
+      fileList:[],
       dialogImageUrl: '',
       dialogVisible: false,
     };
   },
-  /*computed:{
-      fileList: {
-          // getter
-          get: function () {
-              return this.imageList;
-          },
-          // setter
-          set: function (newValue) {
-              this.imageList=newValue;
+ watch: {
+      imageList(val) {
+          debugger
+          if(val.length>0){
+              this.fileList=this.imageList;
           }
       },
-  },*/
+  },
   methods: {
 
     //【内容图删除事件】
     handleImageRemove: function (file, fileList) {
-      this.fileList=fileList;
-      this.$emit('updateImageList',this.fileList);
+        this.fileList=fileList;
+        this.removeFileId(file.file_id);
     },
 
     //【内容图片预览事件】
@@ -72,7 +75,7 @@
       let {data} = response;
       file = Object.assign(file,{file_id:data.file_id,name:data.name,url:data.url});
       this.fileList=fileList;
-      this.$emit('updateImageList',this.fileList);
+      this.value.push(file.file_id);
     },
     //上传内容图
     uploadImage: function (file) {
@@ -106,9 +109,19 @@
         message: `只能上传${this.limit}张图片`,
         type: 'warning'
       });
-    }
+    },
+    removeFileId:function (file_id) {
+        var index = this.value.indexOf(file_id);
+        if (index > -1) {
+            this.value.splice(index, 1);
+        }
+    },
   },
-};
+   mounted() {
+
+      this.fileList=this.imageList;
+   }
+  };
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

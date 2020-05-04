@@ -24,7 +24,7 @@
           />
         </el-form-item>
         <el-form-item label="图片:" prop="images">
-          <upload-image :image-list="image_list"  @updateImageList="updateImageList"></upload-image>
+          <upload-image v-model="postForm.images" :image-list="fileList"  @updateImageList="updateImageList"></upload-image>
         </el-form-item>
         <el-form-item  label="区域" prop="house_region">
           <el-cascader
@@ -103,6 +103,7 @@ export default {
           label: 'name',
       },
       regionTrees:[],
+      fileList:[],
     };
   },
   computed: {
@@ -137,7 +138,7 @@ export default {
           this.postForm.house_region=data.house_region;
           this.postForm.region_id=data.region_id;
           this.postForm.content = data.content;
-          this.image_list=data.image_list;
+          this.fileList=data.image_list;
           // Set tagsview title
           this.setTagsViewTitle();
         })

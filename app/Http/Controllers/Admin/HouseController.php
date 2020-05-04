@@ -114,12 +114,13 @@ class HouseController extends Controller
 
     protected function validateHouse($from)
     {
-        $validator = \Validator::make($from,[
+        $rules=[
             'name'=>'required',
             'desc'=>'sometimes',
             'house_region'=>'required',
             'images'=>'required',
-        ],
+        ];
+        $validator = \Validator::make($from,$rules,
             [
                 'name.required'=>'楼盘名称必填',
                 'desc.sometimes'=>'标题必填',
@@ -128,7 +129,7 @@ class HouseController extends Controller
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
-        $data = $validator->getData();
+        $data = Arr::only($validator->getData(),array_keys($rules));
         $data['region_id'] =$data['house_region'][2];
         $images = Arr::pull($data,'images');
         return [$data,$images];

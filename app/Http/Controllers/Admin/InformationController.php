@@ -115,12 +115,13 @@ class InformationController extends Controller
 
     protected function validateInformation($from)
     {
-        $validator = \Validator::make($from,[
+        $rules=[
             'title'=>'required',
             'desc'=>'sometimes',
             'content'=>'required',
             'images'=>'required',
-        ],
+        ];
+        $validator = \Validator::make($from,$rules,
             [
                 'name.required'=>'楼盘名称必填',
                 'desc.sometimes'=>'标题必填',
@@ -129,7 +130,7 @@ class InformationController extends Controller
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
-        $data = $validator->getData();
+        $data = Arr::only($validator->getData(),array_keys($rules));
         $images = Arr::pull($data,'images');
         return [$data,$images];
     }
