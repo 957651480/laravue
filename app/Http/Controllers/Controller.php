@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -29,5 +30,10 @@ class Controller extends BaseController
             'msg'=>$msg,
             'data'=>$data
         ])->withHeaders($header);
+    }
+
+    public function getUserCityId(User $user)
+    {
+        return $user->city_id;
     }
 }

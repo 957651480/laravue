@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filter\HouseScope;
 use App\Traits\AuthorTrait;
 use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -45,10 +46,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\App\Models\House withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Models\House withoutTrashed()
  * @mixin \Eloquent
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\House likeTitle($title)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\House cityId($city_id)
  */
 class House extends EloquentModel
 {
-    use SoftDeletes,CityTrait,AuthorTrait;
+    use SoftDeletes,CityTrait,AuthorTrait,HouseScope;
     //
     protected $guarded = [];
     protected $table='house';
@@ -78,5 +81,7 @@ class House extends EloquentModel
     {
         return json_decode($value,true);
     }
+
+
 
 }

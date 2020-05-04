@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\ApiException;
+use App\Filter\HouseFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminHouseResource;
 use App\Models\House;
@@ -30,12 +31,14 @@ class HouseController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->service->with(['images','region','city','author'])->newQuery();
-        $wheres =$this->filter($request);
-        $query->when($wheres,function ($query)use($wheres){
-            $query->where($wheres);
-        });
-        $paginate = $query->latest('created_at')->paginate($request->get('limit'));
+        $form = $request->all();
+        $limit = Arr::getInt($form,'limit',15);
+        $keyword = Arr::getStringTrimAddSlashes($form,'keyword');
+        $city_id = Arr::getInt($form,'city_id');
+
+        $paginate = $this->service->likeTitle($keyword)->cityId($city_id)
+            ->latest('created_at')->with(['images','region','city','author'])
+            ->paginate($limit);
 
         $data =[
             'total'=>$paginate->total(),
@@ -89,29 +92,6 @@ class HouseController extends Controller
     }
 
 
-    public function export(Request $request)
-    {
-        $tileArray=['课程ID','标题','分类名称','教师名称','报名人数','课程人数','地点'];
-        $query = $this->service->with(['category'])->newQuery();
-        $wheres =$this->filter($request);
-        $query->when($wheres,function ($query)use($wheres){
-            $query->where($wheres);
-        });
-        $courseCol = $query->get();
-        $transform = $courseCol->transform(function ($course)
-        {
-            return [
-                'course_id' => (integer)$course->course_id,
-                'title'=>$course->title,
-                'attend_number' => (integer)$course->attend_number,
-                'number' => (integer)$course->number,
-                'address' => (string)$course->address,
-            ];
-        });
-        return export_excel('kkk.csv',$tileArray,$transform->toArray());
-    }
-
-
     protected function validateHouse($from)
     {
         $rules=[
@@ -147,13 +127,5 @@ class HouseController extends Controller
             $wheres[]=$this->filterCategoryId($category_id);
         }
         return $wheres;
-    }
-    protected function filterTitleLike($title)
-    {
-        return ['title','like',"%{$title}%"];
-    }
-    protected function filterCategoryId($id)
-    {
-        return ['category_id','=',$id];
     }
 }

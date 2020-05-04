@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        App\Providers\ArrMacroServiceProvider::class,
         /*
          * Application Service Providers...
          */
