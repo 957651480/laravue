@@ -32,8 +32,8 @@ class Attend extends JsonResource
             'user_avatarUrl'=>$user->avatarUrl??'',
             'course_id'=>$this->course_id,
             'course_title'=>$course->title??'',
-            'created_at'=>(string)$this->created_at,
-            'updated_at'=>(string)$this->updated_at,
+            'created_at'=>(string)optional($this->created_at),
+            'updated_at'=>(string)optional($this->updated_at),
         ];
     }
 }

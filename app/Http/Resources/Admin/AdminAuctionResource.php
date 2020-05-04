@@ -31,8 +31,8 @@ class AdminAuctionResource extends JsonResource
             'images' => $this->images->fileIds(),
             'image_list' => $this->images,
             'content' => (string)$this->content,
-            'created_at'=>(string)$this->created_at->toDateTimeString(),
-            'updated_at'=>(string)$this->updated_at->toDateTimeString(),
+            'created_at'=>(string)optional($this->created_at)->toDateTimeString(),
+            'updated_at'=>(string)optional($this->updated_at)->toDateTimeString(),
 
         ];
     }

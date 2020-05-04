@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-use \App\Laravue\Faker;
-use \App\Laravue\JsonResponse;
 
 /*
 |--------------------------------------------------------------------------

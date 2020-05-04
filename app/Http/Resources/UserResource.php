@@ -34,8 +34,8 @@ class UserResource extends JsonResource
             'open_id'=>$this->open_id,
             'avatar' =>$this->avatarUrl,
             'token'=>$this->token,
-            'created_at'=>$this->created_at->toDateTimeString(),
-            'updated_at'=>$this->updated_at->toDateTimeString(),
+            'created_at'=>optional($this->created_at)->toDateTimeString(),
+            'updated_at'=>optional($this->updated_at)->toDateTimeString(),
         ];
     }
 }

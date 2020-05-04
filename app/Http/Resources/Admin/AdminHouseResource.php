@@ -36,8 +36,8 @@ class AdminHouseResource extends JsonResource
             'author_id'=>(integer)$this->author_id,
             'author_name'=>(string)optional($author)->name,
             'content' => (string)$this->content,
-            'created_at'=>(string)$this->created_at->toDateTimeString(),
-            'updated_at'=>(string)$this->updated_at->toDateTimeString(),
+            'created_at'=>(string)optional($this->created_at)->toDateTimeString(),
+            'updated_at'=>(string)optional($this->updated_at)->toDateTimeString(),
 
         ];
     }

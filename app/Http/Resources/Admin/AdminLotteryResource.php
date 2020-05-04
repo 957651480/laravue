@@ -22,8 +22,8 @@ class AdminLotteryResource extends JsonResource
             'images' => $this->images->fileIds(),
             'image_list' => $this->images,
             'introduction'=>(string)$this->introduction,
-            'created_at'=>(string)$this->created_at,
-            'updated_at'=>(string)$this->updated_at,
+            'created_at'=>(string)optional($this->created_at),
+            'updated_at'=>(string)optional($this->updated_at),
         ];
     }
 }

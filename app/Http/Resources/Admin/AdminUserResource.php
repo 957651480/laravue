@@ -25,8 +25,8 @@ class AdminUserResource extends JsonResource
             'open_id'=>$this->open_id,
             'avatar' =>$this->avatarUrl,
             'token'=>$this->token,
-            'created_at'=>(string)$this->created_at->toDateTimeString(),
-            'updated_at'=>(string)$this->updated_at->toDateTimeString(),
+            'created_at'=>(string)optional($this->created_at)->toDateTimeString(),
+            'updated_at'=>(string)optional($this->updated_at)->toDateTimeString(),
         ];
     }
 }

@@ -18,8 +18,8 @@ class Category extends JsonResource
             'category_id'=>(integer)$this->category_id,
             'name'=>(string)$this->name,
             'sort'=>(integer)$this->sort,
-            'created_at'=>(string)$this->created_at,
-            'updated_at'=>(string)$this->updated_at,
+            'created_at'=>(string)optional($this->created_at),
+            'updated_at'=>(string)optional($this->updated_at),
         ];
     }
 }

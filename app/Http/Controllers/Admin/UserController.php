@@ -196,14 +196,11 @@ class UserController extends Controller
      */
     public function permissions(User $user)
     {
-        try {
-            return new JsonResponse([
-                'user' => PermissionResource::collection($user->getDirectPermissions()),
-                'role' => PermissionResource::collection($user->getPermissionsViaRoles()),
-            ]);
-        } catch (\Exception $ex) {
-            response()->json(['error' => $ex->getMessage()], 403);
-        }
+        $data = [
+            'user' => PermissionResource::collection($user->getDirectPermissions()),
+            'role' => PermissionResource::collection($user->getPermissionsViaRoles()),
+        ];
+        return  $this->renderSuccess('',$data);
     }
 
 
