@@ -2,7 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Laravue\Acl;
+use App\Models\Acl;
 use App\Models\Role;
 
 class UsersTableSeeder extends Seeder
@@ -32,9 +32,9 @@ class UsersTableSeeder extends Seeder
             'password' => Hash::make('admin'),
         ]);
 
-        $adminRole = Role::findByName(\App\Laravue\Acl::ROLE_ADMIN);
-        $managerRole = Role::findByName(\App\Laravue\Acl::ROLE_MANAGER);
-        $partnerRole = Role::findByName(\App\Laravue\Acl::ROLE_PARTNER);
+        $adminRole = Role::findByName(\App\Models\Acl::ROLE_ADMIN);
+        $managerRole = Role::findByName(\App\Models\Acl::ROLE_MANAGER);
+        $partnerRole = Role::findByName(\App\Models\Acl::ROLE_PARTNER);
         $admin->syncRoles($adminRole);
         $manager->syncRoles($managerRole);
         $partner->syncRoles($partnerRole);

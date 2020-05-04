@@ -6,7 +6,7 @@
  * @package Laravue
  * @version 1.0
  */
-namespace App\Laravue;
+namespace App\Models;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;

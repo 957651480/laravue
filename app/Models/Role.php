@@ -9,7 +9,7 @@
 namespace App\Models;
 
 use App\Exceptions\ApiException;
-use App\Laravue\Acl;
+use App\Models\Acl;
 use Spatie\Permission\Models\Permission;
 
 

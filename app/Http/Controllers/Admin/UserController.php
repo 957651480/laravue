@@ -107,7 +107,7 @@ class UserController extends Controller
         $currentUser = Auth::user();
         /*if (!$currentUser->isAdmin()
             && $currentUser->id !== $user->id
-            && !$currentUser->hasPermission(\App\Laravue\Acl::PERMISSION_USER_MANAGE)
+            && !$currentUser->hasPermission(\App\Models\Acl::PERMISSION_USER_MANAGE)
         ) {
             return response()->json(['error' => 'Permission denied'], 403);
         }*/

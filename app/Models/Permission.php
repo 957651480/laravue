@@ -8,7 +8,7 @@
  */
 
 namespace App\Models;
-use App\Laravue\Acl;
+use App\Models\Acl;
 use Illuminate\Database\Query\Builder;
 
 class Permission extends \Spatie\Permission\Models\Permission

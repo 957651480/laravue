@@ -75,19 +75,19 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::get('parking/delete/{id}', 'ParkingController@destroy');
 
         Route::get('auth/user', 'AuthController@user');
-        Route::get('users', 'UserController@index')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
-        Route::post('users', 'UserController@store')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
-        Route::get('users/{user}', 'UserController@show')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
+        Route::get('users', 'UserController@index')->middleware('permission:' . \App\Models\Acl::PERMISSION_USER_MANAGE);
+        Route::post('users', 'UserController@store')->middleware('permission:' . \App\Models\Acl::PERMISSION_USER_MANAGE);
+        Route::get('users/{user}', 'UserController@show')->middleware('permission:' . \App\Models\Acl::PERMISSION_USER_MANAGE);
         Route::put('users/{user}', 'UserController@update');
-        Route::delete('users/{user}', 'UserController@destroy')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_USER_MANAGE);
-        Route::get('users/{user}/permissions', 'UserController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
-        Route::put('users/{user}/permissions', 'UserController@updatePermissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::delete('users/{user}', 'UserController@destroy')->middleware('permission:' . \App\Models\Acl::PERMISSION_USER_MANAGE);
+        Route::get('users/{user}/permissions', 'UserController@permissions')->middleware('permission:' . \App\Models\Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::put('users/{user}/permissions', 'UserController@updatePermissions')->middleware('permission:' . \App\Models\Acl::PERMISSION_PERMISSION_MANAGE);
 
-        Route::post('roles/create','RoleController@store')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
-        Route::post('roles/update/{id}', 'RoleController@update')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
-        Route::apiResource('roles', 'RoleController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
-        Route::get('roles/{role}/permissions', 'RoleController@permissions')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
-        Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Laravue\Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::post('roles/create','RoleController@store')->middleware('permission:' . \App\Models\Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::post('roles/update/{id}', 'RoleController@update')->middleware('permission:' . \App\Models\Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::apiResource('roles', 'RoleController')->middleware('permission:' . \App\Models\Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::get('roles/{role}/permissions', 'RoleController@permissions')->middleware('permission:' . \App\Models\Acl::PERMISSION_PERMISSION_MANAGE);
+        Route::apiResource('permissions', 'PermissionController')->middleware('permission:' . \App\Models\Acl::PERMISSION_PERMISSION_MANAGE);
 
         Route::post('file/upload', 'FileController@upload');
     });

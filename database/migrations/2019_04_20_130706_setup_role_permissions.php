@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 use App\Models\Role;
 use App\Models\Permission;
-use App\Laravue\Acl;
+use App\Models\Acl;
 
 class SetupRolePermissions extends Migration
 {
