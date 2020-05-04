@@ -66,6 +66,6 @@ class Banner extends EloquentModel
 
     public function author()
     {
-        return $this->belongsTo(\App\Laravue\Models\User::class,'author_id');
+        return $this->belongsTo(\App\Models\User::class,'author_id');
     }
 }

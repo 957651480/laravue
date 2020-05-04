@@ -49,7 +49,7 @@ class File extends Model
 
     public function author()
     {
-        return $this->belongsTo(\App\Laravue\Models\User::class,'author_id');
+        return $this->belongsTo(\App\Models\User::class,'author_id');
     }
     public function newCollection(array $models = [])
     {
