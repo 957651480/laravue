@@ -51,7 +51,6 @@
   },
  watch: {
       imageList(val) {
-          debugger
           if(val.length>0){
               this.fileList=this.imageList;
           }
