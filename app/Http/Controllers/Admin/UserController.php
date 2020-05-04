@@ -16,7 +16,7 @@ use App\Http\Resources\PermissionResource;
 use App\Http\Resources\UserResource;
 use App\Models\Permission;
 use App\Models\Role;
-use App\Laravue\Models\User;
+use App\Models\User;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;

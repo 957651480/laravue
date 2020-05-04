@@ -47,22 +47,6 @@ class SetupRolePermissions extends Migration
      */
     public function down()
     {
-        if (!Schema::hasColumn('users', 'role')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->string('role')->default('editor');
-            });
-        }
 
-        /** @var \App\User[] $users */
-        $users = \App\Laravue\Models\User::all();
-        foreach ($users as $user) {
-            $roles = array_reverse(Acl::roles());
-            foreach ($roles as $role) {
-                if ($user->hasRole($role)) {
-                    $user->role = $role;
-                    $user->save();
-                }
-            }
-        }
     }
 }
