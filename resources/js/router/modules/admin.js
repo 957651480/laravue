@@ -34,12 +34,6 @@ const adminRoutes = {
       name: 'RoleList',
       meta: { title: 'rolePermission', icon: 'role', permissions: ['manage permission'] },
     },
-    {
-      path: 'roles1',
-      component: () => import('@/views/permission/Role'),
-      name: 'RoleList1',
-      meta: { title: 'rolePermission', icon: 'role', permissions: ['manage permission'] },
-    },
   ],
 };
 

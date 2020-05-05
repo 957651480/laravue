@@ -9,6 +9,8 @@ return [
     'permissions'=>[
         ['name'=>'view menu region ui','display_name'=>'地区列表','guard_name'=>'api'],
         ['name'=>'view menu banner ui','display_name'=>'首页轮播图显示','guard_name'=>'api'],
+        ['name'=>'view menu banner ui','display_name'=>'首页轮播图显示','guard_name'=>'api'],
+        ['name'=>'view menu administrator','display_name'=>'查看权限','guard_name'=>'api'],
         ['name'=>'view menu permission','display_name'=>'查看权限','guard_name'=>'api'],
 
         ['name'=>'manage user','display_name'=>'管理用户','guard_name'=>'api'],

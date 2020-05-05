@@ -6,6 +6,7 @@ use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminParkingResource;
 use App\Models\Parking;
+use Arr;
 use Illuminate\Http\Request;
 
 class ParkingController extends Controller
@@ -75,15 +76,18 @@ class ParkingController extends Controller
 
     protected function validateParking($form)
     {
-
-        $validator = \Validator::make($form,[
+        $rules = [
+            'house_id'=>'required',
             'code'=>'required',
-        ],
+        ];
+        $validator = \Validator::make($form,$rules,
             [
+                'house_id.required'=>'必须选择一个楼盘',
                 'code.required'=>'车位号必填',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
-        return $validator->getData();
+        $data = Arr::only($validator->getData(),array_keys($rules));
+        return $data;
     }
 }

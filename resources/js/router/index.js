@@ -19,8 +19,6 @@ import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 import errorRoutes from './modules/error';
 import exampleRoutes from './modules/example';
-import categoryRoutes from './modules/category';
-import attendRoutes from "@/router/modules/attend";
 import regionRoutes from "@/router/modules/region";
 import houseRoutes from "@/router/modules/house";
 import parkingRoutes from "@/router/modules/parking";
@@ -88,7 +86,7 @@ export const constantRoutes = [
   {
     path: '',
     component: Layout,
-    redirect: '/course/list',
+    redirect: '/house/list',
     /*children: [
       {
         path: 'dashboard',
@@ -98,30 +96,14 @@ export const constantRoutes = [
       },
     ],*/
   },
-  {
-    path: '/guide',
-    component: Layout,
-    hidden: true,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'guide', icon: 'guide', noCache: true },
-      },
-    ],
-  },
   elementUiRoutes,
   exampleRoutes,
   houseRoutes,
   parkingRoutes,
-  //categoryRoutes,
   regionRoutes,
   lotteryRoutes,
   auctionRoutes,
   informationRoutes,
-  //attendRoutes,
   {
     path: '/banner',
     component: Layout,

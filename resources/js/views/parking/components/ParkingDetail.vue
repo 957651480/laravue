@@ -3,14 +3,33 @@
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
       <div class="createPost-main-container">
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="标题:" prop="title">
+        <el-row>
+          <el-col :span="6">
+            <el-form-item style="margin-bottom: 40px;" label-width="80px" label="楼盘:" prop="house_name">
+              <el-input
+                v-model="postForm.house_name"
+                :rows="1"
+                autosize
+                :disabled="true"
+                placeholder="请选择楼盘"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" style="margin-left: 20px">
+            <el-button @click="chooseHouse">选择楼盘</el-button>
+          </el-col>
+          <el-col :span="1" style="margin-left: 20px">
+            <el-input type="hidden" v-model="postForm.house_id" ></el-input>
+          </el-col>
+        </el-row>
+        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="车位编号:" prop="code">
           <el-input
-            v-model="postForm.title"
+            v-model="postForm.code"
             :rows="1"
             type="textarea"
             class="article-textarea"
             autosize
-            placeholder="请输入标题"
+            placeholder="请输入车位编号"
           />
         </el-form-item>
         <el-form-item style="margin-bottom: 40px;" label-width="80px" label="简介:" prop="desc">
@@ -40,6 +59,10 @@
         </el-button>
       </div>
     </el-form>
+
+    <el-dialog :visible.sync="showHouseDialog" title="选择楼盘">
+      <HouseTableSearch v-model="postForm.house_id" @updateHouse="updateHouse"></HouseTableSearch>
+    </el-dialog>
   </div>
 </template>
 
@@ -47,12 +70,16 @@
 import Tinymce from '@/components/Tinymce';
 import {fetchParking, createParking, updateParking} from '@/api/parking';
 import UploadImage from "@/components/Upload/UploadImage";
-import {arrayColumn} from "@/utils";
+import HouseTableSearch from "@/views/house/components/HouseTableSearch";
+
+
 const defaultForm = {
   parking_id: undefined,
-  title: '',
+  code: '',
   desc: '',
   content: '',
+  house_id:null,
+  house_name:'',
   images:[],
 };
 
@@ -61,6 +88,7 @@ export default {
   components: {
     UploadImage,
     Tinymce,
+    HouseTableSearch
   },
   props: {
     isEdit: {
@@ -73,13 +101,15 @@ export default {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       rules: {
-        title: [{ required: true, message: '标题必须', trigger: 'blur' }],
+        house_name: [{ required: true, message: '请选择楼盘', trigger: 'blur' }],
+        code: [{ required: true, message: '请填写车位编号', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
       },
       tempRoute: {},
       image_list:[],
+      showHouseDialog:false,
     };
   },
   computed: {
@@ -169,6 +199,13 @@ export default {
         this.loading = false;
       });
     },
+    chooseHouse(){
+        this.showHouseDialog=true;
+    },
+    updateHouse(item){
+        this.postForm.house_name=item.name;
+        this.showHouseDialog=false;
+    }
   },
 };
 </script>
