@@ -41,4 +41,9 @@ class Parking extends EloquentModel
     protected $table='parking';
     protected $primaryKey='parking_id';
 
+
+    public function house()
+    {
+        return $this->belongsTo(House::class,'house_id');
+    }
 }

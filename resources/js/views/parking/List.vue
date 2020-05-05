@@ -20,25 +20,16 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="200px" label="标题">
+      <el-table-column min-width="200px" label="编号">
         <template slot-scope="{row}">
           <router-link :to="'/parking/edit/'+row.parking_id" class="link-type">
-            <span>{{ row.title }}</span>
+            <span>{{ row.code }}</span>
           </router-link>
         </template>
       </el-table-column>
       <el-table-column min-width="100px" label="简介">
         <template slot-scope="{row}">
             <span>{{ row.desc }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="200px" label="图片">
-        <template slot-scope="scope">
-          <el-image
-            style="width: 80px; height: 80px"
-            :src="scope.row.image_list[0].url"
-            :preview-src-list="showImageList(scope.row.image_list)"
-            ></el-image>
         </template>
       </el-table-column>
 

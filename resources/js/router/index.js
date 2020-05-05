@@ -13,12 +13,8 @@ Vue.use(Router);
 import Layout from '@/layout';
 
 /* Router for modules */
-import elementUiRoutes from './modules/element-ui';
-import componentRoutes from './modules/components';
-import tableRoutes from './modules/table';
 import adminRoutes from './modules/admin';
 import errorRoutes from './modules/error';
-import exampleRoutes from './modules/example';
 import regionRoutes from "@/router/modules/region";
 import houseRoutes from "@/router/modules/house";
 import parkingRoutes from "@/router/modules/parking";
@@ -96,8 +92,6 @@ export const constantRoutes = [
       },
     ],*/
   },
-  elementUiRoutes,
-  exampleRoutes,
   houseRoutes,
   parkingRoutes,
   regionRoutes,
@@ -120,8 +114,6 @@ export const constantRoutes = [
 ];
 
 export const asyncRoutes = [
-  componentRoutes,
-  tableRoutes,
   adminRoutes,
   errorRoutes,
   {

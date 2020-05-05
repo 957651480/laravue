@@ -11,9 +11,6 @@
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
-      </el-button>
     </div>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
@@ -29,15 +26,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="邮箱">
-        <template slot-scope="scope">
-          <span>{{ scope.row.email }}</span>
-        </template>
-      </el-table-column>
-
       <el-table-column align="center" label="角色" width="120">
         <template slot-scope="scope">
-          <span>{{ normalizeUserRoleName(scope.row.roles) }}</span>
+          <span>{{ normalizeUserRoleName(scope.row.role_list) }}</span>
         </template>
       </el-table-column>
 
@@ -96,7 +87,7 @@
           <el-form-item label="用户名" prop="name">
             <el-input v-model="newUser.name" />
           </el-form-item>
-          <el-form-item label="用户角色" prop="role">
+          <el-form-item label="用户角色" prop="role_id">
             <el-select v-model="newUser.role_id" class="filter-item" placeholder="请选择角色" @change="chooseRole(newUser.role_id)">
               <el-option v-for="item in nonAdminRoles" :key="item.role_id" :label="item.display_name" :value="item.role_id" />
             </el-select>
@@ -189,8 +180,8 @@ export default {
           { type: 'email', message: 'Please input correct email address', trigger: ['blur', 'change'] },
         ],
         password: [{ required: true, message: '密码必须', trigger: 'blur' }],
-        confirmPassword: [{ validator: validateConfirmPassword, trigger: 'blur' }],
-          user_region: [{ required: true, message: '必须选择一个城市', trigger: 'blur' }],
+        confirmPassword: [{ required: true,validator: validateConfirmPassword, trigger: 'blur' }],
+        user_region: [{ required: true, message: '必须选择一个城市', trigger: 'blur' }],
       },
       permissionProps: {
         children: 'children',
@@ -399,23 +390,6 @@ export default {
         role_id: null,
       };
     },
-    handleDownload() {
-      this.downloading = true;
-      import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['id', 'user_id', 'name', 'email', 'role'];
-        const filterVal = ['index', 'id', 'name', 'email', 'role'];
-        const data = this.formatJson(filterVal, this.list);
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'user-list',
-        });
-        this.downloading = false;
-      });
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => v[j]));
-    },
     permissionKeys(permissions) {
       return permissions.map(permssion => permssion.id);
     },
@@ -473,8 +447,11 @@ export default {
         return roles[0].display_name
     },
     chooseRole(role_id){
+
         if(role_id===3){
             this.showCity=true;
+        }else{
+            this.showCity=false;
         }
     },
     async getCityList() {

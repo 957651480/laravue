@@ -32,22 +32,6 @@
             placeholder="请输入车位编号"
           />
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="简介:" prop="desc">
-          <el-input
-            v-model="postForm.desc"
-            :rows="1"
-            type="textarea"
-            class="article-textarea"
-            autosize
-            placeholder="请输入简介"
-          />
-        </el-form-item>
-        <el-form-item label="图片:" prop="images">
-          <upload-image v-model="postForm.images" :image-list="image_list" ></upload-image>
-        </el-form-item>
-        <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
-          <Tinymce ref="editor" v-model="postForm.content" :height="400" />
-        </el-form-item>
 
         <el-button
           v-loading="loading"
@@ -76,11 +60,8 @@ import HouseTableSearch from "@/views/house/components/HouseTableSearch";
 const defaultForm = {
   parking_id: undefined,
   code: '',
-  desc: '',
-  content: '',
   house_id:null,
   house_name:'',
-  images:[],
 };
 
 export default {
@@ -104,8 +85,6 @@ export default {
         house_name: [{ required: true, message: '请选择楼盘', trigger: 'blur' }],
         code: [{ required: true, message: '请填写车位编号', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
-        images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
-        content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
       },
       tempRoute: {},
       image_list:[],
@@ -136,11 +115,10 @@ export default {
 
           let data = response.data;
           this.postForm.parking_id=data.parking_id;
-          this.postForm.title=data.title;
-          this.postForm.desc=data.desc;
-          this.postForm.images=data.images;
-          this.postForm.content = data.content;
-          this.image_list=data.image_list;
+          this.postForm.code=data.code;
+          this.postForm.house_id=data.house_id;
+          this.postForm.house_name=data.house_name;
+
           // Set tagsview title
           this.setTagsViewTitle();
         })

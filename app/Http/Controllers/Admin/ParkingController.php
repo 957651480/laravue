@@ -30,7 +30,7 @@ class ParkingController extends Controller
     {
         //
         $query = $this->service->newQuery();
-        $paginate = $query->latest()
+        $paginate = $query->latest()->with(['city','house','author'])
             ->paginate($request->get('limit'));
         $data =[
             'total'=>$paginate->total(),
@@ -51,7 +51,7 @@ class ParkingController extends Controller
 
     public function show($id)
     {
-        $model = $this->service->getModelByIdOrFail($id);
+        $model = $this->service->getModelByIdOrFail($id,['city','house','author']);
         return $this->renderSuccess('',new AdminParkingResource($model));
     }
 
@@ -59,7 +59,7 @@ class ParkingController extends Controller
     public function update(Request $request, $id)
     {
         $model = $this->service->getModelByIdOrFail($id);
-        $data = $this->validateParking($request);
+        $data = $this->validateParking($request->all());
         $model->update($data);
         return $this->renderSuccess();
     }
