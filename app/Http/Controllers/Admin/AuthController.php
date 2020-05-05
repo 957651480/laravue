@@ -49,7 +49,7 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = $request->user();
-        return $this->renderSuccess('',new AdminUserResource($user));
+        return $this->renderSuccess('',new UserResource($user));
     }
 
     public function wxLogin(Request $request)
