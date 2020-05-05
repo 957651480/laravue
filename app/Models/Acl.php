@@ -25,7 +25,7 @@ final class Acl
     const PERMISSION_VIEW_MENU_REGION_UI = 'view menu region ui';
     const PERMISSION_VIEW_MENU_BANNER_UI = 'view menu banner ui';
     const PERMISSION_VIEW_MENU_PERMISSION = 'view menu permission';
-    const PERMISSION_VIEW_MENU_ADMINISTRATOR = 'view menu administrator';
+    //const PERMISSION_VIEW_MENU_ADMINISTRATOR = 'view menu administrator';
    /* const PERMISSION_VIEW_MENU_COMPONENTS = 'view menu components';
     const PERMISSION_VIEW_MENU_CHARTS = 'view menu charts';
     const PERMISSION_VIEW_MENU_NESTED_ROUTES = 'view menu nested routes';

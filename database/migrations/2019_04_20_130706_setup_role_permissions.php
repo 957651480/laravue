@@ -34,9 +34,9 @@ class SetupRolePermissions extends Migration
         }
 
         // Setup basic permission
-        $adminRole->givePermissionTo(Acl::permissions());
-        $managerRole->givePermissionTo(Acl::permissions());
-        $partnerRole->givePermissionTo(Acl::menuPermissions());
+        $adminRole->givePermissionTo(Permission::all());
+        $managerRole->givePermissionTo(Permission::all());
+        $partnerRole->givePermissionTo(Permission::where('name','like',"%menu%")->get());
 
     }
 

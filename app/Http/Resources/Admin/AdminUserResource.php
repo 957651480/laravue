@@ -20,11 +20,23 @@ class AdminUserResource extends JsonResource
             'name' => $this->name,
             'nickName' => $this->nickName,
             'email' => $this->email,
-            'roles' => $this->roles,
-            'permissions' => $permissions,
+            'role_list' => $this->roles,
+            'permission_list' => $permissions,
             'open_id'=>$this->open_id,
             'avatar' =>$this->avatarUrl,
             'token'=>$this->token,
+            'roles' => array_map(
+                function ($role) {
+                    return $role['name'];
+                },
+                $this->roles->toArray()
+            ),
+            'permissions' => array_map(
+                function ($permission) {
+                    return $permission['name'];
+                },
+                $permissions->toArray()
+            ),
             'city_id'=>$this->city_id,
             'created_at'=>(string)optional($this->created_at)->toDateTimeString(),
             'updated_at'=>(string)optional($this->updated_at)->toDateTimeString(),
