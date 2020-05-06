@@ -24,11 +24,11 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Models\HouseImage whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class HouseImage extends Pivot
+class HouseParkingImage extends Pivot
 {
     //
     protected $guarded = [];
-    protected $table='house_image';
+    protected $table='house_parking_image';
 
 
     public function file()

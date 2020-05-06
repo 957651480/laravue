@@ -3,7 +3,7 @@
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
       <div class="createPost-main-container">
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="名称:" prop="name">
+        <el-form-item style="margin-bottom: 40px;" label-width="150px" label="名称:" prop="name">
           <el-input
             v-model="postForm.name"
             :rows="1"
@@ -13,7 +13,7 @@
             placeholder="请输入名称"
           />
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="简介:" prop="desc">
+        <el-form-item style="margin-bottom: 40px;" label-width="150px" label="简介:" prop="desc">
           <el-input
             v-model="postForm.desc"
             :rows="1"
@@ -23,17 +23,20 @@
             placeholder="请输入简介"
           />
         </el-form-item>
-        <el-form-item label="图片:" prop="images">
+        <el-form-item label-width="150px" label="图片:" prop="images">
           <upload-image v-model="postForm.images" :image-list="fileList"  @updateImageList="updateImageList"></upload-image>
         </el-form-item>
-        <el-form-item  label="区域" prop="house_region">
+        <el-form-item label-width="150px" label="车位分布图:" prop="parking_image_ids">
+          <upload-image v-model="postForm.parking_image_ids" :image-list="parking_image_list"  @updateImageList="updateImageList"></upload-image>
+        </el-form-item>
+        <el-form-item  label-width="150px" label="区域" prop="house_region">
           <el-cascader
             v-model="postForm.house_region"
             :props="optionProps"
             :options="regionTrees"
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="住户数:" prop="household">
+        <el-form-item label-width="150px" label="住户数:" prop="household">
             <el-input-number v-model="postForm.household"></el-input-number>
         </el-form-item>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
@@ -68,6 +71,7 @@ const defaultForm = {
   content: '',
   household:1,
   images:[],
+  parking_image_ids:[],
   house_region:[]
 };
 
@@ -104,6 +108,7 @@ export default {
       },
       regionTrees:[],
       fileList:[],
+      parking_image_list:[]
     };
   },
   computed: {
