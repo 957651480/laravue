@@ -48,9 +48,9 @@
         </el-form-item>
         <el-row>
           <el-col :span="10">
-            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位区域:" prop="area_id">
-              <el-select v-model="postForm.area_id" placeholder="选择类型" >
-                <el-option v-for="item in areas" :key="item.area_id" :label="item.name" :value="item.area_id" />
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位区域:" prop="parking_area_id">
+              <el-select v-model="postForm.parking_area_id" placeholder="选择类型" >
+                <el-option v-for="item in areas" :key="item.parking_area_id" :label="item.name" :value="item.parking_area_id" />
               </el-select>
               <router-link :to="`/parking/area-list`" class="link-type">
                 <span>创建车位区域</span>
@@ -58,9 +58,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="10">
-            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位楼层:" prop="floor_id">
-              <el-select v-model="postForm.floor_id" placeholder="选择类型" >
-                <el-option v-for="item in types" :key="item.floor_id" :label="item.name" :value="item.floor_id" />
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位楼层:" prop="parking_floor_id">
+              <el-select v-model="postForm.parking_floor_id" placeholder="选择类型" >
+                <el-option v-for="item in floors" :key="item.parking_floor_id" :label="item.name" :value="item.parking_floor_id" />
               </el-select>
               <router-link :to="`/parking/floor-list`" class="link-type">
                 <span>创建车位楼层</span>
@@ -91,6 +91,8 @@ import Tinymce from '@/components/Tinymce';
 import {fetchParking, createParking, updateParking} from '@/api/parking';
 import UploadImage from "@/components/Upload/UploadImage";
 import HouseTableSearch from "@/views/house/components/HouseTableSearch";
+import {fetchList as fetchAreaList} from "@/api/parking-area";
+import {fetchList as fetchFloorList} from "@/api/parking-floor";
 
 
 const defaultForm = {
@@ -99,7 +101,8 @@ const defaultForm = {
   price: null,
   house_id:null,
   type_id:null,
-  floor_id:null,
+  parking_area_id:null,
+  parking_floor_id:null,
   house_name:'',
 };
 
@@ -125,6 +128,8 @@ export default {
         code: [{ required: true, message: '请填写车位编号', trigger: 'blur' }],
         price: [{ required: true, message: '请填写车位价格', trigger: 'blur' }],
         type_id: [{ required: true, message: '请填写车位', trigger: 'blur' }],
+          parking_area_id: [{ required: true, message: '请填写车位区域', trigger: 'blur' }],
+          parking_floor_id: [{ required: true, message: '请填写车位楼层', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
       },
       tempRoute: {},
@@ -148,6 +153,8 @@ export default {
     } else {
       this.postForm = Object.assign({}, defaultForm);
     }
+    this.getAreaList();
+    this.getFloorList();
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     this.tempRoute = Object.assign({}, this.$route);
@@ -227,7 +234,15 @@ export default {
     updateHouse(item){
         this.postForm.house_name=item.name;
         this.showHouseDialog=false;
-    }
+    },
+    async getAreaList() {
+        const { data } = await fetchAreaList({limit:100});
+        this.areas = data.list;
+    },
+    async getFloorList() {
+        const { data } = await fetchFloorList({limit:100});
+        this.floors = data.list;
+    },
   },
 };
 </script>
