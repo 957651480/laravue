@@ -5,7 +5,7 @@
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="6">
-            <el-form-item style="margin-bottom: 40px;" label-width="80px" label="楼盘:" prop="house_name">
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="楼盘:" prop="house_name">
               <el-input
                 v-model="postForm.house_name"
                 :rows="1"
@@ -22,16 +22,46 @@
             <el-input type="hidden" v-model="postForm.house_id" ></el-input>
           </el-col>
         </el-row>
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="车位编号:" prop="code">
-          <el-input
-            v-model="postForm.code"
-            :rows="1"
-            type="textarea"
-            class="article-textarea"
-            autosize
-            placeholder="请输入车位编号"
-          />
+        <el-row>
+          <el-col :span="6" >
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位编号:" prop="code">
+              <el-input
+                v-model="postForm.code"
+                placeholder="请输入车位编号"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" style="margin-left: 20px">
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位价格:" prop="price">
+              <el-input
+                v-model="postForm.price"
+                placeholder="请输入车位编号"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位类型:" prop="type_id">
+          <el-select v-model="postForm.type_id" placeholder="选择类型" >
+            <el-option v-for="item in types" :key="item.type_id" :label="item.name" :value="item.type_id" />
+          </el-select>
         </el-form-item>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位区域:" prop="area_id">
+              <el-select v-model="postForm.area_id" placeholder="选择类型" >
+                <el-option v-for="item in areas" :key="item.area_id" :label="item.name" :value="item.area_id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位楼层:" prop="floor_id">
+              <el-select v-model="postForm.floor_id" placeholder="选择类型" >
+                <el-option v-for="item in types" :key="item.floor_id" :label="item.name" :value="item.floor_id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-button
           v-loading="loading"
@@ -60,7 +90,10 @@ import HouseTableSearch from "@/views/house/components/HouseTableSearch";
 const defaultForm = {
   parking_id: undefined,
   code: '',
+  price: null,
   house_id:null,
+  type_id:null,
+  floor_id:null,
   house_name:'',
 };
 
@@ -84,11 +117,16 @@ export default {
       rules: {
         house_name: [{ required: true, message: '请选择楼盘', trigger: 'blur' }],
         code: [{ required: true, message: '请填写车位编号', trigger: 'blur' }],
+        price: [{ required: true, message: '请填写车位价格', trigger: 'blur' }],
+        type_id: [{ required: true, message: '请填写车位', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
       },
       tempRoute: {},
       image_list:[],
       showHouseDialog:false,
+      types:[{'type_id':10,name:'小车位'},{'type_id':20,name:'大车位'}],
+      floors:[],
+      areas:[],
     };
   },
   computed: {
