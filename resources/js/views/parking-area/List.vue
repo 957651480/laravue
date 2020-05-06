@@ -5,9 +5,9 @@
       <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <!--<el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
-      </el-button>-->
+      </el-button>
       <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>-->
@@ -16,7 +16,7 @@
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.category_id }}</span>
+          <span>{{ scope.row.parking_area_id }}</span>
         </template>
       </el-table-column>
 
@@ -28,6 +28,16 @@
       <el-table-column align="center" label="排序">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180px" align="center" label="发布城市">
+        <template slot-scope="scope">
+          <span>{{ scope.row.city_name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180px" align="center" label="作者">
+        <template slot-scope="scope">
+          <span>{{ scope.row.author_name }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="创建时间">
@@ -45,9 +55,9 @@
           <el-button type="primary" size="small" icon="el-icon-edit" @click="handleEdit(scope.row)">
             编辑
           </el-button>
-          <!--<el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.category_id, scope.row.name);">
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.parking_area_id, scope.row.name);">
             删除
-          </el-button>-->
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -55,14 +65,14 @@
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
 
     <el-dialog v-model="isEdit" title="增加/编辑分类" :visible.sync="dialogFormVisible">
-      <div v-loading="categoryCreating" class="form-container">
-        <el-form ref="categoryForm" :rules="rules" :model="newCategory" label-position="left" label-width="150px" style="max-width: 500px;">
+      <div v-loading="parking_areaCreating" class="form-container">
+        <el-form ref="parking_areaForm" :rules="rules" :model="newParkingArea" label-position="left" label-width="150px" style="max-width: 500px;">
 
           <el-form-item label="分类名称" prop="name">
-            <el-input v-model="newCategory.name" />
+            <el-input v-model="newParkingArea.name" />
           </el-form-item>
           <el-form-item label="排序:" prop="sort">
-            <el-input-number v-model="newCategory.sort"></el-input-number>
+            <el-input-number v-model="newParkingArea.sort"></el-input-number>
             <span>排序越大越靠前</span>
           </el-form-item>
         </el-form>
@@ -70,7 +80,7 @@
           <el-button @click="dialogFormVisible = false;isEdit=false">
             {{ $t('table.cancel') }}
           </el-button>
-          <el-button type="primary" @click="createCategory()">
+          <el-button type="primary" @click="createParkingArea()">
             {{ $t('table.confirm') }}
           </el-button>
         </div>
@@ -81,10 +91,10 @@
 
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import { fetchList, updateCategory, createCategory, deleteCategory } from '@/api/category';
+import { fetchList, updateParkingArea, createParkingArea, deleteParkingArea } from '@/api/parking-area';
 
 export default {
-  name: 'CategoryList',
+  name: 'ParkingAreaList',
   components: { Pagination },
   data() {
     return {
@@ -92,13 +102,13 @@ export default {
       total: 0,
       loading: true,
       downloading: false,
-      categoryCreating: false,
+      parking_areaCreating: false,
       query: {
         page: 1,
         limit: 15,
         keyword: '',
       },
-      newCategory: {},
+      newParkingArea: {},
       dialogFormVisible: false,
       rules: {
         name: [{ required: true, message: '分类名称必须', trigger: 'blur' }],
@@ -109,7 +119,7 @@ export default {
   computed: {
   },
   created() {
-    this.resetCategory();
+    this.resetParkingArea();
     this.getList();
   },
   methods: {
@@ -129,14 +139,14 @@ export default {
       this.getList();
     },
     handleCreate() {
-      this.resetCategory();
+      this.resetParkingArea();
       this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['categoryForm'].clearValidate();
+        this.$refs['parking_areaForm'].clearValidate();
       });
     },
     handleEdit(data){
-      this.newCategory = data;
+      this.newParkingArea = data;
       this.isEdit = true;
       this.dialogFormVisible = true;
     },
@@ -146,7 +156,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning',
       }).then(() => {
-        deleteCategory(id).then(response => {
+        deleteParkingArea(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',
@@ -158,21 +168,20 @@ export default {
       }).catch(() => {
       });
     },
-    createCategory() {
-      this.$refs['categoryForm'].validate((valid) => {
+    createParkingArea() {
+      this.$refs['parking_areaForm'].validate((valid) => {
         if (valid) {
-          this.newCategory.roles = [this.newCategory.role];
-          this.categoryCreating = true;
+          this.parking_areaCreating = true;
           if (this.isEdit){
-              let  category_id = this.newCategory.category_id;
-            updateCategory(category_id,this.newCategory)
+              let  parking_area_id = this.newParkingArea.parking_area_id;
+            updateParkingArea(parking_area_id,this.newParkingArea)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetCategory();
+                this.resetParkingArea();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -180,17 +189,17 @@ export default {
                 console.log(error);
               })
               .finally(() => {
-                this.categoryCreating = false;
+                this.parking_areaCreating = false;
               });
           } else {
-            createCategory(this.newCategory)
+            createParkingArea(this.newParkingArea)
               .then(response => {
                 this.$message({
                   message: '成功',
                   type: 'success',
                   duration: 5 * 1000,
                 });
-                this.resetCategory();
+                this.resetParkingArea();
                 this.dialogFormVisible = false;
                 this.handleFilter();
               })
@@ -198,7 +207,7 @@ export default {
                 console.log(error);
               })
               .finally(() => {
-                this.categoryCreating = false;
+                this.parking_areaCreating = false;
               });
           }
         } else {
@@ -207,15 +216,12 @@ export default {
         }
       });
     },
-    resetCategory() {
-      this.newCategory = {
-        category_id:null,
+    resetParkingArea() {
+      this.newParkingArea = {
+        parking_area_id:null,
         name: '',
         sort: 10,
       };
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => v[j]));
     },
   },
 };

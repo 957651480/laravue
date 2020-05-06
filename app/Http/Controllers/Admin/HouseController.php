@@ -38,7 +38,7 @@ class HouseController extends Controller
         if($user_city_id = getUserCityId()){
             $city_id = $user_city_id;
         }
-        $paginate = $this->service->likeTitle($keyword)->cityId($city_id)
+        $paginate = $this->service->likeName($keyword)->cityId($city_id)
             ->latest('created_at')->with(['images','region','city','author'])
             ->paginate($limit);
 

@@ -29,9 +29,17 @@ class ParkingFloorController extends Controller
     public function index(Request $request)
     {
         //
+        $form = $request->all();
+        $limit = Arr::getInt($form,'limit',15);
+        $keyword = Arr::getStringTrimAddSlashes($form,'keyword');
+        $city_id = Arr::getInt($form,'city_id');
+        if($user_city_id = getUserCityId()){
+            $city_id = $user_city_id;
+        }
         $query = $this->service->newQuery();
-        $paginate = $query->latest()->with(['city','author'])
-            ->paginate($request->get('limit'));
+        $paginate = $query->likeName($keyword)->cityId($city_id)
+            ->latest('created_at')->with(['city','author'])
+            ->paginate($limit);
         $data =[
             'total'=>$paginate->total(),
             'list'=>AdminParkingFloorResource::collection($paginate)
@@ -81,7 +89,7 @@ class ParkingFloorController extends Controller
         ];
         $validator = \Validator::make($form,$rules,
             [
-                'code.name'=>'车位区域名称必填',
+                'name.required'=>'车位楼层名称必填',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());

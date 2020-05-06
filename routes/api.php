@@ -74,6 +74,20 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::post('parking/update/{id}', 'ParkingController@update');
         Route::get('parking/delete/{id}', 'ParkingController@destroy');
 
+        //车位区域
+        Route::get('parking/area', 'ParkingAreaController@index');
+        Route::post('parking/area/create', 'ParkingAreaController@store');
+        Route::get('parking/area/detail/{id}', 'ParkingAreaController@show');
+        Route::post('parking/area/update/{id}', 'ParkingAreaController@update');
+        Route::get('parking/area/delete/{id}', 'ParkingAreaController@destroy');
+
+        //车位楼层
+        Route::get('parking/floor', 'ParkingFloorController@index');
+        Route::post('parking/floor/create', 'ParkingFloorController@store');
+        Route::get('parking/floor/detail/{id}', 'ParkingFloorController@show');
+        Route::post('parking/floor/update/{id}', 'ParkingFloorController@update');
+        Route::get('parking/floor/delete/{id}', 'ParkingFloorController@destroy');
+
         Route::get('auth/user', 'AuthController@user');
         Route::get('users', 'UserController@index')->middleware('permission:' . \App\Models\Acl::PERMISSION_USER_MANAGE);
         Route::post('users', 'UserController@store')->middleware('permission:' . \App\Models\Acl::PERMISSION_USER_MANAGE);

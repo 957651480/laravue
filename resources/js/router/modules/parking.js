@@ -30,6 +30,19 @@ const parkingRoutes = {
       name: 'ParkingList',
       meta: { title: '车位列表', icon: 'list',noCache: true },
     },
+
+    {
+      path: 'area-list',
+      component: () => import('@/views/parking-area/List'),
+      name: 'ParkingAreaList',
+      meta: { title: '区域列表', icon: 'list' },
+    },
+    {
+      path: 'floor-list',
+      component: () => import('@/views/parking-floor/List'),
+      name: 'ParkingFloorList',
+      meta: { title: '楼层列表', icon: 'list' },
+    },
   ],
 };
 

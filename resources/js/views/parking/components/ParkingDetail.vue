@@ -47,18 +47,24 @@
           </el-select>
         </el-form-item>
         <el-row>
-          <el-col :span="6">
+          <el-col :span="10">
             <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位区域:" prop="area_id">
               <el-select v-model="postForm.area_id" placeholder="选择类型" >
                 <el-option v-for="item in areas" :key="item.area_id" :label="item.name" :value="item.area_id" />
               </el-select>
+              <router-link :to="`/parking/area-list`" class="link-type">
+                <span>创建车位区域</span>
+              </router-link>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="10">
             <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位楼层:" prop="floor_id">
               <el-select v-model="postForm.floor_id" placeholder="选择类型" >
                 <el-option v-for="item in types" :key="item.floor_id" :label="item.name" :value="item.floor_id" />
               </el-select>
+              <router-link :to="`/parking/floor-list`" class="link-type">
+                <span>创建车位楼层</span>
+              </router-link>
             </el-form-item>
           </el-col>
         </el-row>

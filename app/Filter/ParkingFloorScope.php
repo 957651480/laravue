@@ -4,17 +4,15 @@
 namespace App\Filter;
 
 
-use App\Models\House;
-use App\Traits\AuthorTrait;
-use App\Traits\CityTrait;
+use App\Models\ParkingFloor;
 
 /**
- * Trait HouseFilter
+ * Trait ParkingFloorFilter
  * @package App\Filter
- * @mixin House
- * @this House
+ * @mixin ParkingFloor
+ * @this ParkingFloor
  */
-Trait HouseScope
+Trait ParkingFloorScope
 {
 
     use CityScope,AuthorScope;
