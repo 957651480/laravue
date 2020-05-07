@@ -26,8 +26,8 @@
         <el-form-item label-width="150px" label="图片:" prop="images">
           <upload-image v-model="postForm.images" :image-list="fileList"  @updateImageList="updateImageList"></upload-image>
         </el-form-item>
-        <el-form-item label-width="150px" label="车位分布图:" prop="parking_image_ids">
-          <upload-image v-model="postForm.parking_image_ids" :image-list="parking_image_list"  @updateImageList="updateImageList"></upload-image>
+        <el-form-item label-width="150px" label="车位分布图:" prop="parking_images">
+          <upload-image v-model="postForm.parking_images" :image-list="parking_image_list"  @updateImageList="updateImageList"></upload-image>
         </el-form-item>
         <el-form-item  label-width="150px" label="区域" prop="house_region">
           <el-cascader
@@ -71,7 +71,7 @@ const defaultForm = {
   content: '',
   household:1,
   images:[],
-  parking_image_ids:[],
+  parking_images:[],
   house_region:[]
 };
 
@@ -98,6 +98,7 @@ export default {
         house_region: [{ required: true, message: '请选择地区', trigger: 'blur' }],
         household: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
+        parking_images: [{ required: true, message: '请上传车位分布图', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
       },
       tempRoute: {},
@@ -144,6 +145,8 @@ export default {
           this.postForm.region_id=data.region_id;
           this.postForm.content = data.content;
           this.fileList=data.image_list;
+          this.parking_images = data.parking_images;
+          this.parking_image_list=data.parking_image_list;
           // Set tagsview title
           this.setTagsViewTitle();
         })

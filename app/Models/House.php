@@ -65,6 +65,10 @@ class House extends EloquentModel
         return $this->belongsToMany(File::class,'house_image','house_id','image_id');
     }
 
+    public function parking_images()
+    {
+        return $this->belongsToMany(File::class,'house_parking_image','house_id','image_id');
+    }
     public function region()
     {
         return $this->belongsTo(Region::class,'region_id');

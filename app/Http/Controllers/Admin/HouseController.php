@@ -39,7 +39,7 @@ class HouseController extends Controller
             $city_id = $user_city_id;
         }
         $paginate = $this->service->likeName($keyword)->cityId($city_id)
-            ->latest('created_at')->with(['images','region','city','author'])
+            ->latest('created_at')->with(['images','parking_images','region','city','author'])
             ->paginate($limit);
 
         $data =[
@@ -54,9 +54,10 @@ class HouseController extends Controller
         //
         DB::transaction(function ()use($request)
         {
-            list($data,$images) = $this->validateHouse($request->all());
+            list($data,$images,$parking_images) = $this->validateHouse($request->all());
             $model = $this->service->create($data);
             $model->images()->sync($images);
+            $model->parking_images()->sync($parking_images);
         });
         return $this->renderSuccess();
     }
@@ -65,7 +66,7 @@ class HouseController extends Controller
     public function show(Request $request,$id)
     {
         //
-        $course = $this->service->getModelByIdOrFail($id,['images','region','city','author']);
+        $course = $this->service->getModelByIdOrFail($id,['images','parking_images','region','city','author']);
         $course = new AdminHouseResource($course);
         return $this->renderSuccess('',$course);
     }
@@ -74,12 +75,13 @@ class HouseController extends Controller
     public function update(Request $request, $id)
     {
         //
-        list($data,$images) = $this->validateHouse($request->all());
+        list($data,$images,$parking_images) = $this->validateHouse($request->all());
         $model = $this->service->getModelByIdOrFail($id);
         //
-        DB::transaction(function ()use($model,$data,$images)
+        DB::transaction(function ()use($model,$data,$images,$parking_images)
         {
             $model->images()->sync($images);
+            $model->parking_images()->sync($parking_images);
             $model->update($data);
         });
         return $this->renderSuccess();
@@ -101,6 +103,7 @@ class HouseController extends Controller
             'desc'=>'sometimes',
             'house_region'=>'required',
             'images'=>'required',
+            'parking_images'=>'required',
             'content'=>'required',
         ];
         $validator = \Validator::make($from,$rules,
@@ -109,6 +112,7 @@ class HouseController extends Controller
                 'desc.sometimes'=>'标题必填',
                 'house_region.required'=>'区域必填',
                 'images.required'=>'图片必传',
+                'parking_images.required'=>'车位分布图必传',
                 'content.required'=>'详情必须',
             ]
         );
@@ -116,7 +120,8 @@ class HouseController extends Controller
         $data = Arr::only($validator->getData(),array_keys($rules));
         $data['region_id'] = end($data['house_region']);
         $images = Arr::pull($data,'images');
-        return [$data,$images];
+        $parking_images = Arr::pull($data,'parking_images');
+        return [$data,$images,$parking_images];
     }
 
     protected function filter(Request $request)

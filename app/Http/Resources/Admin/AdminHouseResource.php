@@ -21,6 +21,7 @@ class AdminHouseResource extends JsonResource
         $city = $this->city;
         $author = $this->author;
         $region = $this->region;
+        $parking_images = $this->parking_images;
         return [
             'house_id' => (integer)$this->house_id,
             'name' => (string)$this->name,
@@ -31,6 +32,8 @@ class AdminHouseResource extends JsonResource
             'region_merger_name'=>(string)optional($region)->merger_name,
             'images' => $this->images->fileIds(),
             'image_list' => $this->images,
+            'parking_images' => $parking_images->fileIds(),
+            'parking_image_list' => $parking_images,
             'city_id'=>(integer)$this->city_id,
             'city_name'=>(string)optional($city)->name,
             'author_id'=>(integer)$this->author_id,
