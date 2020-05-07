@@ -79,11 +79,19 @@ class ParkingController extends Controller
         $rules = [
             'house_id'=>'required',
             'code'=>'required',
+            'price'=>'required',
+            'type_id'=>'required',
+            'parking_area_id'=>'required',
+            'parking_floor_id'=>'required',
         ];
         $validator = \Validator::make($form,$rules,
             [
                 'house_id.required'=>'必须选择一个楼盘',
-                'code.required'=>'车位号必填',
+                'code.required'=>'车位编号必填',
+                'price.required'=>'车位价格必填',
+                'type_id.required'=>'车位类型',
+                'parking_area_id.required'=>'车位区域必填',
+                'parking_floor_id.required'=>'车位楼层必填',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());

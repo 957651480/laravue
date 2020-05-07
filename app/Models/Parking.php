@@ -46,4 +46,14 @@ class Parking extends EloquentModel
     {
         return $this->belongsTo(House::class,'house_id');
     }
+
+    public function parking_area()
+    {
+        return $this->belongsTo(ParkingArea::class,'parking_area_id');
+    }
+
+    public function parking_floor()
+    {
+        return $this->belongsTo(ParkingFloor::class,'parking_floor_id');
+    }
 }

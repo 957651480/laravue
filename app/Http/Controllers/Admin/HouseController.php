@@ -101,6 +101,9 @@ class HouseController extends Controller
         $rules=[
             'name'=>'required',
             'desc'=>'sometimes',
+            'household'=>'required',
+            'rate'=>'required',
+            'house_status'=>'sometimes',
             'house_region'=>'required',
             'images'=>'required',
             'parking_images'=>'required',
@@ -110,10 +113,13 @@ class HouseController extends Controller
             [
                 'name.required'=>'楼盘名称必填',
                 'desc.sometimes'=>'标题必填',
+                'rate.required'=>'车位配比必填',
+                'house_status.sometimes'=>'楼盘上下架状态',
                 'house_region.required'=>'区域必填',
                 'images.required'=>'图片必传',
                 'parking_images.required'=>'车位分布图必传',
                 'content.required'=>'详情必须',
+                'household.required'=>'住户数必填',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());

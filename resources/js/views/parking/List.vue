@@ -27,12 +27,22 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" label="简介">
+      <el-table-column min-width="100px" label="价格">
         <template slot-scope="{row}">
-            <span>{{ row.desc }}</span>
+            <span>{{ row.price }}</span>
         </template>
       </el-table-column>
 
+      <el-table-column min-width="100px" label="区域">
+        <template slot-scope="{row}">
+          <span>{{ row.parking_area_name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column min-width="100px" label="楼层">
+        <template slot-scope="{row}">
+          <span>{{ row.parking_floor_name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column width="180px" align="center" label="发布城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>

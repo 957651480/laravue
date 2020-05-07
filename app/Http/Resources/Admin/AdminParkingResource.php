@@ -16,11 +16,18 @@ class AdminParkingResource extends JsonResource
     {
         $city = $this->city;
         $author = $this->author;
+        $parking_area = $this->parking_area;
+        $parking_floor = $this->parking_floor;
         return [
             'parking_id'=>(integer)$this->parking_id,
             'code'=>(string)$this->code,
             'desc'=>(string)$this->desc,
             'content' => (string)$this->content,
+            'price'=>(float)$this->price,
+            'parking_area_id'=>(string)$this->parking_area_id,
+            'parking_area_name'=>(string)optional($parking_area)->name,
+            'parking_floor_id'=>(string)$this->parking_floor_id,
+            'parking_floor_name'=>(string)optional($parking_floor)->name,
             'house_id'=>(string)$this->house_id,
             'house_name'=>(string)optional($this->house)->name,
             'city_id'=>(integer)$this->city_id,

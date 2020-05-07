@@ -23,21 +23,44 @@
             placeholder="请输入简介"
           />
         </el-form-item>
-        <el-form-item label-width="150px" label="图片:" prop="images">
-          <upload-image v-model="postForm.images" :image-list="fileList"  @updateImageList="updateImageList"></upload-image>
-        </el-form-item>
-        <el-form-item label-width="150px" label="车位分布图:" prop="parking_images">
-          <upload-image v-model="postForm.parking_images" :image-list="parking_image_list"  @updateImageList="updateImageList"></upload-image>
-        </el-form-item>
-        <el-form-item  label-width="150px" label="区域" prop="house_region">
-          <el-cascader
-            v-model="postForm.house_region"
-            :props="optionProps"
-            :options="regionTrees"
-          ></el-cascader>
-        </el-form-item>
-        <el-form-item label-width="150px" label="住户数:" prop="household">
-            <el-input-number v-model="postForm.household"></el-input-number>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label-width="150px" label="图片:" prop="images">
+              <upload-image v-model="postForm.images" :image-list="fileList"  @updateImageList="updateImageList"></upload-image>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label-width="150px" label="车位分布图:" prop="parking_images">
+              <upload-image v-model="postForm.parking_images" :image-list="parking_image_list"  @updateImageList="updateImageList"></upload-image>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item  label-width="150px" label="区域" prop="house_region">
+              <el-cascader
+                v-model="postForm.house_region"
+                :props="optionProps"
+                :options="regionTrees"
+              ></el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label-width="150px" label="住户数:" prop="household">
+              <el-input-number v-model="postForm.household"></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="5">
+            <el-form-item label-width="150px" label="车位配比:" prop="rate">
+              <el-input v-model="postForm.rate"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label-width="150px" label="楼盘上下架装态:" prop="house_status">
+          <el-radio v-model="postForm.house_status" :label="10">上架</el-radio>
+          <el-radio v-model="postForm.house_status" :label="20">下架</el-radio>
         </el-form-item>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
@@ -70,6 +93,8 @@ const defaultForm = {
   desc: '',
   content: '',
   household:1,
+  rate:'',
+  house_status:10,
   images:[],
   parking_images:[],
   house_region:[]
@@ -97,6 +122,8 @@ export default {
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
         house_region: [{ required: true, message: '请选择地区', trigger: 'blur' }],
         household: [{ required: true, message: '请填写人数', trigger: 'blur' }],
+        rate: [{ required: true, message: '请填写车位配比', trigger: 'blur' }],
+        house_status: [{ required: true, message: '请选择楼盘上下架状态', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         parking_images: [{ required: true, message: '请上传车位分布图', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
@@ -141,6 +168,8 @@ export default {
           this.postForm.desc=data.desc;
           this.postForm.images=data.images;
           this.postForm.household=data.household;
+          this.postForm.rate=data.rate;
+          this.postForm.house_status=data.house_status;
           this.postForm.house_region=data.house_region;
           this.postForm.region_id=data.region_id;
           this.postForm.content = data.content;
