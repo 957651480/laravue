@@ -38,9 +38,13 @@ class HouseController extends Controller
         if($user_city_id = getUserCityId()){
             $city_id = $user_city_id;
         }
-        $paginate = $this->service->likeName($keyword)->cityId($city_id)
-            ->latest('created_at')->with(['images','parking_images','region','city','author'])
-            ->paginate($limit);
+        $query = $this->service->newQuery()->latest('created_at');
+
+        $query->leftJoin('parking','parking.house_id','house.house_id');
+        $paginate = $query->select(['house.*',DB::raw('count(parking.parking_id) as parking_count')])
+            ->likeName($keyword)->cityId($city_id)->toSql();
+            /*->with(['images','parking_images','region','city','author'])
+            ->paginate($limit);*/
 
         $data =[
             'total'=>$paginate->total(),
