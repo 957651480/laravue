@@ -42,9 +42,10 @@ class HouseController extends Controller
 
         $query->leftJoin('parking','parking.house_id','house.house_id');
         $paginate = $query->select(['house.*',DB::raw('count(parking.parking_id) as parking_count')])
-            ->likeName($keyword)->cityId($city_id)->toSql();
-            /*->with(['images','parking_images','region','city','author'])
-            ->paginate($limit);*/
+            ->likeName($keyword)->cityId($city_id)
+            ->groupBy('house.house_id')
+            ->with(['images','parking_images','region','city','author'])
+            ->paginate($limit);
 
         $data =[
             'total'=>$paginate->total(),
@@ -106,6 +107,7 @@ class HouseController extends Controller
             'name'=>'required',
             'desc'=>'sometimes',
             'household'=>'required',
+            'sales'=>'required|array',
             'rate'=>'required',
             'house_status'=>'sometimes',
             'house_region'=>'required',
@@ -124,6 +126,7 @@ class HouseController extends Controller
                 'parking_images.required'=>'车位分布图必传',
                 'content.required'=>'详情必须',
                 'household.required'=>'住户数必填',
+                'sales.required'=>'销售数据必填',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());

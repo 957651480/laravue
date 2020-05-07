@@ -86,6 +86,14 @@ class House extends EloquentModel
         return json_decode($value,true);
     }
 
+    public function setSalesAttribute($value)
+    {
+        $this->attributes['sales'] = json_encode($value);
+    }
 
+    public function getSalesAttribute($value)
+    {
+        return json_decode($value,true);
+    }
 
 }

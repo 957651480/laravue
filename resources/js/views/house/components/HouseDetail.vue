@@ -51,6 +51,40 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row v-for="(item, index) in postForm.sales" :key="index">
+          <el-col :span="6" >
+
+              <el-form-item label-width="150px"
+                :label="`销售${index+1}姓名`"
+                :prop="'sales.' + index + '.name'"
+                :rules="{
+            required: true, message: '销售姓名不能为空', trigger: 'blur'
+        }"
+              >
+                <el-input v-model="item.name" style="width:150px"></el-input>
+              </el-form-item>
+
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label-width="150px"
+              :label="`销售${index+1}手机号`"
+              :prop="'sales.' + index + '.phone'"
+              :rules="[
+             {required: true, message: '销售手机号不能为空', trigger: 'blur'},
+             { pattern: /^1[34578]\d{9}$/, message: '目前只支持中国大陆的手机号码' }
+          ]"
+            >
+              <el-input v-model="item.phone" style="width:150px"></el-input>
+            </el-form-item>
+
+          </el-col>
+          <el-col :span="2" >
+            <el-button type="primary" icon="el-icon-plus" @click="addSaleItem(item, index)">添加</el-button>
+          </el-col>
+          <el-col :span="2">
+              <el-button type="danger" icon="el-icon-delete" @click="deleteSaleItem(item, index)">删除</el-button>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="5">
             <el-form-item label-width="150px" label="车位配比:" prop="rate">
@@ -97,7 +131,8 @@ const defaultForm = {
   house_status:10,
   images:[],
   parking_images:[],
-  house_region:[]
+  house_region:[],
+    sales:[{name:'',phone:''}]
 };
 
 export default {
@@ -162,20 +197,21 @@ export default {
       fetchHouse(id)
         .then(response => {
 
-          let data = response.data;
-          this.postForm.house_id=data.house_id;
-          this.postForm.name=data.name;
-          this.postForm.desc=data.desc;
-          this.postForm.images=data.images;
-          this.postForm.household=data.household;
-          this.postForm.rate=data.rate;
-          this.postForm.house_status=data.house_status;
-          this.postForm.house_region=data.house_region;
-          this.postForm.region_id=data.region_id;
-          this.postForm.content = data.content;
-          this.fileList=data.image_list;
-          this.parking_images = data.parking_images;
-          this.parking_image_list=data.parking_image_list;
+          let {house_id,name,desc,images,household,rate,sales,house_status,house_region,region_id,image_lise,content,parking_images,parking_image_list} = response.data;
+          this.postForm.house_id=house_id;
+          this.postForm.name=name;
+          this.postForm.desc=desc;
+          this.postForm.images=images;
+          this.postForm.household=household;
+          this.postForm.rate=rate;
+          this.postForm.sales=sales;
+          this.postForm.house_status=house_status;
+          this.postForm.house_region=house_region;
+          this.postForm.region_id=region_id;
+          this.postForm.content = content;
+          this.fileList=image_list;
+          this.parking_images = parking_images;
+          this.parking_image_list=parking_image_list;
           // Set tagsview title
           this.setTagsViewTitle();
         })
@@ -256,6 +292,16 @@ export default {
               }
           }
           return data;
+      },
+      addSaleItem(){
+          this.postForm.sales.push({name:'',phone:''})
+      },
+      deleteSaleItem(item, index){
+          if(index===0){
+              this.$alert('不能删除第一项');
+              return false;
+          }
+          this.postForm.sales.splice(index, 1)
       }
   },
 };

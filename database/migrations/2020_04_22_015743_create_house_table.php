@@ -19,6 +19,7 @@ class CreateHouseTable extends Migration
             $table->string('desc')->default('')->comment('楼盘简介');
             $table->longText('content')->comment('详情');
             $table->string('household')->default(0)->comment('住户数量');
+            $table->string('sales')->default('[]')->comment('销售数据列表');
             $table->string('rate')->default('')->comment('车位配比');
             $table->integer('house_status')->default(10)->comment('楼盘上下架状态10 上架 20 下架');
             $table->string('house_region')->default('[]')->comment('省市区选择的数据列表');
