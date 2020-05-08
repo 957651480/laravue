@@ -52,7 +52,7 @@
           </el-col>
         </el-row>
         <el-row v-for="(item, index) in postForm.sales" :key="index">
-          <el-col :span="6" >
+          <el-col :span="10" >
 
               <el-form-item label-width="150px"
                 :label="`销售${index+1}姓名`"
@@ -61,7 +61,7 @@
             required: true, message: '销售姓名不能为空', trigger: 'blur'
         }"
               >
-                <el-input v-model="item.name" style="width:150px"></el-input>
+                <el-input v-model="item.name" style="width:217px"></el-input>
               </el-form-item>
 
           </el-col>
@@ -74,7 +74,7 @@
              { pattern: /^1[34578]\d{9}$/, message: '目前只支持中国大陆的手机号码' }
           ]"
             >
-              <el-input v-model="item.phone" style="width:150px"></el-input>
+              <el-input v-model="item.phone" style="width:217px"></el-input>
             </el-form-item>
 
           </el-col>
@@ -86,9 +86,15 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="5">
+          <el-col :span="10">
             <el-form-item label-width="150px" label="车位配比:" prop="rate">
-              <el-input v-model="postForm.rate"></el-input>
+              <el-input v-model="postForm.rate" style="width:217px"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label-width="150px" label="楼盘推荐:" prop="house_status">
+              <el-radio v-model="postForm.house_recommend" :label="10">是</el-radio>
+              <el-radio v-model="postForm.house_recommend" :label="20">否</el-radio>
             </el-form-item>
           </el-col>
         </el-row>
@@ -132,7 +138,8 @@ const defaultForm = {
   images:[],
   parking_images:[],
   house_region:[],
-    sales:[{name:'',phone:''}]
+  sales:[{name:'',phone:''}],
+  house_recommend:20
 };
 
 export default {
@@ -159,6 +166,7 @@ export default {
         household: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         rate: [{ required: true, message: '请填写车位配比', trigger: 'blur' }],
         house_status: [{ required: true, message: '请选择楼盘上下架状态', trigger: 'blur' }],
+        house_recommend: [{ required: true, message: '请选择是否推荐', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         parking_images: [{ required: true, message: '请上传车位分布图', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
@@ -171,7 +179,7 @@ export default {
       },
       regionTrees:[],
       fileList:[],
-      parking_image_list:[]
+      parking_image_list:[],
     };
   },
   computed: {
@@ -197,7 +205,7 @@ export default {
       fetchHouse(id)
         .then(response => {
 
-          let {house_id,name,desc,images,household,rate,sales,house_status,house_region,region_id,image_lise,content,parking_images,parking_image_list} = response.data;
+          let {house_id,name,desc,images,household,rate,sales,house_status,house_region,region_id,image_lise,content,parking_images,parking_image_list,house_recommend} = response.data;
           this.postForm.house_id=house_id;
           this.postForm.name=name;
           this.postForm.desc=desc;
@@ -212,6 +220,7 @@ export default {
           this.fileList=image_list;
           this.parking_images = parking_images;
           this.parking_image_list=parking_image_list;
+          this.house_recommend=house_recommend;
           // Set tagsview title
           this.setTagsViewTitle();
         })

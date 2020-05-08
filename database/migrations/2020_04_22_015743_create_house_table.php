@@ -22,6 +22,7 @@ class CreateHouseTable extends Migration
             $table->string('sales')->default('[]')->comment('销售数据列表');
             $table->string('rate')->default('')->comment('车位配比');
             $table->integer('house_status')->default(10)->comment('楼盘上下架状态10 上架 20 下架');
+            $table->integer('house_recommend')->default(20)->comment('楼盘推荐10 是 20 否');
             $table->string('house_region')->default('[]')->comment('省市区选择的数据列表');
             $table->integer('region_id')->default(0)->comment('区域关联id');
             $table->integer('city_id')->default(0)->comment('城市id');
@@ -55,6 +56,16 @@ class CreateHouseTable extends Migration
             $table->primary(['house_id', 'image_id'],
                 'house_parking_image_id');
         });
+        Schema::create('house_appointment', function (Blueprint $table)  {
+            $table->unsignedInteger('house_appointment_id');
+            $table->string('phone')->default('')->comment('手机号');
+            $table->unsignedInteger('house_id')->default(0)->comment('楼盘id');
+            $table->integer('city_id')->default(0)->comment('城市id');
+            $table->integer('user_id')->default(0)->comment('用户id');
+            $table->softDeletes();
+            $table->timestamps();
+
+        });
     }
 
     /**
@@ -67,5 +78,6 @@ class CreateHouseTable extends Migration
         Schema::dropIfExists('house');
         Schema::dropIfExists('house_image');
         Schema::dropIfExists('house_parking_image');
+        Schema::dropIfExists('house_appointment');
     }
 }

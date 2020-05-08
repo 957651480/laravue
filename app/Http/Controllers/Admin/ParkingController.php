@@ -81,6 +81,7 @@ class ParkingController extends Controller
             'code'=>'required',
             'price'=>'required',
             'type_id'=>'required',
+            'size_id'=>'required',
             'parking_area_id'=>'required',
             'parking_floor_id'=>'required',
         ];
@@ -90,6 +91,7 @@ class ParkingController extends Controller
                 'code.required'=>'车位编号必填',
                 'price.required'=>'车位价格必填',
                 'type_id.required'=>'车位类型',
+                'size_id.required'=>'车位尺寸',
                 'parking_area_id.required'=>'车位区域必填',
                 'parking_floor_id.required'=>'车位楼层必填',
             ]

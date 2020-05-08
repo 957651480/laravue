@@ -1,18 +1,29 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="query.category_id" placeholder="选择分类" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in categories" :key="item.category_id" :label="item.name | uppercaseFirst" :value="item.category_id" />
-      </el-select>
-
+    <el-form :inline="true" >
+      <el-form-item label="车位编号:">
+        <el-input v-model="query.code" placeholder="请输入车位编号搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-form-item>
+      <el-form-item label="楼盘名称:">
+        <el-input v-model="query.house_name" placeholder="请输入楼盘名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-form-item>
+      <el-form-item label="车位分类:">
+        <el-select v-model="query.type_id" placeholder="选择分类" clearable style="width: 90px" class="filter-item" @change="handleFilter">
+          <el-option v-for="item in types" :key="item.type_id" :label="item.name" :value="item.type_id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="车位尺寸:">
+        <el-select v-model="query.size_id" placeholder="选择车位尺寸" clearable style="width: 90px" class="filter-item" @change="handleFilter">
+          <el-option v-for="item in sizes" :key="item.size_id" :label="item.name " :value="item.size_id" />
+        </el-select>
+      </el-form-item>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
-    </div>
+    </el-form>
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -95,10 +106,14 @@ export default {
       query: {
         page: 1,
         limit: 15,
-        keyword: '',
-        category_id:''
+        code: '',
+        house_name: '',
+        type_id:'',
+        size_id:'',
       },
       categories:[],
+      sizes:[{size_id:10,name:'小车位'},{size_id:20,name:'大车位'}],
+      types:[{'type_id':10,name:'认筹'},{'type_id':20,name:'竞拍'}],
     };
   },
   created() {

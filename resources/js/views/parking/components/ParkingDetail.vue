@@ -12,6 +12,7 @@
                 autosize
                 :disabled="true"
                 placeholder="请选择楼盘"
+                style="width: 217px"
               />
             </el-form-item>
           </el-col>
@@ -23,33 +24,45 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="6" >
+          <el-col :span="8" >
             <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位编号:" prop="code">
               <el-input
                 v-model="postForm.code"
-                placeholder="请输入车位编号"
+                placeholder="请输入车位编号" style="width: 217px"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6" style="margin-left: 20px">
+          <el-col :span="6" >
             <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位价格:" prop="price">
-              <el-input
+              <el-input-number
+                :min="1"
                 v-model="postForm.price"
-                placeholder="请输入车位编号"
+                placeholder="请输入车位价格"
               />
             </el-form-item>
           </el-col>
         </el-row>
-
-        <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位类型:" prop="type_id">
-          <el-select v-model="postForm.type_id" placeholder="选择类型" >
-            <el-option v-for="item in types" :key="item.type_id" :label="item.name" :value="item.type_id" />
-          </el-select>
-        </el-form-item>
         <el-row>
-          <el-col :span="10">
+          <el-col :span="8">
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位类型:" prop="type_id">
+              <el-select v-model="postForm.type_id" placeholder="选择类型" >
+                <el-option v-for="item in types" :key="item.type_id" :label="item.name" :value="item.type_id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位尺寸:" prop="size_id">
+              <el-select v-model="postForm.size_id" placeholder="选择车位尺寸" >
+                <el-option v-for="item in sizes" :key="item.size_id" :label="item.name" :value="item.size_id" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="8">
             <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位区域:" prop="parking_area_id">
-              <el-select v-model="postForm.parking_area_id" placeholder="选择类型" >
+              <el-select v-model="postForm.parking_area_id" placeholder="选择车位区域" >
                 <el-option v-for="item in areas" :key="item.parking_area_id" :label="item.name" :value="item.parking_area_id" />
               </el-select>
               <router-link :to="`/parking/area-list`" class="link-type">
@@ -57,9 +70,9 @@
               </router-link>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="8">
             <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位楼层:" prop="parking_floor_id">
-              <el-select v-model="postForm.parking_floor_id" placeholder="选择类型" >
+              <el-select v-model="postForm.parking_floor_id" placeholder="选择车位楼层" >
                 <el-option v-for="item in floors" :key="item.parking_floor_id" :label="item.name" :value="item.parking_floor_id" />
               </el-select>
               <router-link :to="`/parking/floor-list`" class="link-type">
@@ -101,6 +114,7 @@ const defaultForm = {
   price: null,
   house_id:null,
   type_id:null,
+  size_id:null,
   parking_area_id:null,
   parking_floor_id:null,
   house_name:'',
@@ -127,7 +141,8 @@ export default {
         house_name: [{ required: true, message: '请选择楼盘', trigger: 'blur' }],
         code: [{ required: true, message: '请填写车位编号', trigger: 'blur' }],
         price: [{ required: true, message: '请填写车位价格', trigger: 'blur' }],
-        type_id: [{ required: true, message: '请填写车位', trigger: 'blur' }],
+        type_id: [{ required: true, message: '请填写车位类型', trigger: 'blur' }],
+        size_id: [{ required: true, message: '请填写车位尺寸', trigger: 'blur' }],
           parking_area_id: [{ required: true, message: '请填写车位区域', trigger: 'blur' }],
           parking_floor_id: [{ required: true, message: '请填写车位楼层', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
@@ -135,7 +150,8 @@ export default {
       tempRoute: {},
       image_list:[],
       showHouseDialog:false,
-      types:[{'type_id':10,name:'小车位'},{'type_id':20,name:'大车位'}],
+      sizes:[{size_id:10,name:'小车位'},{size_id:20,name:'大车位'}],
+      types:[{'type_id':10,name:'认筹'},{'type_id':20,name:'竞拍'}],
       floors:[],
       areas:[],
     };

@@ -114,6 +114,7 @@ class HouseController extends Controller
             'images'=>'required',
             'parking_images'=>'required',
             'content'=>'required',
+            'house_recommend'=>'required',
         ];
         $validator = \Validator::make($from,$rules,
             [
