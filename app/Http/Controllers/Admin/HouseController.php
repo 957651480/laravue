@@ -33,7 +33,7 @@ class HouseController extends Controller
         //
         $form = $request->all();
         $limit = Arr::getInt($form,'limit',15);
-        $keyword = Arr::getStringTrimAddSlashes($form,'keyword');
+        $name = Arr::getStringTrimAddSlashes($form,'name');
         $city_id = Arr::getInt($form,'city_id');
         if($user_city_id = getUserCityId()){
             $city_id = $user_city_id;
@@ -42,7 +42,7 @@ class HouseController extends Controller
 
         $query->leftJoin('parking','parking.house_id','house.house_id');
         $paginate = $query->select(['house.*',DB::raw('count(parking.parking_id) as parking_count')])
-            ->likeName($keyword)->cityId($city_id)
+            ->likeName($name)->cityId($city_id)
             ->groupBy('house.house_id')
             ->with(['images','parking_images','region','city','author'])
             ->paginate($limit);

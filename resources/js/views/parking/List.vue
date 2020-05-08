@@ -2,10 +2,10 @@
   <div class="app-container">
     <el-form :inline="true" >
       <el-form-item label="车位编号:">
-        <el-input v-model="query.code" placeholder="请输入车位编号搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="query.code" placeholder="请输入车位编号搜索" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
       </el-form-item>
       <el-form-item label="楼盘名称:">
-        <el-input v-model="query.house_name" placeholder="请输入楼盘名称搜索" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+        <el-input v-model="query.house_name" placeholder="请输入楼盘名称搜索" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
       </el-form-item>
       <el-form-item label="车位分类:">
         <el-select v-model="query.type_id" placeholder="选择分类" clearable style="width: 90px" class="filter-item" @change="handleFilter">

@@ -1,18 +1,17 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="query.category_id" placeholder="选择分类" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in categories" :key="item.category_id" :label="item.name | uppercaseFirst" :value="item.category_id" />
-      </el-select>
-
+    <el-form :inline="true" >
+      <el-form-item label="楼盘名称:">
+        <el-input v-model="query.name" placeholder="请输入楼盘名称" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-form-item>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
       <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
-    </div>
+    </el-form>
+
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -106,8 +105,7 @@ export default {
       query: {
         page: 1,
         limit: 15,
-        keyword: '',
-        category_id:''
+        name: '',
       },
       categories:[],
     };
