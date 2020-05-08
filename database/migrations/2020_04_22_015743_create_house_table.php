@@ -20,7 +20,7 @@ class CreateHouseTable extends Migration
             $table->longText('content')->comment('详情');
             $table->string('household')->default(0)->comment('住户数量');
             $table->string('sales')->default('[]')->comment('销售数据列表');
-            $table->string('map')->default('[]')->comment('楼盘定位经纬度');
+            $table->string('map')->default('{}')->comment('楼盘定位经纬度');
             $table->string('rate')->default('')->comment('车位配比');
             $table->integer('house_status')->default(10)->comment('楼盘上下架状态10 上架 20 下架');
             $table->integer('house_recommend')->default(20)->comment('楼盘推荐10 是 20 否');

@@ -102,9 +102,10 @@
           <el-radio v-model="postForm.house_status" :label="10">上架</el-radio>
           <el-radio v-model="postForm.house_status" :label="20">下架</el-radio>
         </el-form-item>
-        <el-form-item label-width="150px" label="楼盘定位:" prop="map">
-          <gould-map v-model="postForm.map" @location="location"></gould-map>
+        <el-form-item label-width="150px" label="楼盘定位:" prop="map.address">
+          <el-input v-model="postForm.map.address" placeholder="请在地图上定位地址" disabled style="width:500px"></el-input>
         </el-form-item>
+        <gould-map   v-model="postForm.map" @location="location" ></gould-map>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
@@ -127,7 +128,6 @@ import Tinymce from '@/components/Tinymce';
 import {fetchHouse, createHouse, updateHouse} from '@/api/house';
 import AreaSelect from "@/components/AreaSelect/index";
 import UploadImage from "@/components/Upload/UploadImage";
-import SingleImage from "@/components/Upload/SingleImage";
 import {arrayColumn} from "@/utils";
 import {fetchTreeList} from "@/api/region";
 import GouldMap from "@/components/Map/Gould/index";
@@ -144,7 +144,7 @@ const defaultForm = {
   house_region:[],
   sales:[{name:'',phone:''}],
   house_recommend:20,
-  map:[]
+  map:{lng:null,lat:null,address:null}
 };
 
 export default {
@@ -174,7 +174,7 @@ export default {
         house_status: [{ required: true, message: '请选择楼盘上下架状态', trigger: 'blur' }],
         house_recommend: [{ required: true, message: '请选择是否推荐', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
-        map: [{ required: true, message: '请确定定位', trigger: 'blur' }],
+        "map.address": [{ required: true, message: '请确定定位', trigger: 'blur' }],
         parking_images: [{ required: true, message: '请上传车位分布图', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
       },
@@ -190,7 +190,6 @@ export default {
     };
   },
   computed: {
-
     lang() {
       return this.$store.getters.language;
     },
@@ -212,7 +211,7 @@ export default {
       fetchHouse(id)
         .then(response => {
 
-          let {house_id,name,desc,images,household,rate,sales,house_status,house_region,region_id,image_lise,content,parking_images,parking_image_list,house_recommend,map} = response.data;
+          let {house_id,name,desc,images,household,rate,sales,house_status,house_region,region_id,image_list,content,parking_images,parking_image_list,house_recommend,map} = response.data;
           this.postForm.house_id=house_id;
           this.postForm.name=name;
           this.postForm.desc=desc;
@@ -320,9 +319,6 @@ export default {
         }
         this.postForm.sales.splice(index, 1)
     },
-      location(point, address) {
-          alert(`坐标：${point[0]},${point[1]} - 地址：${address}`)
-      }
   },
 };
 </script>

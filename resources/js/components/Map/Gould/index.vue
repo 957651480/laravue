@@ -21,11 +21,11 @@
             width: { type: String, default: '80%' },
             height: { type: String, default: '400px' },
             value: {
-                type: Array,
+                type: Object,
             }
         },
         data () {
-            return { address: '', point: this.value }
+            return { address: this.value.address, point:[this.value.lng,this.value.lat] }
         },
         mounted () {
             this.init(this.point)
@@ -34,7 +34,7 @@
 
             // 初始化
             init (lnglat) {
-                debugger
+
                 // 地图实例对象 （amap 为容器的id）
                 let amap = new AMap.Map('amap', {
                     resizeEnable: true,
@@ -49,7 +49,7 @@
             },
 
             currentPosition (map, lnglat) {
-                if (lnglat.length>0) {
+                if (lnglat[0]===null) {
                     // 有传入坐标点，直接定位到坐标点
                     map.setCenter(lnglat)
                     this.addMark(map, lnglat)
@@ -109,7 +109,8 @@
             },
 
             commit () {
-                this.$emit('input', this.point);
+
+                this.$emit('input', {lng:this.point[0],lat:this.point[1],address:this.address});
                 return false;
             },
         }
