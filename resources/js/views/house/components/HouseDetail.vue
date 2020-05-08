@@ -102,6 +102,10 @@
           <el-radio v-model="postForm.house_status" :label="10">上架</el-radio>
           <el-radio v-model="postForm.house_status" :label="20">下架</el-radio>
         </el-form-item>
+        <el-form-item label-width="150px" label="楼盘经纬度:" prop="map">
+          <gould-map v-model="postForm.map" @lnglatHandler="lnglatHandler"></gould-map>
+          <!--<gould-map :lngitude="postForm.map.lng" :latitude="postForm.map.lat" @lnglatHandler="lnglatHandler"></gould-map>-->
+        </el-form-item>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
@@ -127,6 +131,7 @@ import UploadImage from "@/components/Upload/UploadImage";
 import SingleImage from "@/components/Upload/SingleImage";
 import {arrayColumn} from "@/utils";
 import {fetchTreeList} from "@/api/region";
+import GouldMap from "@/components/Map/Gould/index";
 const defaultForm = {
   house_id: undefined,
   name: '',
@@ -139,12 +144,14 @@ const defaultForm = {
   parking_images:[],
   house_region:[],
   sales:[{name:'',phone:''}],
-  house_recommend:20
+  house_recommend:20,
+  map:{lng:'',lat:''}
 };
 
 export default {
   name: 'HouseDetail',
   components: {
+    GouldMap,
     UploadImage,
     AreaSelect,
     Tinymce,
@@ -285,33 +292,36 @@ export default {
       debugger
       this.postForm.images=arrayColumn(data,'file_id');
     },
-      async getRegionList() {
-          const { data } = await fetchTreeList();
-          this.regionTrees = this.getTreeData(data.list);
-      },
-      // 递归判断列表，把最后的children设为undefined
-      getTreeData(data){
-          for(let i=0;i<data.length;i++){
-              if(data[i].children.length<1){
-                  // children若为空数组，则将children设为undefined
-                  data[i].children=undefined;
-              }else {
-                  // children若不为空数组，则继续 递归调用 本方法
-                  this.getTreeData(data[i].children);
-              }
-          }
-          return data;
-      },
-      addSaleItem(){
-          this.postForm.sales.push({name:'',phone:''})
-      },
-      deleteSaleItem(item, index){
-          if(index===0){
-              this.$alert('不能删除第一项');
-              return false;
-          }
-          this.postForm.sales.splice(index, 1)
-      }
+    async getRegionList() {
+        const { data } = await fetchTreeList();
+        this.regionTrees = this.getTreeData(data.list);
+    },
+    // 递归判断列表，把最后的children设为undefined
+    getTreeData(data){
+        for(let i=0;i<data.length;i++){
+            if(data[i].children.length<1){
+                // children若为空数组，则将children设为undefined
+                data[i].children=undefined;
+            }else {
+                // children若不为空数组，则继续 递归调用 本方法
+                this.getTreeData(data[i].children);
+            }
+        }
+        return data;
+    },
+    addSaleItem(){
+        this.postForm.sales.push({name:'',phone:''})
+    },
+    deleteSaleItem(item, index){
+        if(index===0){
+            this.$alert('不能删除第一项');
+            return false;
+        }
+        this.postForm.sales.splice(index, 1)
+    },
+    lnglatHandler(){
+
+    }
   },
 };
 </script>
