@@ -15,14 +15,6 @@ Vue.use(ElementUI, {
   i18n: (key, value) => i18n.t(key, value),
 });
 
-import VueAMap from "vue-amap";
-
-Vue.use(VueAMap);
-VueAMap.initAMapApiLoader({
-  key: 'd0211c4b27a431b9c5f9e065e071453a',
-  plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType','AMap.Geocoder','AMap.Geolocation','AMap.Marker'],
-  v: '1.4.4'
-});
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {

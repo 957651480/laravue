@@ -96,4 +96,13 @@ class House extends EloquentModel
         return json_decode($value,true);
     }
 
+    public function setMapAttribute($value)
+    {
+        $this->attributes['map'] = json_encode($value);
+    }
+
+    public function getMapAttribute($value)
+    {
+        return json_decode($value,true);
+    }
 }

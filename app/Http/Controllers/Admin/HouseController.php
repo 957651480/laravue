@@ -108,6 +108,7 @@ class HouseController extends Controller
             'desc'=>'sometimes',
             'household'=>'required',
             'sales'=>'required|array',
+            'map'=>'required|array',
             'rate'=>'required',
             'house_status'=>'sometimes',
             'house_region'=>'required',
@@ -128,6 +129,7 @@ class HouseController extends Controller
                 'content.required'=>'详情必须',
                 'household.required'=>'住户数必填',
                 'sales.required'=>'销售数据必填',
+                'map.required'=>'楼盘数据必填',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());

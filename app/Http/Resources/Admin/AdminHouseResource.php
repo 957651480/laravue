@@ -28,6 +28,7 @@ class AdminHouseResource extends JsonResource
             'desc' => (string)$this->desc,
             'household' => (integer)$this->household,
             'sales'=>$this->sales,
+            'map'=>$this->map,
             'house_recommend'=>$this->house_recommend,
             'house_region'=>$this->house_region,
             'parking_count'=>$this->parking_count,

@@ -102,9 +102,8 @@
           <el-radio v-model="postForm.house_status" :label="10">上架</el-radio>
           <el-radio v-model="postForm.house_status" :label="20">下架</el-radio>
         </el-form-item>
-        <el-form-item label-width="150px" label="楼盘经纬度:" prop="map">
-          <gould-map v-model="postForm.map" @lnglatHandler="lnglatHandler"></gould-map>
-          <!--<gould-map :lngitude="postForm.map.lng" :latitude="postForm.map.lat" @lnglatHandler="lnglatHandler"></gould-map>-->
+        <el-form-item label-width="150px" label="楼盘定位:" prop="map">
+          <gould-map v-model="postForm.map" @location="location"></gould-map>
         </el-form-item>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
@@ -145,7 +144,7 @@ const defaultForm = {
   house_region:[],
   sales:[{name:'',phone:''}],
   house_recommend:20,
-  map:{lng:'',lat:''}
+  map:[]
 };
 
 export default {
@@ -175,6 +174,7 @@ export default {
         house_status: [{ required: true, message: '请选择楼盘上下架状态', trigger: 'blur' }],
         house_recommend: [{ required: true, message: '请选择是否推荐', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
+        map: [{ required: true, message: '请确定定位', trigger: 'blur' }],
         parking_images: [{ required: true, message: '请上传车位分布图', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
       },
@@ -212,7 +212,7 @@ export default {
       fetchHouse(id)
         .then(response => {
 
-          let {house_id,name,desc,images,household,rate,sales,house_status,house_region,region_id,image_lise,content,parking_images,parking_image_list,house_recommend} = response.data;
+          let {house_id,name,desc,images,household,rate,sales,house_status,house_region,region_id,image_lise,content,parking_images,parking_image_list,house_recommend,map} = response.data;
           this.postForm.house_id=house_id;
           this.postForm.name=name;
           this.postForm.desc=desc;
@@ -227,7 +227,8 @@ export default {
           this.fileList=image_list;
           this.parking_images = parking_images;
           this.parking_image_list=parking_image_list;
-          this.house_recommend=house_recommend;
+          this.postForm.house_recommend=house_recommend;
+          this.postForm.map=map;
           // Set tagsview title
           this.setTagsViewTitle();
         })
@@ -319,9 +320,9 @@ export default {
         }
         this.postForm.sales.splice(index, 1)
     },
-    lnglatHandler(){
-
-    }
+      location(point, address) {
+          alert(`坐标：${point[0]},${point[1]} - 地址：${address}`)
+      }
   },
 };
 </script>
