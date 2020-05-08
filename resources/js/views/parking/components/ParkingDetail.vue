@@ -180,11 +180,7 @@ export default {
       fetchParking(id)
         .then(response => {
 
-          let data = response.data;
-          this.postForm.parking_id=data.parking_id;
-          this.postForm.code=data.code;
-          this.postForm.house_id=data.house_id;
-          this.postForm.house_name=data.house_name;
+          this.postForm = response.data;
 
           // Set tagsview title
           this.setTagsViewTitle();
