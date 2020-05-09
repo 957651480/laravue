@@ -10,7 +10,7 @@ use App\Models\EloquentModel;
  * Trait CityScope
  * @package App\Filter
  */
-trait CityScope
+trait CityFilter
 {
 
     /**
@@ -22,6 +22,6 @@ trait CityScope
      */
     public function scopeCityId($query, $city_id)
     {
-        return $city_id?$query->whereCityId($city_id):$query;
+        return $query->whereCityId($city_id);
     }
 }

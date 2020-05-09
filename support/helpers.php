@@ -32,6 +32,10 @@ function export_excel($fileName, $tileArray = [], $dataArray = [])
     ob_end_clean();
 }
 
+function array_get_int($arr,$key,$default=0){
+    return Arr::getInt($arr,$key,$default);
+}
+
 function getUserCityId(){
     $city_id =0;
     if($user = auth()->user()){

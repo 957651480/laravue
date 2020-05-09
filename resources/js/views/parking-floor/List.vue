@@ -1,14 +1,13 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button  class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+    <el-form :inline="true" >
+      <el-form-item label="楼层名称:">
+        <el-input v-model="query.name" placeholder="请输入楼层名称搜索" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-form-item>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
-        {{ $t('table.add') }}
-      </el-button>
-    </div>
+    </el-form>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -103,7 +102,7 @@ export default {
       query: {
         page: 1,
         limit: 15,
-        keyword: '',
+        name: '',
       },
       newParkingFloor: {},
       dialogFormVisible: false,

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\ApiException;
-use App\Filter\HouseFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminHouseResource;
 use App\Models\House;
@@ -33,13 +32,21 @@ class HouseController extends Controller
         //
         $form = $request->all();
         $limit = Arr::getInt($form,'limit',15);
+
         $name = Arr::getStringTrimAddSlashes($form,'name');
         $city_id = Arr::getInt($form,'city_id');
         if($user_city_id = getUserCityId()){
             $city_id = $user_city_id;
         }
         $query = $this->service->newQuery()->orderByDesc('sort')->latest('created_at');
-
+        if($scopes =array_filter([
+            'cityId'=>$city_id,
+            'likeName'=>$name
+        ])){
+            foreach (($scopes) as $scope => $value) {
+                $query->$scope($value);
+            }
+        }
         $query->leftJoin('parking','parking.house_id','house.house_id');
         $query->leftJoin('house_appointment','house_appointment.house_id','house.house_id');
         $paginate = $query->select(['house.*',
@@ -47,7 +54,6 @@ class HouseController extends Controller
             DB::raw('avg(parking.price) as parking_avg'),
             DB::raw('count(house_appointment.house_appointment_id) as appoint_count'),
             ])
-            ->likeName($name)->cityId($city_id)
             ->groupBy('house.house_id')
             ->with(['images','parking_images','region','city','author'])
             ->paginate($limit);

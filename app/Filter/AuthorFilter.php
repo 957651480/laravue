@@ -4,7 +4,7 @@
 namespace App\Filter;
 
 
-trait AuthorScope
+trait AuthorFilter
 {
 
     /**
@@ -16,6 +16,6 @@ trait AuthorScope
      */
     public function scopeAuthorId($query, $author_id)
     {
-        return $author_id?$query->whereAuthorId($author_id):$query;
+        return $query->whereAuthorId($author_id);
     }
 }

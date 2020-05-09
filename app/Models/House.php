@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Filter\HouseScope;
+use App\Filter\HouseFilter;
 use App\Traits\AuthorTrait;
 use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -51,7 +51,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class House extends EloquentModel
 {
-    use SoftDeletes,CityTrait,AuthorTrait,HouseScope;
+    use SoftDeletes,CityTrait,AuthorTrait,HouseFilter;
     //
     protected $guarded = [];
     protected $table='house';
@@ -108,4 +108,5 @@ class House extends EloquentModel
     {
         return json_decode($value,true);
     }
+
 }

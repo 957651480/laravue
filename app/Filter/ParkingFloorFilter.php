@@ -4,18 +4,18 @@
 namespace App\Filter;
 
 
-use App\Models\ParkingArea;
+use App\Models\ParkingFloor;
 
 /**
- * Trait ParkingAreaFilter
+ * Trait ParkingFloorFilter
  * @package App\Filter
- * @mixin ParkingArea
- * @this ParkingArea
+ * @mixin ParkingFloor
+ * @this ParkingFloor
  */
-Trait ParkingAreaScope
+Trait ParkingFloorFilter
 {
 
-    use CityScope,AuthorScope;
+    use CityFilter,AuthorFilter;
     /**
      *
      *
@@ -25,7 +25,7 @@ Trait ParkingAreaScope
      */
     public function scopeLikeName($query, $name)
     {
-        return $name?$query->where('name','like', "%$name%"):$query;
+        return $query->where('name','like', "%$name%");
     }
 
 }

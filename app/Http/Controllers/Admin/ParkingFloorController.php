@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminParkingFloorResource;
 use App\Models\ParkingFloor;
 use Arr;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class ParkingFloorController extends Controller
@@ -31,14 +32,22 @@ class ParkingFloorController extends Controller
         //
         $form = $request->all();
         $limit = Arr::getInt($form,'limit',15);
-        $keyword = Arr::getStringTrimAddSlashes($form,'keyword');
+        $name = Arr::getStringTrimAddSlashes($form,'name');
         $city_id = Arr::getInt($form,'city_id');
         if($user_city_id = getUserCityId()){
             $city_id = $user_city_id;
         }
-        $query = $this->service->newQuery();
-        $paginate = $query->likeName($keyword)->cityId($city_id)
-            ->latest('created_at')->with(['city','author'])
+        $query = $this->service->newQuery()->latest('created_at');
+        $scopes =array_filter([
+            'cityId'=>$city_id,
+            'likeName'=>$name
+        ]);
+        $query->when($scopes,function (Builder $query,$scopes){
+            foreach (($scopes) as $scope => $value) {
+                $query->$scope($value);
+            }
+        });
+        $paginate = $query->with(['city','author'])
             ->paginate($limit);
         $data =[
             'total'=>$paginate->total(),

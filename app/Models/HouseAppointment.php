@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use App\Filter\HouseScope;
+use App\Filter\HouseFilter;
 use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class HouseAppointment extends EloquentModel
 {
-    use SoftDeletes,CityTrait,HouseScope;
+    use SoftDeletes,CityTrait,HouseFilter;
     //
     protected $guarded = [];
     protected $table='house_appointment';

@@ -4,18 +4,18 @@
 namespace App\Filter;
 
 
-use App\Models\ParkingFloor;
+use App\Models\House;
 
 /**
- * Trait ParkingFloorFilter
+ * Trait HouseFilter
  * @package App\Filter
- * @mixin ParkingFloor
- * @this ParkingFloor
+ * @mixin House
+ * @this House
  */
-Trait ParkingFloorScope
+Trait HouseFilter
 {
 
-    use CityScope,AuthorScope;
+    use CityFilter,AuthorFilter;
     /**
      *
      *
@@ -25,7 +25,7 @@ Trait ParkingFloorScope
      */
     public function scopeLikeName($query, $name)
     {
-        return $name?$query->where('name','like', "%$name%"):$query;
+        return $query->where('name','like', "%$name%");
     }
 
 }

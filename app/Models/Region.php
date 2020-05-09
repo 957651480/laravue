@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filter\RegionFilter;
 use Arr;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -55,7 +56,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Region extends EloquentModel
 {
     //
-    use SoftDeletes;
+    use SoftDeletes,RegionFilter;
     //
     protected $guarded = [];
     protected $table='region';
