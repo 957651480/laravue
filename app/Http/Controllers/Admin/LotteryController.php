@@ -35,7 +35,7 @@ class LotteryController extends Controller
         $query->when($wheres,function ($query)use($wheres){
             $query->where($wheres);
         });
-        $paginate = $query->latest('created_at')->paginate($request->get('limit'));
+        $paginate = $query->orderByDesc('sort')->latest('created_at')->paginate($request->get('limit'));
 
         $data =[
             'total'=>$paginate->total(),
@@ -97,6 +97,9 @@ class LotteryController extends Controller
             'desc'=>'sometimes',
             'content'=>'required',
             'images'=>'required',
+            'start_time'=>'required',
+            'end_time'=>'required',
+            'sort'=>'sometimes',
         ];
         $validator = \Validator::make($from,$rules,
             [
@@ -104,10 +107,14 @@ class LotteryController extends Controller
                 'desc.sometimes'=>'标题必填',
                 'content.required'=>'详情必填',
                 'images.required'=>'图片必传',
+                'start_time.required'=>'开始时间必传',
+                'end_time.required'=>'结束时间必传',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
         $data = Arr::only($validator->getData(),array_keys($rules));
+        $data['start_time']=strtotime($data['start_time']);
+        $data['end_time']=strtotime($data['end_time']);
         $images = Arr::pull($data,'images');
         return [$data,$images];
     }

@@ -49,15 +49,6 @@ class Auction extends EloquentModel
     protected $primaryKey='auction_id';
 
 
-    /**
-     * 模型的「booted」方法
-     *
-     * @return void
-     */
-    protected static function booted()
-    {
-        static::addGlobalScope(new CityScope());
-    }
 
 
     public function images()

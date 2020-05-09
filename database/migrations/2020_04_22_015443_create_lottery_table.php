@@ -19,6 +19,9 @@ class CreateLotteryTable extends Migration
             $table->string('desc')->default('')->comment('资讯简介');
             $table->longText('content')->comment('详情');
             $table->integer('lottery_recommend')->default(20)->comment('推荐10  20 否');
+            $table->unsignedInteger('start_time')->default(0)->comment('开始时间');
+            $table->unsignedInteger('end_time')->default(0)->comment('结束时间');
+            $table->unsignedInteger('sort')->default(0)->comment('排序');
             $table->integer('city_id')->default(0)->comment('城市id');
             $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();

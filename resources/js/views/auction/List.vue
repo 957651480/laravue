@@ -20,19 +20,20 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="200px" label="标题">
+      <el-table-column align="center" label="排序" width="80">
+        <template slot-scope="scope">
+          <span>{{ scope.row.sort }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" min-width="200px" label="标题">
         <template slot-scope="{row}">
           <router-link :to="'/auction/edit/'+row.auction_id" class="link-type">
             <span>{{ row.title }}</span>
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" label="简介">
-        <template slot-scope="{row}">
-            <span>{{ row.desc }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="200px" label="图片">
+      <el-table-column align="center" min-width="200px" label="图片">
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
@@ -42,6 +43,17 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" min-width="200px" label="开始时间">
+        <template slot-scope="scope">
+          <span>{{scope.row.start_time}}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" min-width="200px" label="结束时间">
+        <template slot-scope="scope">
+          <span>{{scope.row.end_time}}</span>
+        </template>
+      </el-table-column>
       <el-table-column width="180px" align="center" label="发布城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>
@@ -52,7 +64,7 @@
           <span>{{ scope.row.author_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="80px" label="发布时间">
+      <el-table-column align="center" min-width="80px" label="发布时间">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>

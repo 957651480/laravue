@@ -3,7 +3,7 @@
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
 
       <div class="createPost-main-container">
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="标题:" prop="title">
+        <el-form-item style="margin-bottom: 40px;" label-width="120px" label="标题:" prop="title">
           <el-input
             v-model="postForm.title"
             :rows="1"
@@ -13,7 +13,7 @@
             placeholder="请输入标题"
           />
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;" label-width="80px" label="简介:" prop="desc">
+        <el-form-item style="margin-bottom: 40px;" label-width="120px" label="简介:" prop="desc">
           <el-input
             v-model="postForm.desc"
             :rows="1"
@@ -23,8 +23,33 @@
             placeholder="请输入简介"
           />
         </el-form-item>
-        <el-form-item label="图片:" prop="images">
+        <el-row>
+          <el-col :span="8">
+            <el-form-item style="margin-bottom: 40px;" label-width="120px" label="开始时间:" prop="start_time">
+              <el-date-picker
+                v-model="postForm.start_time"
+                type="datetime"
+                placeholder="选择开始时间"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item style="margin-bottom: 40px;" label-width="120px" label="结束时间:" prop="end_time">
+              <el-date-picker
+                v-model="postForm.end_time"
+                type="datetime"
+                placeholder="选择结束时间"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="图片:" prop="images" label-width="120px">
           <upload-image v-model="postForm.images" :image-list="image_list" ></upload-image>
+        </el-form-item>
+        <el-form-item label="排序:" label-width="120px" >
+          <el-input-number v-model="postForm.sort"  ></el-input-number> <span> 值越大越靠前</span>
         </el-form-item>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
@@ -52,8 +77,11 @@ const defaultForm = {
   lottery_id: undefined,
   title: '',
   desc: '',
+  start_time: '',
+  end_time: '',
   content: '',
   images:[],
+  sort:0,
 };
 
 export default {
@@ -75,6 +103,8 @@ export default {
       rules: {
         title: [{ required: true, message: '标题必须', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
+        start_time: [{ required: true, message: '开始时间必须', trigger: 'blur' }],
+        end_time: [{ required: true, message: '结束时间必须', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
       },
@@ -104,13 +134,8 @@ export default {
       fetchLottery(id)
         .then(response => {
 
-          let data = response.data;
-          this.postForm.lottery_id=data.lottery_id;
-          this.postForm.title=data.title;
-          this.postForm.desc=data.desc;
-          this.postForm.images=data.images;
-          this.postForm.content = data.content;
-          this.image_list=data.image_list;
+          this.postForm = response.data;
+          this.image_list=response.data.image_list;
           // Set tagsview title
           this.setTagsViewTitle();
         })
