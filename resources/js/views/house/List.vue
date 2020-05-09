@@ -18,7 +18,11 @@
           <span>{{ scope.row.house_id }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column align="center" label="排序" width="80">
+        <template slot-scope="scope">
+          <span>{{ scope.row.sort }}</span>
+        </template>
+      </el-table-column>
       <el-table-column min-width="200px" label="楼盘名称">
         <template slot-scope="{row}">
           <router-link :to="'/house/edit/'+row.house_id" class="link-type">

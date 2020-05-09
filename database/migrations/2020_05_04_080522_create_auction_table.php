@@ -24,6 +24,7 @@ class CreateAuctionTable extends Migration
             $table->unsignedInteger('sort')->default(0)->comment('排序');
             $table->integer('city_id')->default(0)->comment('城市id');
             $table->integer('author_id')->default(0)->comment('作者id');
+            $table->tinyInteger('status')->default(10)->comment('状态10未开始,20进行中,30已结束');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -28,6 +28,7 @@ class CreateHouseTable extends Migration
             $table->integer('region_id')->default(0)->comment('区域关联id');
             $table->integer('city_id')->default(0)->comment('城市id');
             $table->integer('author_id')->default(0)->comment('作者id');
+            $table->unsignedInteger('sort')->default(0)->comment('排序');
             $table->softDeletes();
             $table->timestamps();
         });

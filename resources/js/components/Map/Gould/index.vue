@@ -49,7 +49,8 @@
             },
 
             currentPosition (map, lnglat) {
-                if (lnglat[0]===null) {
+
+                if (lnglat[0]!==null) {
                     // 有传入坐标点，直接定位到坐标点
                     map.setCenter(lnglat)
                     this.addMark(map, lnglat)

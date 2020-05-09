@@ -98,14 +98,26 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label-width="150px" label="楼盘上下架装态:" prop="house_status">
-          <el-radio v-model="postForm.house_status" :label="10">上架</el-radio>
-          <el-radio v-model="postForm.house_status" :label="20">下架</el-radio>
-        </el-form-item>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label-width="150px" label="楼盘状态:" prop="house_status">
+              <el-radio v-model="postForm.house_status" :label="10">上架</el-radio>
+              <el-radio v-model="postForm.house_status" :label="20">下架</el-radio>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="排序:" label-width="150px" >
+              <el-input-number v-model="postForm.sort"  ></el-input-number> <span> 值越大越靠前</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label-width="150px" label="楼盘定位:" prop="map.address">
           <el-input v-model="postForm.map.address" placeholder="请在地图上定位地址" disabled style="width:500px"></el-input>
         </el-form-item>
-        <gould-map   v-model="postForm.map" @location="location" ></gould-map>
+        <el-form-item >
+          <gould-map   v-model="postForm.map" ></gould-map>
+        </el-form-item>
+
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
@@ -144,7 +156,8 @@ const defaultForm = {
   house_region:[],
   sales:[{name:'',phone:''}],
   house_recommend:20,
-  map:{lng:null,lat:null,address:null}
+  map:{lng:null,lat:null,address:null},
+  sort:0
 };
 
 export default {
