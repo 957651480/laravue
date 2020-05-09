@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\ApiRegionResource;
@@ -47,54 +47,6 @@ class RegionController extends Controller
         return $this->renderSuccess('',$data);
     }
 
-    public function store(Request $request)
-    {
-        //
-        $data = $this->validateRegion($request);
-        $this->service->create($data);
-        return $this->renderSuccess();
-    }
-
-
-    public function show($id)
-    {
-        //
-        $region = new ApiRegionResource($this->service->getModelByIdOrFail($id));
-        return $this->renderSuccess('',$region);
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        //
-        $region = $this->service->getModelByIdOrFail($id);
-        $data = $this->validateRegion($request);
-        $region->update($data);
-        return $this->renderSuccess();
-    }
-
-
-    public function destroy($id)
-    {
-        //
-        $region = $this->service->getModelByIdOrFail($id);
-        $region->delete();
-        return $this->renderSuccess();
-    }
-
-    protected function validateRegion(Request $request)
-    {
-        return $this->validate($request,[
-            'name'=>'required',
-            'parent_id'=>'sometimes',
-            'level'=>'sometimes',
-            'pinyin'=>'sometimes',
-            'show'=>'sometimes',
-            'sort'=>'sometimes'
-        ]
-        );
-    }
-
     public function treeList(Request $request)
     {
         $need_level = $request->get('need_level',0);
@@ -105,5 +57,15 @@ class RegionController extends Controller
         }
         $list = $this->service->getTree($all_region,$parent_id);
         return $this->renderSuccess('',['list'=>$list]);
+    }
+
+    public function city(Request $request)
+    {
+        $list = $this->service->fetchAllCity();
+        $data = [
+            'list'=>$list,
+            'total'=>count($list)
+        ];
+        return $this->renderSuccess('',$data);
     }
 }

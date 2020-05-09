@@ -128,6 +128,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('attends/delete/{id}', 'AttendController@destroy');
 });
 
+//公共路由
+Route::namespace('Common')->group(function (){
+
+    Route::get('region/city','RegionController@city');
+});
+
 //分类路由
 Route::get('categories','CategoryController@index');
 Route::get('categories/detail/{id}','CategoryController@show');

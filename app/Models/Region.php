@@ -69,7 +69,7 @@ class Region extends EloquentModel
         if($data = \Cache::get($cache_key)){
             return $data;
         }
-        if($data = $this->all(['region_id','name','parent_id','level'])->toArray()){
+        if($data = $this->all(['region_id','name','parent_id','level','pinyin','first'])->toArray()){
             \Cache::forever($cache_key,$data);
         }
         return $data;
@@ -84,6 +84,29 @@ class Region extends EloquentModel
             });
         }
         return $all_region;
+    }
+
+    public function fetchAllProvince()
+    {
+        return $this->filterByLevel(1);
+    }
+    public function fetchAllCity()
+    {
+       return $this->filterByLevel(2);
+    }
+
+    public function fetchAllDistinct()
+    {
+        return $this->filterByLevel(3);
+    }
+
+    public function filterByLevel($level)
+    {
+        $all_region = $this->fetchAll();
+        $all_region = Arr::where($all_region, function ($value, $key) use($level){
+            return $value['level']==$level;
+        });
+        return array_values($all_region);
     }
     //获取某分类的直接子分类
     public function fetchSons($regions, $parent_id=0){

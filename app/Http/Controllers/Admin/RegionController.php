@@ -87,8 +87,6 @@ class RegionController extends Controller
             'parent_id'=>'sometimes',
             'level'=>'sometimes',
             'pinyin'=>'sometimes',
-            'show'=>'sometimes',
-            'sort'=>'sometimes'
         ]
         );
     }
