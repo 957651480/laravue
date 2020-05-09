@@ -41,7 +41,12 @@ class HouseController extends Controller
         $query = $this->service->newQuery()->orderByDesc('sort')->latest('created_at');
 
         $query->leftJoin('parking','parking.house_id','house.house_id');
-        $paginate = $query->select(['house.*',DB::raw('count(parking.parking_id) as parking_count')])
+        $query->leftJoin('house_appointment','house_appointment.house_id','house.house_id');
+        $paginate = $query->select(['house.*',
+            DB::raw('count(parking.parking_id) as parking_count'),
+            DB::raw('avg(parking.price) as parking_avg'),
+            DB::raw('count(house_appointment.house_appointment_id) as appoint_count'),
+            ])
             ->likeName($name)->cityId($city_id)
             ->groupBy('house.house_id')
             ->with(['images','parking_images','region','city','author'])

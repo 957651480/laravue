@@ -23,19 +23,29 @@
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="200px" label="楼盘名称">
+      <el-table-column align="center" min-width="200px" label="楼盘名称">
         <template slot-scope="{row}">
           <router-link :to="'/house/edit/'+row.house_id" class="link-type">
             <span>{{ row.name }}</span>
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column min-width="100px" label="简介">
+      <el-table-column align="center" min-width="100px" label="车位数">
         <template slot-scope="{row}">
-            <span>{{ row.desc }}</span>
+            <span>{{ row.parking_count }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="200px" align="center" label="楼盘图片" >
+      <el-table-column align="center" min-width="100px" label="车位均价">
+        <template slot-scope="{row}">
+          <span>{{ row.parking_avg }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" min-width="100px" label="预约数">
+        <template slot-scope="{row}">
+          <span>{{ row.appoint_count }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" min-width="200px"  label="楼盘图片" >
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
@@ -44,7 +54,7 @@
             ></el-image>
         </template>
       </el-table-column>
-      <el-table-column min-width="80px" label="住户数">
+      <el-table-column align="center" min-width="80px" label="住户数">
         <template slot-scope="scope">
           <span>{{ scope.row.household }}</span>
         </template>
@@ -65,7 +75,7 @@
           <span>{{ scope.row.author_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="80px" label="发布时间">
+      <el-table-column align="center" min-width="80px" label="发布时间">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>

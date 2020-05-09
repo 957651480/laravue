@@ -74,7 +74,10 @@ class House extends EloquentModel
         return $this->belongsTo(Region::class,'region_id');
     }
 
-
+    public function appointments()
+    {
+        return $this->hasMany(HouseAppointment::class,'house_id');
+    }
 
     public function setHouseRegionAttribute($value)
     {
