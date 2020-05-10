@@ -14,4 +14,11 @@ class FileCollection extends Collection
     {
         return $this->modelKeys();
     }
+
+    public function urls()
+    {
+        return array_map(function ($model) {
+            return $model->url;
+        }, $this->items);
+    }
 }

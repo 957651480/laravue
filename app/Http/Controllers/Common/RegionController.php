@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\ApiRegionResource;
+use App\Http\Resources\Common\CommonRegionResource;
 use App\Models\Region ;
 use Arr;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ class RegionController extends Controller
         $paginator = $query->paginate($limit);
         $data =[
             'total'=>$paginator->total(),
-            'list'=>ApiRegionResource::collection($paginator)
+            'list'=>CommonRegionResource::collection($paginator)
         ];
         return $this->renderSuccess('',$data);
     }
@@ -63,6 +63,7 @@ class RegionController extends Controller
     {
         $list = $this->service->fetchAllCity();
         $data = [
+            'hot_city'=>[],
             'list'=>$list,
             'total'=>count($list)
         ];

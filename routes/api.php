@@ -132,6 +132,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 Route::namespace('Common')->group(function (){
 
     Route::get('region/city','RegionController@city');
+    Route::get('house/list','HouseController@index');
+    Route::get('house/detail/{id}','HouseController@detail');
 });
 
 //分类路由
