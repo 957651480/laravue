@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="query.title" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
+      <el-input v-model="query.name" placeholder="请输入奖项名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="query.lottery_name" placeholder="请输入转盘名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
@@ -13,7 +13,7 @@
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.lottery_id }}</span>
+          <span>{{ scope.row.lottery_prize_id }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="排序" width="80">
@@ -21,10 +21,10 @@
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" min-width="200px" label="标题">
+      <el-table-column align="center" min-width="200px" label="名称">
         <template slot-scope="{row}">
-          <router-link :to="'/lottery/edit/'+row.lottery_id" class="link-type">
-            <span>{{ row.title }}</span>
+          <router-link :to="'/lottery/prize/edit/'+row.lottery_prize_id" class="link-type">
+            <span>{{ row.name }}</span>
           </router-link>
         </template>
       </el-table-column>
@@ -38,15 +38,27 @@
             ></el-image>
         </template>
       </el-table-column>
-      <el-table-column align="center" min-width="200px" label="开始时间">
+      <el-table-column align="center" min-width="200px" label="等级">
         <template slot-scope="scope">
-          <span>{{scope.row.start_time}}</span>
+          <span>{{scope.row.grade}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" min-width="200px" label="结束时间">
+      <el-table-column align="center" min-width="200px" label="数量">
         <template slot-scope="scope">
-          <span>{{scope.row.end_time}}</span>
+          <span>{{scope.row.number}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" min-width="200px" label="概率">
+        <template slot-scope="scope">
+          <span>{{scope.row.probability}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" min-width="200px" label="所属转盘">
+        <template slot-scope="{row}">
+          <router-link :to="'/lottery/edit/'+row.lottery_id" class="link-type">
+            <span>{{ row.lottery_title }}</span>
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column align="center" width="180px"  label="发布城市">
@@ -66,12 +78,12 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
-          <router-link :to="'/lottery/edit/'+scope.row.lottery_id">
+          <router-link :to="'/lottery_prize/edit/'+scope.row.lottery_prize_id">
             <el-button type="primary" size="small" icon="el-icon-edit">
               编辑
             </el-button>
           </router-link>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.lottery_id)">
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.lottery_prize_id)">
             删除
           </el-button>
         </template>
@@ -86,11 +98,11 @@
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import waves from '@/directive/waves';
 
-import { fetchList,deleteLottery } from '@/api/lottery';
+import { fetchList,deleteLotteryPrize } from '@/api/lottery-prize';
 
 
 export default {
-  name: 'LotteryList',
+  name: 'LotteryPrizeList',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -101,9 +113,9 @@ export default {
       query: {
         page: 1,
         limit: 15,
-        title: '',
+        name: '',
+          lottery_name: '',
       },
-      categories:[],
     };
   },
   created() {
@@ -126,7 +138,7 @@ export default {
       this.getList();
     },
     handleDelete(id) {
-      deleteLottery(id).then(response => {
+      deleteLotteryPrize(id).then(response => {
           this.$message({
             type: 'success',
             message: '已删除',

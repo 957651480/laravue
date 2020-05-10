@@ -4,24 +4,25 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\AdminLotteryResource;
-use App\Models\Lottery;
+use App\Http\Resources\Admin\AdminLotteryRecordResource;
+use App\Models\LotteryRecord;
 use DB;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
-class LotteryController extends Controller
+class LotteryRecordController extends Controller
 {
     /**
-     * @var Lottery
+     * @var LotteryRecord
      */
     protected $service;
 
     /**
-     * LotteryController constructor.
-     * @param Lottery $service
+     * LotteryRecordController constructor.
+     * @param LotteryRecord $service
      */
-    public function __construct(Lottery $service)
+    public function __construct(LotteryRecord $service)
     {
         $this->service = $service;
     }
@@ -33,26 +34,32 @@ class LotteryController extends Controller
         $form = $request->all();
         $limit = Arr::getInt($form,'limit',15);
 
-        $title = Arr::getStringTrimAddSlashes($form,'title');
+        $name = Arr::getStringTrimAddSlashes($form,'name');
         $city_id = Arr::getInt($form,'city_id');
         if($user_city_id = getUserCityId()){
             $city_id = $user_city_id;
         }
-
-        $query = $this->service->with(['images','city','author'])->newQuery();
+        $query = $this->service->with(['image','city','author','lottery'])->newQuery();
         if($scopes =array_filter([
             'cityId'=>$city_id,
-            'likeTitle'=>$title
+            'likeName'=>$name
         ])){
             foreach (($scopes) as $scope => $value) {
                 $query->$scope($value);
             }
         }
+        if($lottery_name = Arr::getStringAddSlashes($form,'lottery_name'))
+        {
+            $query->whereHas('lottery',function (Builder $query)use($lottery_name){
+                $query->where('name', 'like', "%{$lottery_name}%");
+            });
+        }
+
         $paginate = $query->orderByDesc('sort')->latest('created_at')->paginate($limit);
 
         $data =[
             'total'=>$paginate->total(),
-            'list'=>AdminLotteryResource::collection($paginate)
+            'list'=>AdminLotteryRecordResource::collection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }
@@ -60,12 +67,9 @@ class LotteryController extends Controller
     public function store(Request $request)
     {
         //
-        DB::transaction(function ()use($request)
-        {
-            list($data,$images) = $this->validateLottery($request->all());
-            $model = $this->service->create($data);
-            $model->images()->sync($images);
-        });
+        $data = $this->validateLotteryRecord($request->all());
+        $model = $this->service->create($data);
+
         return $this->renderSuccess();
     }
 
@@ -73,8 +77,8 @@ class LotteryController extends Controller
     public function show(Request $request,$id)
     {
         //
-        $course = $this->service->getModelByIdOrFail($id,['images','city','author']);
-        $course = new AdminLotteryResource($course);
+        $course = $this->service->getModelByIdOrFail($id,['image','city','author']);
+        $course = new AdminLotteryRecordResource($course);
         return $this->renderSuccess('',$course);
     }
 
@@ -82,14 +86,10 @@ class LotteryController extends Controller
     public function update(Request $request, $id)
     {
         //
-        list($data,$images) = $this->validateLottery($request->all());
+        $data= $this->validateLotteryRecord($request->all());
         $model = $this->service->getModelByIdOrFail($id);
         //
-        DB::transaction(function ()use($model,$data,$images)
-        {
-            $model->images()->sync($images);
-            $model->update($data);
-        });
+        $model->update($data);
         return $this->renderSuccess();
     }
 
@@ -103,33 +103,32 @@ class LotteryController extends Controller
 
 
 
-    protected function validateLottery($from)
+    protected function validateLotteryRecord($from)
     {
         $rules=[
-            'title'=>'required',
-            'desc'=>'sometimes',
-            'content'=>'required',
+            'lottery_id'=>'required',
+            'name'=>'required',
+            'grade'=>'required',
             'images'=>'required',
-            'start_time'=>'required',
-            'end_time'=>'required',
+            'number'=>'required',
+            'probability'=>'required',
             'sort'=>'sometimes',
         ];
         $validator = \Validator::make($from,$rules,
             [
-                'name.required'=>'楼盘名称必填',
-                'desc.sometimes'=>'标题必填',
-                'content.required'=>'详情必填',
+                'lottery_id.required'=>'转盘名称必填',
+                'name.required'=>'名称必填',
+                'grade.required'=>'详情必填',
                 'images.required'=>'图片必传',
-                'start_time.required'=>'开始时间必传',
-                'end_time.required'=>'结束时间必传',
+                'number.required'=>'数量必传',
+                'probability.required'=>'概率必传',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
         $data = Arr::only($validator->getData(),array_keys($rules));
-        $data['start_time']=strtotime($data['start_time']);
-        $data['end_time']=strtotime($data['end_time']);
         $images = Arr::pull($data,'images');
-        return [$data,$images];
+        $data['image_id'] = $images[0];
+        return $data;
     }
 
     protected function filter(Request $request)

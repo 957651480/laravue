@@ -30,6 +30,25 @@ const lotteryRoutes = {
       name: 'LotteryList',
       meta: { title: '转盘列表', icon: 'list',noCache: true },
     },
+    {
+      path: '/lottery/prize/create',
+      component: () => import('@/views/lottery-prize/Create'),
+      name: 'CreateLotteryPrize',
+      meta: { title: '创建奖项', icon: 'edit' },
+    },
+    {
+      path: '/lottery/prize/edit/:id(\\d+)',
+      component: () => import('@/views/lottery-prize/Edit'),
+      name: 'EditLotteryPrize',
+      meta: { title: '编辑奖项', noCache: true },
+      hidden: true,
+    },
+    {
+      path: '/lottery/prize/list',
+      component: () => import('@/views/lottery-prize/List'),
+      name: 'LotteryPrizeList',
+      meta: { title: '奖项列表', icon: 'list',noCache: true },
+    },
   ],
 };
 

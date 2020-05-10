@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Filter\LotteryPrizeFilter;
+use App\Traits\AuthorTrait;
+use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,11 +36,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class LotteryPrize extends EloquentModel
 {
     //
+    use CityTrait,AuthorTrait,LotteryPrizeFilter;
     protected $guarded = [];
     protected $primaryKey='lottery_prize_id';
     protected $table='lottery_prize';
 
 
+    public function image()
+    {
+        return $this->belongsTo(File::class,'image_id');
+    }
     public function lottery()
     {
         return $this->belongsTo(Lottery::class,'lottery_id');

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filter\LotteryFilter;
 use App\Traits\AuthorTrait;
 use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -45,7 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Lottery extends EloquentModel
 {
     //
-    use SoftDeletes,CityTrait,AuthorTrait;
+    use SoftDeletes,CityTrait,AuthorTrait,LotteryFilter;
     protected $guarded = [];
     protected $table='lottery';
     protected $primaryKey='lottery_id';

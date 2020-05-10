@@ -61,6 +61,13 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::post('lottery/update/{id}', 'LotteryController@update');
         Route::get('lottery/delete/{id}', 'LotteryController@destroy');
 
+        Route::get('lottery/prize', 'LotteryPrizeController@index');
+        Route::post('lottery/prize/create', 'LotteryPrizeController@store');
+        Route::get('lottery/prize/detail/{id}', 'LotteryPrizeController@show');
+        Route::post('lottery/prize/update/{id}', 'LotteryPrizeController@update');
+        Route::get('lottery/prize/delete/{id}', 'LotteryPrizeController@destroy');
+
+        Route::get('lottery/record', 'LotteryPrizeController@index');
         //竞拍路由
         Route::get('auction', 'AuctionController@index');
         Route::post('auction/create', 'AuctionController@store');

@@ -234,7 +234,6 @@ export default {
               path: '/parking',
             });
           }).catch((error) => {
-              debugger
           });
         }
         this.loading = false;
