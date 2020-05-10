@@ -32,6 +32,7 @@ class CreateParkingTable extends Migration
         Schema::create('parking_area', function (Blueprint $table) {
             $table->integerIncrements('parking_area_id')->comment('车位区域id');
             $table->string('name')->default('')->comment('区域名称');
+            $table->integer('sort')->default(0)->comment('排序');
             $table->integer('city_id')->default(0)->comment('城市id');
             $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();
@@ -40,6 +41,7 @@ class CreateParkingTable extends Migration
         Schema::create('parking_floor', function (Blueprint $table) {
             $table->integerIncrements('parking_floor_id')->comment('车位楼层id');
             $table->string('name')->default('')->comment('区域名称');
+            $table->integer('sort')->default(0)->comment('排序');
             $table->integer('city_id')->default(0)->comment('城市id');
             $table->integer('author_id')->default(0)->comment('作者id');
             $table->softDeletes();

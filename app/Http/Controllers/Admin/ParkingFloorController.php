@@ -37,7 +37,7 @@ class ParkingFloorController extends Controller
         if($user_city_id = getUserCityId()){
             $city_id = $user_city_id;
         }
-        $query = $this->service->newQuery()->latest('created_at');
+        $query = $this->service->newQuery()->orderByDesc('sort')->latest('created_at');
         $scopes =array_filter([
             'cityId'=>$city_id,
             'likeName'=>$name
@@ -95,6 +95,7 @@ class ParkingFloorController extends Controller
     {
         $rules = [
             'name'=>'required',
+            'sort'=>'sometimes',
         ];
         $validator = \Validator::make($form,$rules,
             [

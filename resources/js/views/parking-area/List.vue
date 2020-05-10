@@ -7,6 +7,9 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+        {{ $t('table.add') }}
+      </el-button>
     </el-form>
 
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
@@ -15,15 +18,14 @@
           <span>{{ scope.row.parking_area_id }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column align="center" label="分类名称">
-        <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="排序">
+      <el-table-column align="center" label="排序" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="名称">
+        <template slot-scope="scope">
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column width="180px" align="center" label="发布城市">
@@ -60,11 +62,11 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="query.page" :limit.sync="query.limit" @pagination="getList" />
 
-    <el-dialog v-model="isEdit" title="增加/编辑分类" :visible.sync="dialogFormVisible">
+    <el-dialog v-model="isEdit" title="增加/编辑" :visible.sync="dialogFormVisible">
       <div v-loading="parking_areaCreating" class="form-container">
         <el-form ref="parking_areaForm" :rules="rules" :model="newParkingArea" label-position="left" label-width="150px" style="max-width: 500px;">
 
-          <el-form-item label="分类名称" prop="name">
+          <el-form-item label="名称" prop="name">
             <el-input v-model="newParkingArea.name" />
           </el-form-item>
           <el-form-item label="排序:" prop="sort">
@@ -107,7 +109,7 @@ export default {
       newParkingArea: {},
       dialogFormVisible: false,
       rules: {
-        name: [{ required: true, message: '分类名称必须', trigger: 'blur' }],
+        name: [{ required: true, message: '名称必须', trigger: 'blur' }],
       },
       isEdit: false,
     };
@@ -216,7 +218,7 @@ export default {
       this.newParkingArea = {
         parking_area_id:null,
         name: '',
-        sort: 10,
+        sort: 0,
       };
     },
   },

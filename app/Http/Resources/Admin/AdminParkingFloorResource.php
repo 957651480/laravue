@@ -19,6 +19,7 @@ class AdminParkingFloorResource extends JsonResource
         return [
             'parking_floor_id'=>(integer)$this->parking_floor_id,
             'name'=>(string)$this->name,
+            'sort'=>(integer)$this->sort,
             'city_id'=>(integer)$this->city_id,
             'city_name'=>(string)optional($city)->name,
             'author_id'=>(integer)$this->author_id,
