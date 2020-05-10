@@ -90,10 +90,11 @@
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import { fetchList, updateParkingArea, createParkingArea, deleteParkingArea } from '@/api/parking-area';
-
+import waves from '@/directive/waves';
 export default {
   name: 'ParkingAreaList',
   components: { Pagination },
+  directives: { waves },
   data() {
     return {
       list: null,

@@ -90,10 +90,11 @@
 <script>
 import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 import { fetchList, updateParkingFloor, createParkingFloor, deleteParkingFloor } from '@/api/parking-floor';
-
+import waves from '@/directive/waves';
 export default {
   name: 'ParkingFloorList',
   components: { Pagination },
+  directives: { waves },
   data() {
     return {
       list: null,
