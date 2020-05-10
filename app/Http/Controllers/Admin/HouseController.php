@@ -38,7 +38,12 @@ class HouseController extends Controller
         if($user_city_id = getUserCityId()){
             $city_id = $user_city_id;
         }
-        $query = $this->service->newQuery()->orderByDesc('sort')->latest('created_at');
+        $hs_as = 'hs';
+        $query = $this->service->setTable($hs_as)->from('house',$hs_as)->newQuery()
+            ->orderByDesc("sort")->latest("created_at");
+
+
+        $query->from('house',$hs_as);
         if($scopes =array_filter([
             'cityId'=>$city_id,
             'likeName'=>$name
@@ -47,15 +52,15 @@ class HouseController extends Controller
                 $query->$scope($value);
             }
         }
-        $query->leftJoin('parking','parking.house_id','house.house_id');
-        $query->leftJoin('house_appointment','house_appointment.house_id','house.house_id');
-        $paginate = $query->select(['house.*',
+        $query->leftJoin('parking','parking.house_id',"{$hs_as}.house_id");
+        $query->leftJoin('house_appointment','house_appointment.house_id',"{$hs_as}.house_id");
+        $paginate = $query->select(["{$hs_as}.*",
             DB::raw('count(parking.parking_id) as parking_count'),
             DB::raw('avg(parking.price) as parking_avg'),
             DB::raw('count(house_appointment.house_appointment_id) as appoint_count'),
-            ])
-            ->groupBy('house.house_id')
-            ->with(['images','parking_images','region','city','author'])
+        ])
+            ->groupBy("{$hs_as}.house_id")
+            ->with(['images','parking_images','region','city','author','appointments'])
             ->paginate($limit);
 
         $data =[

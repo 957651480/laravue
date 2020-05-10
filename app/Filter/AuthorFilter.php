@@ -16,6 +16,6 @@ trait AuthorFilter
      */
     public function scopeAuthorId($query, $author_id)
     {
-        return $query->whereAuthorId($author_id);
+        return $query->where($this->qualifyColumn('author_id'),$author_id);
     }
 }

@@ -16,6 +16,6 @@ trait RegionFilter
      */
     public function scopeLevel($query, $level)
     {
-        return $query->whereLevel($level);
+        return $query->where($this->qualifyColumn('level'),$level);
     }
 }

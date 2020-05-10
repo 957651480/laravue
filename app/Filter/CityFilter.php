@@ -22,6 +22,6 @@ trait CityFilter
      */
     public function scopeCityId($query, $city_id)
     {
-        return $query->whereCityId($city_id);
+        return $query->where($this->qualifyColumn('city_id'),$city_id);
     }
 }

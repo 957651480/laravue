@@ -25,7 +25,7 @@ Trait ParkingFloorFilter
      */
     public function scopeLikeName($query, $name)
     {
-        return $query->where('name','like', "%$name%");
+        return $query->where($this->qualifyColumn('name'),'like', "%$name%");
     }
 
 }
