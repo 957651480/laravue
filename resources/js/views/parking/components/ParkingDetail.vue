@@ -84,12 +84,14 @@
               <el-input-number
                 :min="1"
                 v-model="postForm.handsel"
-                placeholder="请输入车位价格"
+                placeholder="请输入车位定金"
               />
             </el-form-item>
           </el-col>
         </el-row>
-
+        <el-form-item label="排序:" label-width="150px" >
+          <el-input-number v-model="postForm.sort"  ></el-input-number> <span> 值越大越靠前</span>
+        </el-form-item>
 
         <el-button
           v-loading="loading"
@@ -127,7 +129,8 @@ const defaultForm = {
   parking_area_id:null,
   parking_floor_id:null,
   house_name:'',
-  handsel:'',
+  handsel:1000,
+  sort:0,
 };
 
 export default {

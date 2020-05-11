@@ -23,7 +23,9 @@ class AdminParkingResource extends JsonResource
             'code'=>(string)$this->code,
             'handsel'=>(float)$this->handsel,
             'type_id' => (integer)$this->type_id,
+            'type_name' => (string)$this->type_name(),
             'size_id' => (integer)$this->size_id,
+            'size_name' => (string)$this->size_name(),
             'price'=>(float)$this->price,
             'parking_area_id'=>(integer)$this->parking_area_id,
             'parking_area_name'=>(string)optional($parking_area)->name,
@@ -35,6 +37,7 @@ class AdminParkingResource extends JsonResource
             'city_name'=>(string)optional($city)->name,
             'author_id'=>(integer)$this->author_id,
             'author_name'=>(string)optional($author)->name,
+            'sort'=>(integer)$this->sort,
             'created_at'=>(string)optional($this->created_at)->toDateTimeString(),
             'updated_at'=>(string)optional($this->updated_at)->toDateTimeString(),
         ];

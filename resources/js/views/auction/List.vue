@@ -1,18 +1,17 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="query.category_id" placeholder="选择分类" clearable style="width: 90px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in categories" :key="item.category_id" :label="item.name | uppercaseFirst" :value="item.category_id" />
-      </el-select>
-
+    <el-form :inline="true" >
+      <el-form-item label="竞拍标题:">
+        <el-input v-model="query.title" placeholder="请输入竞拍标题" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-form-item>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
-      </el-button>
-    </div>
+      </el-button>-->
+    </el-form>
+
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -31,6 +30,16 @@
           <router-link :to="'/auction/edit/'+row.auction_id" class="link-type">
             <span>{{ row.title }}</span>
           </router-link>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" min-width="200px" label="车位号">
+        <template slot-scope="scope">
+          <span>{{scope.row.start_time}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" min-width="200px" label="开始时间">
+        <template slot-scope="scope">
+          <span>{{scope.row.start_time}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" min-width="200px" label="图片">
@@ -54,7 +63,17 @@
           <span>{{scope.row.end_time}}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180px" align="center" label="发布城市">
+      <el-table-column align="center" min-width="80px" label="推荐竞拍">
+        <template slot-scope="scope">
+          <span>{{scope.row.auction_recommend===10?'是':'否' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" min-width="80px" label="状态">
+        <template slot-scope="scope">
+          <span>{{scope.row.status_name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180px" align="center" label="所属城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>
         </template>
@@ -102,14 +121,12 @@ export default {
     return {
       list: null,
       total: 0,
-      downloading: false,
+      loading: false,
       query: {
         page: 1,
         limit: 15,
-        keyword: '',
-        category_id:''
+        title: '',
       },
-      categories:[],
     };
   },
   created() {

@@ -1,15 +1,16 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="query.title" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-
+    <el-form :inline="true" >
+      <el-form-item label="转盘标题:">
+        <el-input v-model="query.title" placeholder="请输入转盘标题" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-form-item>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         {{ $t('table.export') }}
-      </el-button>
-    </div>
+      </el-button>-->
+    </el-form>
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -49,7 +50,17 @@
           <span>{{scope.row.end_time}}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="180px"  label="发布城市">
+      <el-table-column align="center" min-width="80px" label="推荐转盘">
+        <template slot-scope="scope">
+          <span>{{scope.row.lottery_recommend===10?'是':'否' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" min-width="80px" label="状态">
+        <template slot-scope="scope">
+          <span>{{scope.row.status_name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" width="180px"  label="所属城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>
         </template>

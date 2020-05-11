@@ -48,9 +48,33 @@
         <el-form-item label="图片:" prop="images" label-width="120px">
           <upload-image v-model="postForm.images" :image-list="image_list" ></upload-image>
         </el-form-item>
-        <el-form-item label="排序:" label-width="120px" >
-          <el-input-number v-model="postForm.sort"  ></el-input-number> <span> 值越大越靠前</span>
-        </el-form-item>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="排序:" label-width="120px" >
+              <el-input-number v-model="postForm.sort"  ></el-input-number> <span> 值越大越靠前</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label-width="120px" label="推荐:" prop="lottery_recommend">
+              <el-radio v-model="postForm.lottery_recommend" :label="10">是</el-radio>
+              <el-radio v-model="postForm.lottery_recommend" :label="20">否</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label-width="120px" label="状态:" prop="status_id">
+              <el-select v-model="postForm.status_id" placeholder="请选择转盘状态">
+                <el-option
+                  v-for="item in all_status"
+                  :key="item.status_id"
+                  :label="item.name"
+                  :value="item.status_id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
@@ -82,6 +106,8 @@ const defaultForm = {
   content: '',
   images:[],
   sort:0,
+  lottery_recommend:20,
+  status_id:10,
 };
 
 export default {
@@ -107,9 +133,11 @@ export default {
         end_time: [{ required: true, message: '结束时间必须', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
+        status_id: [{ required: true, message: '状态必填', trigger: 'blur' }],
       },
       tempRoute: {},
       image_list:[],
+      all_status:[{status_id:10,name:'未开始'},{status_id:20,name:'进行中'},{status_id:30,name:'已结束'}],
     };
   },
   computed: {

@@ -63,4 +63,13 @@ class Lottery extends EloquentModel
         return $this->hasMany(LotteryPrize::class,'lottery_id');
     }
 
+    public function statusName()
+    {
+        $status_names=[
+            10=>'未开始',
+            20=>'进行中',
+            30=>'已结束',
+        ];
+        return $status_names[$this->status_id]??'';
+    }
 }

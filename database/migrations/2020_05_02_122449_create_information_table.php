@@ -17,9 +17,11 @@ class CreateInformationTable extends Migration
             $table->integerIncrements('information_id')->comment('资讯id');
             $table->string('title')->default('')->comment('资讯标题');
             $table->string('desc')->default('')->comment('资讯简介');
+            $table->unsignedInteger('information_recommend')->default(20)->comment('资讯推荐10 推荐车位 20 否');
             $table->longText('content')->comment('详情');
-            $table->integer('city_id')->default(0)->comment('城市id');
-            $table->integer('author_id')->default(0)->comment('作者id');
+            $table->unsignedInteger('city_id')->default(0)->comment('城市id');
+            $table->unsignedInteger('author_id')->default(0)->comment('作者id');
+            $table->unsignedInteger('sort')->default(0)->comment('排序');
             $table->softDeletes();
             $table->timestamps();
         });

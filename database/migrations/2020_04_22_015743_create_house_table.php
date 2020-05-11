@@ -22,12 +22,12 @@ class CreateHouseTable extends Migration
             $table->string('sales')->default('[]')->comment('销售数据列表');
             $table->string('map')->default('{}')->comment('楼盘定位经纬度');
             $table->string('rate')->default('')->comment('车位配比');
-            $table->integer('house_status')->default(10)->comment('楼盘上下架状态10 上架 20 下架');
-            $table->integer('house_recommend')->default(20)->comment('楼盘推荐10 是 20 否');
+            $table->unsignedInteger('house_status')->default(10)->comment('楼盘上下架状态10 上架 20 下架');
+            $table->unsignedInteger('house_recommend')->default(20)->comment('楼盘推荐10 是 20 否');
             $table->string('house_region')->default('[]')->comment('省市区选择的数据列表');
-            $table->integer('region_id')->default(0)->comment('区域关联id');
-            $table->integer('city_id')->default(0)->comment('城市id');
-            $table->integer('author_id')->default(0)->comment('作者id');
+            $table->unsignedInteger('region_id')->default(0)->comment('区域关联id');
+            $table->unsignedInteger('city_id')->default(0)->comment('城市id');
+            $table->unsignedInteger('author_id')->default(0)->comment('作者id');
             $table->unsignedInteger('sort')->default(0)->comment('排序');
             $table->softDeletes();
             $table->timestamps();

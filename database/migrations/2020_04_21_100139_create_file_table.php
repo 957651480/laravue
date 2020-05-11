@@ -20,8 +20,8 @@ class CreateFileTable extends Migration
             $table->string('extension')->default('')->comment('文件名扩展名');
             $table->mediumInteger('size')->default(0)->comment('文件大小');
             $table->string('mime_type')->default('')->comment('文件格式');
-            $table->integer('city_id')->default(0)->comment('城市id');
-            $table->integer('author_id')->default(0)->comment('作者id');
+            $table->unsignedInteger('city_id')->default(0)->comment('城市id');
+            $table->unsignedInteger('author_id')->default(0)->comment('作者id');
             $table->softDeletes();
             $table->timestamps();
         });

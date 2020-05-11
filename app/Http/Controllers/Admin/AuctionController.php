@@ -30,12 +30,24 @@ class AuctionController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->service->with(['images','city','author'])->newQuery();
-        $wheres =$this->filter($request);
-        $query->when($wheres,function ($query)use($wheres){
-            $query->where($wheres);
-        });
-        $paginate = $query->orderByDesc('sort')->latest('created_at')->paginate($request->get('limit'));
+        $query = $this->service->with(['parking','images','city','author'])->newQuery();
+        $form = $request->all();
+        $limit = Arr::getInt($form,'limit',15);
+
+        $title = Arr::getStringTrimAddSlashes($form,'title');
+        $city_id = Arr::getInt($form,'city_id');
+        if($user_city_id = getUserCityId()){
+            $city_id = $user_city_id;
+        }
+        if($scopes =array_filter([
+            'cityId'=>$city_id,
+            'likeTitle'=>$title
+        ])){
+            foreach (($scopes) as $scope => $value) {
+                $query->$scope($value);
+            }
+        }
+        $paginate = $query->orderByDesc('sort')->latest('created_at')->paginate($limit);
 
         $data =[
             'total'=>$paginate->total(),
@@ -60,7 +72,7 @@ class AuctionController extends Controller
     public function show(Request $request,$id)
     {
         //
-        $course = $this->service->getModelByIdOrFail($id,['images','city','author']);
+        $course = $this->service->getModelByIdOrFail($id,['parking','images','city','author']);
         $course = new AdminAuctionResource($course);
         return $this->renderSuccess('',$course);
     }
@@ -94,20 +106,27 @@ class AuctionController extends Controller
         $rules=[
             'title'=>'required',
             'desc'=>'sometimes',
+            'parking_id'=>'required',
+            'start_price'=>'required',
             'content'=>'required',
             'images'=>'required',
             'start_time'=>'required',
             'end_time'=>'required',
+            'status_id'=>'required',
             'sort'=>'sometimes',
+            'auction_recommend'=>'sometimes',
         ];
         $validator = \Validator::make($from,$rules,
             [
-                'name.required'=>'楼盘名称必填',
+                'title.required'=>'起拍标题必填',
                 'desc.sometimes'=>'标题必填',
+                'start_price.required'=>'起拍价必填',
+                'parking_id.required'=>'车位必选',
                 'content.required'=>'详情必填',
                 'images.required'=>'图片必传',
                 'start_time.required'=>'开始时间必传',
                 'end_time.required'=>'结束时间必传',
+                'status_id.required'=>'状态必传',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
@@ -118,23 +137,4 @@ class AuctionController extends Controller
         return [$data,$images];
     }
 
-    protected function filter(Request $request)
-    {
-        $wheres =[];
-        if($keyword = $request->get('keyword')){
-            $this->filterTitleLike($keyword);
-        }
-        if($category_id = $request->get('category_id')){
-            $wheres[]=$this->filterCategoryId($category_id);
-        }
-        return $wheres;
-    }
-    protected function filterTitleLike($title)
-    {
-        return ['title','like',"%{$title}%"];
-    }
-    protected function filterCategoryId($id)
-    {
-        return ['category_id','=',$id];
-    }
 }

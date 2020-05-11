@@ -120,6 +120,8 @@ class InformationController extends Controller
             'desc'=>'sometimes',
             'content'=>'required',
             'images'=>'required',
+            'information_recommend'=>'sometimes',
+            'sort'=>'sometimes',
         ];
         $validator = \Validator::make($from,$rules,
             [

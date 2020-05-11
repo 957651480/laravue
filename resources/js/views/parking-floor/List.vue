@@ -28,7 +28,7 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180px" align="center" label="发布城市">
+      <el-table-column width="180px" align="center" label="所属城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>
         </template>

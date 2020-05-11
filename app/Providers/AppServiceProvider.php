@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Auction;
 use App\Models\Banner;
 use App\Models\File;
 use App\Models\House;
@@ -12,6 +13,7 @@ use App\Models\Parking;
 use App\Models\ParkingArea;
 use App\Models\ParkingFloor;
 use App\Models\Region;
+use App\Observers\AuctionObserver;
 use App\Observers\BannerObserver;
 use App\Observers\FileObserver;
 use App\Observers\HouseObserver;
@@ -54,5 +56,6 @@ class AppServiceProvider extends ServiceProvider
         ParkingFloor::observe(ParkingFloorObserver::class);
         Lottery::observe(LotteryObserver::class);
         LotteryPrize::observe(LotteryPrizeObserver::class);
+        Auction::observe(AuctionObserver::class);
     }
 }

@@ -7,11 +7,11 @@
       <el-form-item label="楼盘名称:">
         <el-input v-model="query.house_name" placeholder="请输入楼盘名称搜索" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
       </el-form-item>
-      <el-form-item label="车位分类:">
+      <!--<el-form-item label="车位分类:">
         <el-select v-model="query.type_id" placeholder="选择分类" clearable style="width: 90px" class="filter-item" @change="handleFilter">
           <el-option v-for="item in types" :key="item.type_id" :label="item.name" :value="item.type_id" />
         </el-select>
-      </el-form-item>
+      </el-form-item>-->
       <el-form-item label="车位尺寸:">
         <el-select v-model="query.size_id" placeholder="选择车位尺寸" clearable style="width: 90px" class="filter-item" @change="handleFilter">
           <el-option v-for="item in sizes" :key="item.size_id" :label="item.name " :value="item.size_id" />
@@ -20,9 +20,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
-        {{ $t('table.export') }}
-      </el-button>
     </el-form>
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -30,11 +27,7 @@
           <span>{{ scope.row.parking_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="排序" width="80">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sort }}</span>
-        </template>
-      </el-table-column>
+
       <el-table-column min-width="200px" label="编号">
         <template slot-scope="{row}">
           <router-link :to="'/parking/edit/'+row.parking_id" class="link-type">
@@ -77,11 +70,6 @@
           <span>{{ scope.row.house_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" min-width="80px" label="推荐车位">
-        <template slot-scope="scope">
-          <span>{{scope.row.parking_recommend===10?'是':'否' }}</span>
-        </template>
-      </el-table-column>
       <el-table-column width="180px" align="center" label="所属城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>
@@ -99,13 +87,8 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
-          <router-link :to="'/parking/edit/'+scope.row.parking_id">
-            <el-button type="primary" size="small" icon="el-icon-edit">
-              编辑
-            </el-button>
-          </router-link>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.parking_id)">
-            删除
+          <el-button type="success" size="small" icon="el-icon-check" @click="handleChoose(scope.row)">
+            选择
           </el-button>
         </template>
       </el-table-column>
@@ -123,9 +106,10 @@ import { fetchList,deleteParking } from '@/api/parking';
 
 
 export default {
-  name: 'ParkingList',
+  name: 'ParkingTableSearch',
   components: { Pagination },
   directives: { waves },
+  props: ['value'],
   data() {
     return {
       list: null,
@@ -136,7 +120,7 @@ export default {
         limit: 15,
         code: '',
         house_name: '',
-        type_id:'',
+        type_id:20,
         size_id:'',
       },
       categories:[],
@@ -144,7 +128,7 @@ export default {
       types:[{'type_id':10,name:'认筹'},{'type_id':20,name:'竞拍'}],
     };
   },
-  created() {
+  mounted() {
     this.getList();
   },
   methods: {
@@ -163,62 +147,9 @@ export default {
       this.query.page = 1;
       this.getList();
     },
-    handleDelete(id) {
-      deleteParking(id).then(response => {
-          this.$message({
-            type: 'success',
-            message: '已删除',
-          });
-          this.handleFilter();
-        }).catch(error => {
-          console.log(error);
-        });
-
-    },
-    handleDownload() {
-      this.downloading = true;
-
-        axios
-            .get("/api/courses/export", {
-                params: this.query,
-                headers:this.myHeaders,
-                responseType : "blob" // 1.首先设置responseType对象格式为 blob:
-            })
-            .then(
-                res => {
-                    //resolve(res)
-                    let blob = new Blob([res.data], {
-                        type: "application/vnd.ms-excel"
-                    }); // 2.获取请求返回的response对象中的blob 设置文件类型，这里以excel为例
-                    let url = window.URL.createObjectURL(blob); // 3.创建一个临时的url指向blob对象
-
-                    // 4.创建url之后可以模拟对此文件对象的一系列操作，例如：预览、下载
-                    let a = document.createElement("a");
-                    a.href = url;
-                    a.download = "课程.csv";
-                    a.click();
-                    // 5.释放这个临时的对象url
-                    window.URL.revokeObjectURL(url);
-                    this.$message({
-                        type: 'success',
-                        message: '已导出',
-                    });
-                    this.downloading = false;
-                },
-                err => {
-                    resolve(err.response);
-                }
-            )
-            .catch(error => {
-                reject(error);
-            });
-    },
-    showImageList(imageList){
-        let tmpList = [];
-        for (let i = 0;i < imageList.length;i++){
-            tmpList[i]=imageList[i].url;
-        }
-        return tmpList;
+    handleChoose(item){
+      this.$emit('input',item.parking_id);
+      this.$emit('updateParking',item);
     }
   },
 };

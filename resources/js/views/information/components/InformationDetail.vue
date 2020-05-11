@@ -26,6 +26,10 @@
         <el-form-item label="图片:" prop="images">
           <upload-image v-model="postForm.images" :image-list="image_list" ></upload-image>
         </el-form-item>
+        <el-form-item label-width="120px" label="推荐:" prop="information_recommend">
+          <el-radio v-model="postForm.information_recommend" :label="10">是</el-radio>
+          <el-radio v-model="postForm.information_recommend" :label="20">否</el-radio>
+        </el-form-item>
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
@@ -52,6 +56,7 @@ const defaultForm = {
   information_id: undefined,
   title: '',
   desc: '',
+  information_recommend: 20,
   content: '',
   images:[],
 };

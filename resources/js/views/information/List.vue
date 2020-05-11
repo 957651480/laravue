@@ -41,8 +41,12 @@
             ></el-image>
         </template>
       </el-table-column>
-
-      <el-table-column width="180px" align="center" label="发布城市">
+      <el-table-column align="center" min-width="80px" label="推荐资讯">
+        <template slot-scope="scope">
+          <span>{{scope.row.information_recommend===10?'是':'否' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="180px" align="center" label="所属城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>
         </template>

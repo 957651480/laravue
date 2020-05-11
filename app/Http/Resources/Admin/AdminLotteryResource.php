@@ -30,6 +30,8 @@ class AdminLotteryResource extends JsonResource
             'images' => $this->images->fileIds(),
             'image_list' => $this->images,
             'content'=>(string)$this->content,
+            'status_id'=>(integer)$this->status_id,
+            'status_name' => (string)$this->statusName(),
             'sort' => (integer)$this->sort,
             'created_at'=>(string)optional($this->created_at)->toDateTimeString(),
             'updated_at'=>(string)optional($this->updated_at)->toDateTimeString(),

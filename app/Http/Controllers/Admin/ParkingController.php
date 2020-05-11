@@ -29,9 +29,31 @@ class ParkingController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->service->newQuery();
-        $paginate = $query->latest()->with(['city','house','author'])
-            ->paginate($request->get('limit'));
+        $form = $request->all();
+        $limit = Arr::getInt($form,'limit',15);
+
+        $query = $this->service->newQuery()->orderByDesc('sort')->latest();
+        $code = Arr::getStringTrimAddSlashes($form,'code');
+
+        $type_id = Arr::getInt($form,'type_id');
+        $size_id = Arr::getInt($form,'size_id');
+
+        $city_id = Arr::getInt($form,'city_id');
+        if($user_city_id = getUserCityId()){
+            $city_id = $user_city_id;
+        }
+        if($scopes =array_filter([
+            'cityId'=>$city_id,
+            'likeCode'=>$code,
+            'typeId'=>$type_id,
+            'sizeId'=>$size_id,
+        ])){
+            foreach (($scopes) as $scope => $value) {
+                $query->$scope($value);
+            }
+        }
+        $paginate = $query->with(['city','house','author'])
+            ->paginate($limit);
         $data =[
             'total'=>$paginate->total(),
             'list'=>AdminParkingResource::collection($paginate)
@@ -85,6 +107,7 @@ class ParkingController extends Controller
             'size_id'=>'required',
             'parking_area_id'=>'required',
             'parking_floor_id'=>'required',
+            'sort'=>'sometimes',
         ];
         $validator = \Validator::make($form,$rules,
             [

@@ -26,7 +26,7 @@
       <el-table-column align="center" label="操作" width="350">
         <template slot-scope="scope">
 
-          <el-button type="danger" size="small" class="el-icon-check" @click="handleChoose(scope.row)">
+          <el-button type="success" size="small" class="el-icon-check" @click="handleChoose(scope.row)">
             选择
           </el-button>
         </template>

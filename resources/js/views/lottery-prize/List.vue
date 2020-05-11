@@ -61,7 +61,7 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column align="center" width="180px"  label="发布城市">
+      <el-table-column align="center" width="180px"  label="所属城市">
         <template slot-scope="scope">
           <span>{{ scope.row.city_name }}</span>
         </template>

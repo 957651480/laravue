@@ -112,6 +112,8 @@ class LotteryController extends Controller
             'images'=>'required',
             'start_time'=>'required',
             'end_time'=>'required',
+            'status_id'=>'required',
+            'lottery_recommend'=>'sometimes',
             'sort'=>'sometimes',
         ];
         $validator = \Validator::make($from,$rules,
@@ -122,6 +124,7 @@ class LotteryController extends Controller
                 'images.required'=>'图片必传',
                 'start_time.required'=>'开始时间必传',
                 'end_time.required'=>'结束时间必传',
+                'status_id.required'=>'状态必传',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());

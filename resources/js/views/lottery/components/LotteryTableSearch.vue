@@ -39,56 +39,56 @@
 </template>
 
 <script>
-    import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-    import waves from '@/directive/waves';
+import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
+import waves from '@/directive/waves';
 
-    import { fetchList,deleteLottery } from '@/api/lottery';
+import { fetchList,deleteLottery } from '@/api/lottery';
 
 
-    export default {
-        name: 'LotteryTableSearch',
-        props: ['value'],
-        components: { Pagination },
-        directives: { waves },
-        data() {
-            return {
-                list: null,
-                total: 0,
-                loading: false,
-                query: {
-                    page: 1,
-                    limit: 15,
-                    keyword: '',
-                    category_id:''
-                },
-                categories:[],
-            };
+export default {
+    name: 'LotteryTableSearch',
+    props: ['value'],
+    components: { Pagination },
+    directives: { waves },
+    data() {
+        return {
+            list: null,
+            total: 0,
+            loading: false,
+            query: {
+                page: 1,
+                limit: 15,
+                keyword: '',
+                category_id:''
+            },
+            categories:[],
+        };
+    },
+    mounted() {
+        this.getList();
+    },
+    methods: {
+        async getList() {
+            const { limit, page } = this.query;
+            this.loading = true;
+            const { data } = await fetchList(this.query);
+            this.list = data.list;
+            this.list.forEach((element, index) => {
+                element['index'] = (page - 1) * limit + index + 1;
+            });
+            this.total=data.total;
+            this.loading = false;
         },
-        mounted() {
+        handleFilter() {
+            this.query.page = 1;
             this.getList();
         },
-        methods: {
-            async getList() {
-                const { limit, page } = this.query;
-                this.loading = true;
-                const { data } = await fetchList(this.query);
-                this.list = data.list;
-                this.list.forEach((element, index) => {
-                    element['index'] = (page - 1) * limit + index + 1;
-                });
-                this.total=data.total;
-                this.loading = false;
-            },
-            handleFilter() {
-                this.query.page = 1;
-                this.getList();
-            },
-            handleChoose(item){
-                this.$emit('input',item.lottery_id);
-                this.$emit('updateLottery',item);
-            },
+        handleChoose(item){
+            this.$emit('input',item.lottery_id);
+            this.$emit('updateLottery',item);
         },
-    };
+    },
+};
 </script>
 
 <style scoped>

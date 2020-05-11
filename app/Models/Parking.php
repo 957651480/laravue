@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filter\ParkingFilter;
 use App\Traits\AuthorTrait;
 use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -36,10 +37,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Parking extends EloquentModel
 {
     //
-    use SoftDeletes,CityTrait,AuthorTrait;
+    use SoftDeletes,CityTrait,AuthorTrait,ParkingFilter;
     protected $guarded = [];
     protected $table='parking';
     protected $primaryKey='parking_id';
+
 
 
     public function house()
@@ -55,5 +57,23 @@ class Parking extends EloquentModel
     public function parking_floor()
     {
         return $this->belongsTo(ParkingFloor::class,'parking_floor_id');
+    }
+
+    public function type_name()
+    {
+        $types =[
+          10=>'认筹',
+          20=>'竞拍',
+        ];
+        return $types[$this->type_id]??'';
+    }
+
+    public function size_name()
+    {
+        $types =[
+            10=>'小车位',
+            20=>'大车位',
+        ];
+        return $types[$this->size_id]??'';
     }
 }

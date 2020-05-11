@@ -13,6 +13,7 @@
             placeholder="请输入标题"
           />
         </el-form-item>
+
         <el-form-item style="margin-bottom: 40px;" label-width="120px" label="简介:" prop="desc">
           <el-input
             v-model="postForm.desc"
@@ -21,6 +22,41 @@
             class="article-textarea"
             autosize
             placeholder="请输入简介"
+          />
+        </el-form-item>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item style="margin-bottom: 40px;" label-width="120px" label="车位编号:" prop="parking_code">
+              <el-input
+                v-model="postForm.parking_code"
+                :rows="1"
+                autosize
+                :disabled="true"
+                placeholder="请选择车位编号"
+                style="width: 217px"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="1" style="margin-left: 10px">
+            <el-button @click="chooseParking">选择车位</el-button>
+          </el-col>
+          <el-col :span="1">
+            <el-input type="hidden" v-model="postForm.parking_id" ></el-input>
+          </el-col>
+          <!--<el-col :span="6">
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位编号:" prop="code">
+              <el-input
+                v-model="postForm.code"
+                placeholder="请输入车位编号" style="width: 217px"
+              />
+            </el-form-item>
+          </el-col>-->
+        </el-row>
+        <el-form-item style="margin-bottom: 40px;" label-width="120px" label="起拍价:" prop="start_price">
+          <el-input-number
+            v-model="postForm.start_price"
+            placeholder="请输入起拍价"
+            style="width: 217px"
           />
         </el-form-item>
         <el-row>
@@ -48,9 +84,34 @@
         <el-form-item label="图片:" prop="images" label-width="120px">
           <upload-image v-model="postForm.images" :image-list="image_list" ></upload-image>
         </el-form-item>
-        <el-form-item label="排序:" label-width="120px">
-          <el-input-number v-model="postForm.sort"  ></el-input-number> <span> 值越大越靠前</span>
-        </el-form-item>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label="排序:" label-width="120px">
+              <el-input-number v-model="postForm.sort"  ></el-input-number> <span> 值越大越靠前</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label-width="120px" label="推荐:" prop="auction_recommend">
+              <el-radio v-model="postForm.auction_recommend" :label="10">是</el-radio>
+              <el-radio v-model="postForm.auction_recommend" :label="20">否</el-radio>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label-width="120px" label="状态:" prop="status_id">
+              <el-select v-model="postForm.status_id" placeholder="请选择竞拍状态">
+                <el-option
+                  v-for="item in all_status"
+                  :key="item.status_id"
+                  :label="item.name"
+                  :value="item.status_id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item prop="content" style="margin-bottom: 30px;" label="详情:">
           <Tinymce ref="editor" v-model="postForm.content" :height="400" />
         </el-form-item>
@@ -65,6 +126,9 @@
         </el-button>
       </div>
     </el-form>
+    <el-dialog :visible.sync="showParkingDialog" title="选择竞拍车位">
+      <parking-table-search v-model="postForm.parking_id" @updateParking="updateParking" ></parking-table-search>
+    </el-dialog>
   </div>
 </template>
 
@@ -73,6 +137,7 @@ import Tinymce from '@/components/Tinymce';
 import {fetchAuction, createAuction, updateAuction} from '@/api/auction';
 import UploadImage from "@/components/Upload/UploadImage";
 import {arrayColumn} from "@/utils";
+import ParkingTableSearch from "@/views/parking/components/ParkingTableSearch";
 const defaultForm = {
   auction_id: undefined,
   title: '',
@@ -82,11 +147,17 @@ const defaultForm = {
   content: '',
   images:[],
   sort:0,
+  parking_id:null,
+  parking_code:'',
+  start_price:1000,
+  auction_recommend:20,
+  status_id:10,
 };
 
 export default {
   name: 'AuctionDetail',
   components: {
+    ParkingTableSearch,
     UploadImage,
     Tinymce,
   },
@@ -107,9 +178,14 @@ export default {
         end_time: [{ required: true, message: '结束时间必须', trigger: 'blur' }],
         images: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         content: [{ required: true, message: '请填写详情', trigger: 'blur' }],
+        parking_code: [{ required: true, message: '车位编码必选', trigger: 'blur' }],
+        start_price: [{ required: true, message: '起拍价必填', trigger: 'blur' }],
+        status_id: [{ required: true, message: '状态必填', trigger: 'blur' }],
       },
       tempRoute: {},
       image_list:[],
+      showParkingDialog:false,
+      all_status:[{status_id:10,name:'未开始'},{status_id:20,name:'进行中'},{status_id:30,name:'已结束'}],
     };
   },
   computed: {
@@ -134,13 +210,8 @@ export default {
       fetchAuction(id)
         .then(response => {
 
-          let data = response.data;
-          this.postForm.auction_id=data.auction_id;
-          this.postForm.title=data.title;
-          this.postForm.desc=data.desc;
-          this.postForm.images=data.images;
-          this.postForm.content = data.content;
-          this.image_list=data.image_list;
+          this.postForm = response.data;
+          this.image_list=response.data.image_list;
           // Set tagsview title
           this.setTagsViewTitle();
         })
@@ -199,6 +270,14 @@ export default {
         this.loading = false;
       });
     },
+
+    chooseParking(){
+      this.showParkingDialog=true;
+    },
+    updateParking(item){
+      this.postForm.parking_code=item.code;
+      this.showParkingDialog=false;
+    }
   },
 };
 </script>

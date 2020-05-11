@@ -179,7 +179,7 @@ export default {
               duration: 5 * 1000,
             });
             this.$router.push({
-              path: '/lottery_prize',
+              path: '/lottery/prize/list',
             });
           }).catch(() => {
           })
@@ -192,7 +192,7 @@ export default {
               duration: 5 * 1000,
             });
             this.$router.push({
-              path: '/lottery_prize',
+              path: '/lottery/prize/list',
             });
           }).catch((error) => {
               debugger
