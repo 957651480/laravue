@@ -22,6 +22,7 @@ class CreateParkingTable extends Migration
             $table->tinyInteger('parking_area_id')->default(0)->comment('车位区域id');
             $table->tinyInteger('parking_floor_id')->default(0)->comment('车位楼层id');
             $table->decimal('price')->default(0.00)->comment('价格');
+            $table->decimal('handsel')->default(0.00)->comment('定金');
             $table->integer('house_id')->default(0)->comment('关联楼盘id');
             $table->integer('city_id')->default(0)->comment('城市id');
             $table->integer('author_id')->default(0)->comment('作者id');

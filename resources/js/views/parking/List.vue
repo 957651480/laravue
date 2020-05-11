@@ -43,7 +43,11 @@
             <span>{{ row.price }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column min-width="100px" label="定金">
+        <template slot-scope="{row}">
+          <span>{{ row.handsel }}</span>
+        </template>
+      </el-table-column>
       <el-table-column min-width="100px" label="区域">
         <template slot-scope="{row}">
           <span>{{ row.parking_area_name }}</span>

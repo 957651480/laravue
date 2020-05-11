@@ -7,7 +7,7 @@
       <p>经度：{{point ? point[0] : '-'}}</p>
       <p>纬度：{{point ? point[1] : '-'}}</p>
       <p>地址：{{address}}</p>
-      <button size="mini" class="btnmap" @click="commit">确定</button>
+      <el-button type="primary"  @click="commit">确定</el-button>
     </div>
   </div>
 
@@ -74,10 +74,25 @@
                             // 存下坐标与地址
                             this.point = points
                             this.getAddress(points)
-                        } else {
-                            console.log('定位失败', result)
                         }
-                    })
+                    });
+                    if(this.point[0]===null)
+                    {
+                      //定位城市
+                      map.addControl(geolocation);
+                      geolocation.getCityInfo((status,result)=>{
+
+                        if (status === 'complete') {
+                          let points = [result.center[0], result.center[1]]
+                          map.setCenter(points) // 设置中心点
+                          this.addMark(map, points) // 添加标记
+
+                          // 存下坐标与地址
+                          this.point = points
+                          this.getAddress(points)
+                        }
+                      });
+                    }
                 }
             },
 

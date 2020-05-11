@@ -21,8 +21,7 @@ class AdminParkingResource extends JsonResource
         return [
             'parking_id'=>(integer)$this->parking_id,
             'code'=>(string)$this->code,
-            'desc'=>(string)$this->desc,
-            'content' => (string)$this->content,
+            'handsel'=>(float)$this->handsel,
             'type_id' => (integer)$this->type_id,
             'size_id' => (integer)$this->size_id,
             'price'=>(float)$this->price,

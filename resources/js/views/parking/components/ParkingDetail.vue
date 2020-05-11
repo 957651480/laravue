@@ -16,28 +16,17 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="6" style="margin-left: 20px">
+          <el-col :span="1" style="margin-left: 10px">
             <el-button @click="chooseHouse">选择楼盘</el-button>
           </el-col>
-          <el-col :span="1" style="margin-left: 20px">
+          <el-col :span="1">
             <el-input type="hidden" v-model="postForm.house_id" ></el-input>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8" >
+          <el-col :span="6">
             <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位编号:" prop="code">
               <el-input
                 v-model="postForm.code"
                 placeholder="请输入车位编号" style="width: 217px"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6" >
-            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位价格:" prop="price">
-              <el-input-number
-                :min="1"
-                v-model="postForm.price"
-                placeholder="请输入车位价格"
               />
             </el-form-item>
           </el-col>
@@ -58,7 +47,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
         <el-row>
           <el-col :span="8">
             <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位区域:" prop="parking_area_id">
@@ -81,6 +69,27 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="8" >
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位价格:" prop="price">
+              <el-input-number
+                :min="1"
+                v-model="postForm.price"
+                placeholder="请输入车位价格"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" >
+            <el-form-item style="margin-bottom: 40px;" label-width="150px" label="车位定金:" prop="handsel">
+              <el-input-number
+                :min="1"
+                v-model="postForm.handsel"
+                placeholder="请输入车位价格"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
 
         <el-button
           v-loading="loading"
@@ -118,6 +127,7 @@ const defaultForm = {
   parking_area_id:null,
   parking_floor_id:null,
   house_name:'',
+  handsel:'',
 };
 
 export default {
@@ -143,9 +153,9 @@ export default {
         price: [{ required: true, message: '请填写车位价格', trigger: 'blur' }],
         type_id: [{ required: true, message: '请填写车位类型', trigger: 'blur' }],
         size_id: [{ required: true, message: '请填写车位尺寸', trigger: 'blur' }],
-          parking_area_id: [{ required: true, message: '请填写车位区域', trigger: 'blur' }],
-          parking_floor_id: [{ required: true, message: '请填写车位楼层', trigger: 'blur' }],
-        desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
+        parking_area_id: [{ required: true, message: '请填写车位区域', trigger: 'blur' }],
+        parking_floor_id: [{ required: true, message: '请填写车位楼层', trigger: 'blur' }],
+        handsel: [{ required: true, message: '车位定金必须', trigger: 'blur' }],
       },
       tempRoute: {},
       image_list:[],

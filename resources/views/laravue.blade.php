@@ -33,6 +33,6 @@
     <script src="{{ mix('js/vendor.js') }}"></script>
     <script src="{{ mix('js/manifest.js') }}"></script>
     <script src="{{ mix('js/app.js') }}"></script>
-    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.4&key=d0211c4b27a431b9c5f9e065e071453a"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=d0211c4b27a431b9c5f9e065e071453a"></script>
 </body>
 </html>
