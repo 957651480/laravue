@@ -30,10 +30,25 @@ class BannerController extends Controller
     public function index(Request $request)
     {
         //
-        $query = $this->banners->newQuery();
-        $paginate = $query->with(['image','city','author'])->latest()
-            ->orderBy('sort','desc')
-            ->paginate($request->get('limit'));
+        $form = $request->all();
+        $limit = Arr::getInt($form,'limit',15);
+
+        $title = Arr::getStringTrimAddSlashes($form,'title');
+        $city_id = Arr::getInt($form,'city_id');
+        if($user_city_id = getUserCityId()){
+            $city_id = $user_city_id;
+        }
+
+        $query = $this->banners->with(['image','city','author'])->newQuery();
+        if($scopes =array_filter([
+            'cityId'=>$city_id,
+            'likeTitle'=>$title
+        ])){
+            foreach (($scopes) as $scope => $value) {
+                $query->$scope($value);
+            }
+        }
+        $paginate = $query->orderByDesc('sort')->latest()->paginate($limit);
         $data =[
             'total'=>$paginate->total(),
             'list'=>AdminBannerResource::collection($paginate)

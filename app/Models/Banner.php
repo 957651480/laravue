@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filter\BannerFilter;
 use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -45,7 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Banner extends EloquentModel
 {
     //
-    use SoftDeletes,CityTrait;
+    use SoftDeletes,CityTrait,BannerFilter;
     protected $guarded = [];
     protected $table='banner';
     protected $primaryKey='banner_id';

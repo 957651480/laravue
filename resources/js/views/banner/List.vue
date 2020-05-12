@@ -1,14 +1,19 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+    <el-form :inline="true" >
+      <el-form-item label="轮播标题:">
+        <el-input v-model="query.title" placeholder="请输入轮播标题" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-form-item>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         {{ $t('table.add') }}
       </el-button>
-    </div>
+      <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+        {{ $t('table.export') }}
+      </el-button>-->
+    </el-form>
 
     <el-table v-loading="tableLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
@@ -72,7 +77,7 @@
     <el-dialog v-model="isEdit" title="增加/编辑轮播图" :visible.sync="dialogFormVisible">
       <div v-loading="BannerCreating" class="form-container">
         <el-form ref="userForm" :rules="rules" :model="newBanner" label-position="left" label-width="150px" style="max-width: 500px;">
-          <el-form-item label="名称:" prop="title">
+          <el-form-item label="标题:" prop="title">
             <el-input v-model="newBanner.title" />
           </el-form-item>
           <el-form-item label="图片:" prop="images">
@@ -132,7 +137,7 @@ export default {
       query: {
         page: 1,
         limit: 15,
-        keyword: '',
+        title: '',
       },
       newBanner: {},
       dialogFormVisible: false,

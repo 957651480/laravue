@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Filter\InformationFilter;
 use App\Traits\AuthorTrait;
 use App\Traits\CityTrait;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -41,7 +42,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Information extends EloquentModel
 {
-    use SoftDeletes,CityTrait,AuthorTrait;
+    use SoftDeletes,CityTrait,AuthorTrait,InformationFilter;
     //
     protected $guarded = [];
     protected $table='information';
