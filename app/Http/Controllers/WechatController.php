@@ -8,10 +8,12 @@ use App\Events\OrderPayed;
 use App\Exceptions\ApiException;
 use App\Http\Resources\Api\ApiUserResource;
 use App\Models\User;
+use App\Service\OrderPayService;
 use Arr;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class WechatController extends Controller
 {
@@ -61,6 +63,12 @@ class WechatController extends Controller
         return $response; // Laravel 里请使用：return $response;
     }
 
+    public function order()
+    {
+
+        $result = OrderPayService::createPayOrder(Str::random(16),1.01,'oGimR4ifs1vzQhyzI4XTCvmSBf0E');
+        return $this->renderSuccess('',$result);
+    }
     protected function validateLogin($form)
     {
         $rules=[

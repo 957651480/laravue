@@ -15,6 +15,7 @@
 
 Route::post('wechat/login', 'WechatController@login');
 Route::any('wechat/notify', 'WechatController@notify');
+Route::any('wechat/order', 'WechatController@order');
 //后台路由
 Route::prefix('admin/')->namespace('Admin')->group(function ()
 {

@@ -7,6 +7,9 @@ use App\Models\Order;
 use App\Models\House;
 use App\Exceptions\ApiException;
 use App\Http\Resources\Api\ApiOrderResource;
+use App\Models\Parking;
+use App\Service\OrderPayService;
+use App\Service\OrderService;
 use Arr;
 use DB;
 use Illuminate\Http\Request;
@@ -16,22 +19,22 @@ class OrderController extends Controller
     /**
      * @var Order
      */
-    protected $attends;
+    protected $orders;
 
     /**
      * AttendController constructor.
-     * @param Order $attends
+     * @param Order $orders
      */
-    public function __construct(Order $attends)
+    public function __construct(Order $orders)
     {
-        $this->attends = $attends;
+        $this->orders = $orders;
     }
 
 
     public function index(Request $request)
     {
         //
-        $query = $this->attends->with(['course','user'])->newQuery();
+        $query = $this->orders->with(['course','user'])->newQuery();
         if($keyword = $request->get('keyword')){
             $query->where('title','like',"%{$keyword}%");
         }
@@ -52,7 +55,11 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         //
-
+        $form = $request->all();
+        $data = $this->validateOrder($form);
+        $parking = OrderService::getParking($data['parking_id'],['house']);
+        OrderService::createOrder();
+        $out_trade_no = $this->orders->uniqueOutTradeNo();
     }
 
     /**
@@ -87,69 +94,18 @@ class OrderController extends Controller
         return $this->renderSuccess();
     }
 
-    public function join(Request $request,$id)
-    {
+    protected function validateOrder($from){
 
-        $post = $request->all();
         $rules=[
-            'student_name'=>'required',
-            'grade'=>'required',
-            'class'=>'required',
-            'time_id'=>'required',
+            'parking_id'=>'required',
         ];
-        $validator = \Validator::make($post,$rules,[
-            'student_name.required'=>'学生姓名必填',
-            'grade.required'=>'年级必填',
-            'class.required'=>'班级必填',
-            'time_id.required'=>'请选择时间段',
-        ]);
-        if($validator->fails()){
-            return $this->renderError($validator->messages()->first());
-        }
-        $data = Arr::only($post,array_keys($rules));
-        $user_id = $request->user()->id;
-        $attendWheres = DB::transaction(function () use($id,$data,$user_id){
-
-            //判断课程人数是否已经满了
-            $courseWheres =[
-                ['course_id','=',$id],
-                ['attend_number','<','number'],
-            ];
-            $course = House::where($courseWheres)->sharedLock()->first();
-            throw_unless($course,ApiException::class,'该课程报名人数已满');
-
-
-            //判断自己是否有报过该课程
-            $attendWheres =[
-                ['course_id','=',$id],
-                ['user_id','=',$user_id],
-            ];
-            $attend = $this->attends->where($attendWheres)->sharedLock()->first();
-            throw_if($attend,ApiException::class,'你已经报名了该课程');
-            //报名
-            $data = array_merge($data,[
-                'course_id'=>$id,
-                'user_id'=>$user_id
-            ]);
-            $this->attends->create($data);
-            $course->increment('attend_number');
-            return $attendWheres;
-        }, 2);
-        $attend = $this->attends->with('course')->where($attendWheres)->first();
-        $course = $attend->course;
-        $times = Arr::only($course->times,$attend->time_id);
-        $date = date_create($course->date);
-        $date = date_format($date, 'm-d');
-        $data =[
-
-            'grade'=>$attend->grade,
-            'class'=>$attend->class,
-            'student_name'=>$attend->student_name,
-            'course_title'=>$attend->course->title,
-            'course_date'=>$date,
-            'course_times'=>$times,
-            'course_address'=>$attend->course->address,
-        ];
-        return $this->renderSuccess('报名成功',$data);
+        $validator = \Validator::make($from,$rules,
+            [
+                'parking_id.required'=>'车位必选',
+            ]
+        );
+        throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
+        $data = $validator->validated();
+        return $data;
     }
 }
