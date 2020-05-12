@@ -1,27 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Models\Attend;
+use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\House;
 use App\Exceptions\ApiException;
-use App\Http\Resources\AttendCollection;
+use App\Http\Resources\Api\ApiOrderResource;
 use Arr;
 use DB;
 use Illuminate\Http\Request;
 
-class AttendController extends Controller
+class OrderController extends Controller
 {
     /**
-     * @var Attend
+     * @var Order
      */
     protected $attends;
 
     /**
      * AttendController constructor.
-     * @param Attend $attends
+     * @param Order $attends
      */
-    public function __construct(Attend $attends)
+    public function __construct(Order $attends)
     {
         $this->attends = $attends;
     }
@@ -37,7 +38,7 @@ class AttendController extends Controller
         $paginate = $query->latest()->paginate($request->get('limit'));
         $data =[
             'total'=>$paginate->total(),
-            'list'=>new AttendCollection($paginate)
+            'list'=>ApiOrderResource::collection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }

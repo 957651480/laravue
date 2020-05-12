@@ -94,11 +94,16 @@ return [
      */
      'mini_program' => [
          'default' => [
-             'app_id'  => env('WECHAT_MINI_PROGRAM_APPID', 'wx03837cfa1f460081'),
-             'secret'  => env('WECHAT_MINI_PROGRAM_SECRET', 'b677160fc4886bf46a223e0486dbc958'),
+             'app_id'  => env('WECHAT_MINI_PROGRAM_APPID', 'wxe02410441ea47ba5'),
+             'secret'  => env('WECHAT_MINI_PROGRAM_SECRET', 'd730d25795ccf699d3876d7fd4f9fc85'),
              'token'   => env('WECHAT_MINI_PROGRAM_TOKEN', ''),
              'aes_key' => env('WECHAT_MINI_PROGRAM_AES_KEY', ''),
          ],
+         'guzzle' => [ // 配置
+             'verify' => false,
+             'timeout' => 4.0,
+         ],
+
      ],
 
     /*
@@ -128,4 +133,5 @@ return [
     //          //...
     //      ],
     // ],
+
 ];

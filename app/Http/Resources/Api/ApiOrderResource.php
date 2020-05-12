@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Api;
 
 use Arr;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Attend extends JsonResource
+class ApiOrderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

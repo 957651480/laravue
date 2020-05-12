@@ -13,7 +13,8 @@
 */
 
 
-Route::post('auth/wxlogin', 'AuthController@wxLogin');
+Route::post('wechat/login', 'WechatController@login');
+Route::any('wechat/notify', 'WechatController@notify');
 //后台路由
 Route::prefix('admin/')->namespace('Admin')->group(function ()
 {
