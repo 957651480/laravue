@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\AdminRegionResource;
 use App\Http\Resources\Admin\AdminRegionResourceCollection;
@@ -29,13 +30,19 @@ class RegionController extends Controller
     public function index(Request $request)
     {
         //
-        $limit = (integer)$request->get('limit',15);
+        $form = $request->all();
+        $limit = Arr::getInt($form,'limit',15);
+
+
         $query = $this->service->newQuery();
-        $query->when($request->has('parent_id'),function ($query)use($request){
+        if($request->has('parent_id')){
             $query->whereParentId($request->get('parent_id'));
-        });
+        }
+        if($name = Arr::getStringTrimAddSlashes($form,'name')){
+            $query->likeName($name);
+        }
         if($level = $request->get('level')){
-            $query->where('level',$level);
+            $query->level($level);
         }
         $paginator = $query->paginate($limit);
         $data =[
@@ -48,7 +55,8 @@ class RegionController extends Controller
     public function store(Request $request)
     {
         //
-        $data = $this->validateRegion($request);
+        $form = $request->all();
+        $data = $this->validateRegion($form);
         $this->service->create($data);
         return $this->renderSuccess();
     }
@@ -65,8 +73,9 @@ class RegionController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $form = $request->all();
         $region = $this->service->getModelByIdOrFail($id);
-        $data = $this->validateRegion($request);
+        $data = $this->validateRegion($form);
         $region->update($data);
         return $this->renderSuccess();
     }
@@ -80,15 +89,23 @@ class RegionController extends Controller
         return $this->renderSuccess();
     }
 
-    protected function validateRegion(Request $request)
+    protected function validateRegion($form)
     {
-        return $this->validate($request,[
+        $validator = \Validator::make($form,[
             'name'=>'required',
             'parent_id'=>'sometimes',
             'level'=>'sometimes',
             'pinyin'=>'sometimes',
-        ]
-        );
+            'short_name'=>'sometimes',
+            'merger_name'=>'sometimes',
+            'code'=>'sometimes',
+            'zip_code'=>'sometimes',
+            'first'=>'sometimes',
+        ],[
+            'name.required'=>'名称必须'
+        ]);
+        throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
+        return $validator->validated();
     }
 
     public function treeList(Request $request)

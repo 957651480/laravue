@@ -1,13 +1,21 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="query.keyword" placeholder="请输入关键词" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+    <el-form :inline="true" >
+      <el-form-item label="地区名称:">
+        <el-input v-model="query.name" placeholder="请输入地区名称" clearable style="width: 200px;" @change="handleFilter" class="filter-item" @keyup.enter.native="handleFilter" />
+      </el-form-item>
+      <el-form-item label="省市区:">
+        <el-select v-model="query.level" placeholder="省市区筛选" clearable style="width: 90px" class="filter-item" @change="handleFilter">
+          <el-option v-for="item in levels" :key="item.level" :label="item.name" :value="item.level" />
+        </el-select>
+      </el-form-item>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">添加省</el-button>
-    </div>
-
+      <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+        {{ $t('table.export') }}
+      </el-button>-->
+    </el-form>
     <el-table v-loading="loading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -81,13 +89,20 @@
           <el-form-item label="拼音码:" prop="pinyin">
             <el-input v-model="newRegion.pinyin" />
           </el-form-item>
-          <el-form-item label="状态:" prop="show">
-            <el-radio v-model="newRegion.show" :label="10">显示</el-radio>
-            <el-radio v-model="newRegion.show" :label="20">隐藏</el-radio>
+          <el-form-item label="短名称:" prop="short_name">
+            <el-input v-model="newRegion.short_name" />
           </el-form-item>
-          <el-form-item label="排序:" prop="sort">
-            <el-input-number v-model="newRegion.sort"></el-input-number>
-            <span>排序越大越靠前</span>
+          <el-form-item label="全称:" prop="merger_name">
+            <el-input v-model="newRegion.merger_name" />
+          </el-form-item>
+          <el-form-item label="长途区号:">
+            <el-input v-model="newRegion.code" />
+          </el-form-item>
+          <el-form-item label="邮编:" >
+            <el-input v-model="newRegion.zip_code" />
+          </el-form-item>
+          <el-form-item label="首字母:" >
+            <el-input v-model="newRegion.first" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -124,7 +139,7 @@ export default {
       query: {
         page: 1,
         limit: 10,
-        keyword: '',
+        name: '',
       },
       newRegion: {},
       dialogFormVisible: false,
@@ -132,6 +147,7 @@ export default {
         name: [{ required: true, message: '名称必须', trigger: 'blur' }],
       },
       isEdit: false,
+      levels:[{level:1,name:'省'},{level:2,name:'市'},{level:3,name:'区'}]
     };
   },
   computed: {
