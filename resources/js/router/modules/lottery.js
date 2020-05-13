@@ -49,6 +49,12 @@ const lotteryRoutes = {
       name: 'LotteryPrizeList',
       meta: { title: '奖项列表', icon: 'list',noCache: true },
     },
+    {
+      path: '/lottery/record/list',
+      component: () => import('@/views/lottery-prize/List'),
+      name: 'LotteryPrizeList',
+      meta: { title: '中奖记录', icon: 'list',noCache: true },
+    },
   ],
 };
 
