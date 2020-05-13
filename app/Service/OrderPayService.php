@@ -44,7 +44,7 @@ class OrderPayService
         // 如果成功生成统一下单的订单，那么进行二次签名
         $params = [
             'appId'     => $config['app_id'],
-            'timeStamp' => time(),
+            'timeStamp' => (string)time(),
             'nonceStr'  => $result['nonce_str'],
             'package'   => 'prepay_id=' . $result['prepay_id'],
             'signType'  => 'MD5',

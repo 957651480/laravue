@@ -48,7 +48,8 @@ class WechatController extends Controller
 
     public function notify(Request $request)
     {
-        $response = app()->handlePaidNotify(function ($message, $fail) use($request){
+        $payment = \EasyWeChat::payment();
+        $response = $payment->handlePaidNotify(function ($message, $fail) use($request){
             // 你的逻辑
             try {
                 event(new OrderPayed($message));
@@ -65,8 +66,7 @@ class WechatController extends Controller
 
     public function order()
     {
-
-        $result = OrderPayService::createPayOrder(Str::random(16),1.01,'oGimR4ifs1vzQhyzI4XTCvmSBf0E');
+        $result = OrderPayService::createPayOrder(Str::random(32),1.01,'oGimR4ifs1vzQhyzI4XTCvmSBf0E');
         return $this->renderSuccess('',$result);
     }
     protected function validateLogin($form)
