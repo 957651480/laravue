@@ -30,12 +30,25 @@ class InformationController extends Controller
     public function index(Request $request)
     {
         //
+        $form = $request->all();
+        $limit = Arr::getInt($form,'limit',15);
+
+        $title = Arr::getStringTrimAddSlashes($form,'title');
+        $city_id = Arr::getInt($form,'city_id');
+        if($user_city_id = getUserCityId()){
+            $city_id = $user_city_id;
+        }
+
         $query = $this->service->with(['images','city','author'])->newQuery();
-        $wheres =$this->filter($request);
-        $query->when($wheres,function ($query)use($wheres){
-            $query->where($wheres);
-        });
-        $paginate = $query->latest('created_at')->paginate($request->get('limit'));
+        if($scopes =array_filter([
+            'cityId'=>$city_id,
+            'likeTitle'=>$title
+        ])){
+            foreach (($scopes) as $scope => $value) {
+                $query->$scope($value);
+            }
+        }
+        $paginate = $query->orderByDesc('sort')->latest('created_at')->paginate($limit);
 
         $data =[
             'total'=>$paginate->total(),
@@ -137,23 +150,4 @@ class InformationController extends Controller
         return [$data,$images];
     }
 
-    protected function filter(Request $request)
-    {
-        $wheres =[];
-        if($keyword = $request->get('keyword')){
-            $this->filterTitleLike($keyword);
-        }
-        if($category_id = $request->get('category_id')){
-            $wheres[]=$this->filterCategoryId($category_id);
-        }
-        return $wheres;
-    }
-    protected function filterTitleLike($title)
-    {
-        return ['title','like',"%{$title}%"];
-    }
-    protected function filterCategoryId($id)
-    {
-        return ['category_id','=',$id];
-    }
 }
