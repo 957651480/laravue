@@ -3,6 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\OrderPayed;
+use App\Models\Order;
+use App\Models\OrderParking;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -27,5 +29,15 @@ class SendOrderNotification
     public function handle(OrderPayed $event)
     {
         $message = $event->getMessage();
+        $orders = new  Order();
+        $out_trade_no = $message['out_trade_no'];
+        /**
+         * @var Order $order
+         */
+        $order = $orders->outTradeNo($out_trade_no)->first();
+
+        //设置付款成功状态
+        $order->update(['pay_status'=>20,'pay_time'=>time()]);
+        //
     }
 }

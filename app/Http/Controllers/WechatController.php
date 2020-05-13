@@ -9,6 +9,7 @@ use App\Exceptions\ApiException;
 use App\Http\Resources\Api\ApiUserResource;
 use App\Models\User;
 use App\Service\OrderPayService;
+use App\Service\OrderService;
 use Arr;
 use Auth;
 use Illuminate\Http\Request;
@@ -66,8 +67,11 @@ class WechatController extends Controller
 
     public function order()
     {
-        $result = OrderPayService::createPayOrder(Str::random(32),1.01,'oGimR4ifs1vzQhyzI4XTCvmSBf0E');
-        return $this->renderSuccess('',$result);
+        $parking = OrderService::getParking(1);
+        $house = OrderService::getParkingHouseOrFail($parking);
+        OrderService::validateHouseStatus($house);
+        $data = OrderService::createOrder($parking);
+        return $this->renderSuccess('',$data);
     }
     protected function validateLogin($form)
     {
