@@ -57,7 +57,7 @@ class HouseController extends Controller
             DB::raw('count(house_appointment.house_appointment_id) as appoint_count'),
         ])
             ->groupBy("{$hs_as}.house_id")
-            ->with(['images','parking_images','region','city','author','appointments'])
+            ->with(['images','parking_images','region','city','author','appointments','appointments.user'])
             ->paginate($limit);
 
         $data =[

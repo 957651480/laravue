@@ -59,7 +59,7 @@ class CreateHouseTable extends Migration
                 'house_parking_image_id');
         });
         Schema::create('house_appointment', function (Blueprint $table)  {
-            $table->unsignedInteger('house_appointment_id');
+            $table->integerIncrements('house_appointment_id');
             $table->string('phone')->default('')->comment('手机号');
             $table->unsignedInteger('house_id')->default(0)->comment('楼盘id');
             $table->integer('city_id')->default(0)->comment('城市id');

@@ -31,7 +31,30 @@ class ApiHouseResource extends JsonResource
          * @var Collection $appointments
          */
         $appointments = $this->appointments;
-        $user_has_appoint = 0;
+        foreach ($appointments as $index => $appointment) {
+            $appointment->user_avatar = $appointment->user->avatar;
+            $appointment->setVisible(['house_appointment_id','user_avatar','phone','user_id']);
+        }
+        $parkings = [];
+        foreach ($this->parkings as $index => $parking) {
+            if($parking->type_id==10){
+                $parkings[]=[
+                        "parking_id"=>$parking->parking_id,
+                        "code"=>$parking->code,
+                        "size_id"=>$parking->size_id,
+                        "size_name"=>$parking->size_name(),
+                        "type_id"=>$parking->type_id,
+                        "type_name"=>$parking->type_name(),
+                        "parking_area_id"=>$parking->parking_area_id,
+                        "parking_area_name"=>$parking->parking_area->name,
+                        "parking_floor_id"=>$parking->parking_floor_id,
+                        "parking_floor_name"=>$parking->parking_floor->name,
+                        "price"=>$parking->price,
+                        "handsel"=>$parking->handsel,
+                ];
+            }
+        }
+        /*$user_has_appoint = 0;
         $user = $request->user();
         if($user&&$appointments->isNotEmpty()){
             $first = $appointments->first(function ($appointment)use($user){
@@ -40,7 +63,7 @@ class ApiHouseResource extends JsonResource
             if($first){
                 $user_has_appoint=1;
             }
-        }
+        }*/
         return [
             'house_id' => (integer)$this->house_id,
             'name' => (string)$this->name,
@@ -51,8 +74,8 @@ class ApiHouseResource extends JsonResource
             'parking_count'=>(integer)$this->parking_count,
             'parking_avg'=>number_format($this->parking_avg,2),
             'appoint_count'=>(integer)$this->appoint_count,
-            'appointment'=>$appointments,
-            'user_has_appoint'=>$user_has_appoint,
+            'appointment_list'=>$appointments,
+            'parking_list'=>$parkings,
             'region_id'=>$this->region_id,
             'region_merger_name'=>(string)optional($region)->merger_name,
             'image_list' => $images->urls(),

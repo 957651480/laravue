@@ -60,7 +60,7 @@ class HouseController extends Controller
             DB::raw('count(house_appointment.house_appointment_id) as appoint_count'),
         ])
             ->groupBy("{$hs_as}.house_id")
-            ->with(['images','parking_images','region','city','author','appointments'])
+            ->with(['images','parking_images','region','city','author','appointments','parkings'])
             ->paginate($limit);
 
         $data =[
@@ -87,7 +87,7 @@ class HouseController extends Controller
     public function show(Request $request,$id)
     {
         //
-        $course = $this->service->getModelByIdOrFail($id,['images','parking_images','region','city','author']);
+        $course = $this->service->getModelByIdOrFail($id,['images','parking_images','region','city','author','parkings']);
         $course = new AdminHouseResource($course);
         return $this->renderSuccess('',$course);
     }
