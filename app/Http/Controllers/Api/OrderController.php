@@ -55,11 +55,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         //
-        $form = $request->all();
-        $data = $this->validateOrder($form);
-        $parking = OrderService::getParking($data['parking_id'],['house']);
-        OrderService::createOrder();
-        $out_trade_no = $this->orders->uniqueOutTradeNo();
     }
 
     /**

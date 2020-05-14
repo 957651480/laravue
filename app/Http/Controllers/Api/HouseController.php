@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\ApiHouseResource;
 use App\Models\House;
+use App\Service\OrderService;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -76,5 +77,25 @@ class HouseController extends Controller
         $course = new ApiHouseResource($course);
         return $this->renderSuccess('',$course);
     }
+
+
+    public function identify(Request $request)
+    {
+        if(!$parking_id = $request->get('parking_id')){
+            return $this->renderError('车位id必传');
+        }
+        $parking = OrderService::getParking(1);
+        $house = OrderService::getParkingHouseOrFail($parking);
+        OrderService::validateHouseStatus($house);
+        $user = $request->user();
+        list($order,$payment) = OrderService::createOrder($parking,$user);
+        $data=[
+            'order'=>$order,
+            'payment'=>$payment
+        ];
+        return $this->renderSuccess('',$data);
+    }
+
+
 
 }

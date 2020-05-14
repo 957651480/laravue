@@ -7,7 +7,9 @@ namespace App\Service;
 use App\Exceptions\ApiException;
 use App\Models\House;
 use App\Models\Order;
+use App\Models\OrderParking;
 use App\Models\Parking;
+use App\Models\User;
 use DB;
 use Str;
 
@@ -21,27 +23,29 @@ class OrderService
     {
     }
 
-    public static function createOrder(Parking $parking)
+    public static function createOrder(Parking $parking,User $user)
     {
+        $house = $parking->house;
         //车位类型
         $type_id = $parking->type_id;
         //获取价格
-        try {
-            DB::beginTransaction();
-            $orders = new Order();
-            $order_no = $orders->uniqueOutTradeNo();
-            $payment = OrderPayService::createPayOrder($order_no,1.01,'oGimR4ifs1vzQhyzI4XTCvmSBf0E');
-            $attributes=[
-                'user_id'=>1,
-                'order_no'=>$order_no
-            ];
-            $order = $orders->create($attributes);
 
-        }catch (\Exception $exception){
-            \Log::error('下单有误',['exception'=>$exception]);
-            return false;
-        }
-        return $payment;
+        $orders = new Order();
+        $order_no = $orders->uniqueOutTradeNo();
+        $payment = OrderPayService::createPayOrder($order_no,0.01,$user->open_id);
+        $attributes=[
+            'user_id'=>$user->id,
+            'order_source'=>$type_id,
+            'order_no'=>$order_no
+        ];
+        $order = $orders->create($attributes);
+        OrderParking::create([
+            'order_id'=>$order->order_id,
+            'house_id'=>$house->house_id,
+            'house_name'=>$house->name,
+            'city_id'=>$parking->city_id,
+        ]);
+        return [$order,$payment];
     }
 
     public static function getParking($parking_id,$with=[])

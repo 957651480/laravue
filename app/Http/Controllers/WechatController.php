@@ -33,9 +33,9 @@ class WechatController extends Controller
         //查询openId
         $openid = Arr::get($session,'openid');
         $userData = [
-            'display_name'=>$userInfo['nickName'],
+            'display_name'=>$userInfo['nickName']??'',
             'open_id'=>$openid,
-            'avatar'=>$userInfo['avatarUrl'],
+            'avatar'=>$userInfo['avatarUrl']??'',
         ];
         $user = User::firstOrCreate(['open_id'=>$openid],$userData)->refresh();
         //登录
@@ -49,10 +49,16 @@ class WechatController extends Controller
 
     public function notify(Request $request)
     {
+        $json = '{"appid":"wxe02410441ea47ba5","bank_type":"OTHERS","cash_fee":"1","fee_type":"CNY","is_subscribe":"N","mch_id":"1488033162","nonce_str":"5ebccf8514b39","openid":"oGimR4ifs1vzQhyzI4XTCvmSBf0E","out_trade_no":"202005149712280719","result_code":"SUCCESS","return_code":"SUCCESS","sign":"03CF57F3078F5633E9C8D52CF32B4981","time_end":"20200514125651","total_fee":"1","trade_type":"JSAPI","transaction_id":"4200000560202005142319139309"}';
+        $message =json_decode($json,true);
+        event(new OrderPayed($message));
         $payment = \EasyWeChat::payment();
         $response = $payment->handlePaidNotify(function ($message, $fail) use($request){
             // 你的逻辑
+            $json = '{"appid":"wxe02410441ea47ba5","bank_type":"OTHERS","cash_fee":"1","fee_type":"CNY","is_subscribe":"N","mch_id":"1488033162","nonce_str":"5ebccf8514b39","openid":"oGimR4ifs1vzQhyzI4XTCvmSBf0E","out_trade_no":"202005149712280719","result_code":"SUCCESS","return_code":"SUCCESS","sign":"03CF57F3078F5633E9C8D52CF32B4981","time_end":"20200514125651","total_fee":"1","trade_type":"JSAPI","transaction_id":"4200000560202005142319139309"}';
+            $message =json_decode($json,true);
             try {
+                \Log::error('notify_message',$message);
                 event(new OrderPayed($message));
                 return true;
             }catch (\Exception $exception)
@@ -65,14 +71,20 @@ class WechatController extends Controller
         return $response; // Laravel 里请使用：return $response;
     }
 
-    public function order()
+    public function order(Request $request)
     {
         $parking = OrderService::getParking(1);
         $house = OrderService::getParkingHouseOrFail($parking);
         OrderService::validateHouseStatus($house);
-        $data = OrderService::createOrder($parking);
+        $user = $request->user();
+        list($order,$payment) = OrderService::createOrder($parking,$user);
+        $data=[
+            'order'=>$order,
+            'payment'=>$payment
+        ];
         return $this->renderSuccess('',$data);
     }
+
     protected function validateLogin($form)
     {
         $rules=[
@@ -85,7 +97,7 @@ class WechatController extends Controller
         ]);
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
         $data = $validator->validated();
-        $data['user_info'] = json_decode($data['user_info'], true);
+        //$data['user_info'] = json_decode($data['user_info'], true);
         return [$data['code'],$data['user_info']];
     }
 }

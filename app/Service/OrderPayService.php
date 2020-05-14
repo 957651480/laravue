@@ -28,7 +28,7 @@ class OrderPayService
             'body' => $body?$body:'微信支付',
             'out_trade_no' => $out_trade_no,
             'total_fee' => $total_fee*100,
-            'notify_url' => $notify_url?$notify_url:url('api/wechat/notify',null,true), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'notify_url' => $notify_url?$notify_url:url('api/wechat/notify',null,false), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
             'openid' => $openid,
         ];

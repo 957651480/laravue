@@ -13,9 +13,9 @@
 */
 
 
-Route::post('wechat/login', 'WechatController@login');
+Route::any('wechat/login', 'WechatController@login');
 Route::any('wechat/notify', 'WechatController@notify');
-Route::any('wechat/order', 'WechatController@order');
+Route::any('wechat/order', 'WechatController@order')->middleware(['auth:api']);
 //后台路由
 Route::prefix('admin/')->namespace('Admin')->group(function ()
 {
@@ -116,11 +116,13 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
     });
 
 });
-Route::group(['middleware' => 'api','namespace'=>'Api'],function (){
+Route::group(['namespace'=>'Api'],function (){
 
-    Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'auth:api'], function () {
 
 
+        Route::any('house/parking/identify','HouseController@identify');
+        Route::any('auction/create', 'AuctionController@auction');
     });
 
     //公共路由
@@ -137,6 +139,10 @@ Route::group(['middleware' => 'api','namespace'=>'Api'],function (){
 
     Route::any('lottery/list', 'LotteryController@index');
     Route::any('lottery/detail/{id}', 'LotteryController@show');
+
+    Route::any('auction/list', 'AuctionController@index');
+
+    Route::any('auction/detail/{id}', 'AuctionController@show');
 });
 
 

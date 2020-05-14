@@ -43,6 +43,20 @@ class CreateAuctionTable extends Migration
             $table->primary(['auction_id', 'image_id'],
                 'auction_image_id');
         });
+
+        Schema::create('auction_record', function (Blueprint $table) {
+            $table->integerIncrements('auction_record_id')->comment('竞拍记录id');
+            $table->decimal('price')->default(0.00)->comment('起拍价');
+            $table->decimal('increase_price')->default(0.00)->comment('加价');
+            $table->unsignedInteger('parking_id')->default(0)->comment('车位id');
+            $table->unsignedInteger('auction_id')->default(0)->comment('竞拍id');
+            $table->unsignedInteger('user_id')->default(0)->comment('用户id');
+            $table->unsignedInteger('city_id')->default(0)->comment('城市id');
+            $table->unsignedInteger('author_id')->default(0)->comment('作者id');
+
+            $table->softDeletes();
+            $table->timestamps();
+        });
     }
 
     /**
@@ -54,5 +68,6 @@ class CreateAuctionTable extends Migration
     {
         Schema::dropIfExists('auction');
         Schema::dropIfExists('auction_image');
+        Schema::dropIfExists('auction_record');
     }
 }
