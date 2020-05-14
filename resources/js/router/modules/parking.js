@@ -9,6 +9,7 @@ const parkingRoutes = {
   meta: {
     title: '车位管理',
     icon: 'example',
+    permissions: ['view menu parking ui'],
   },
   children: [
     {

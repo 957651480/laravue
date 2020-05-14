@@ -92,6 +92,9 @@ export const constantRoutes = [
       },
     ],*/
   },
+];
+
+export const asyncRoutes = [
   houseRoutes,
   parkingRoutes,
   regionRoutes,
@@ -107,13 +110,10 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/banner/list'),
         name: 'Banner',
-        meta: { title: '首页轮播图', icon: 'list', noCache: true },
+        meta: { title: '首页轮播图', icon: 'list', noCache: true,permissions: ['view menu banner ui'] },
       },
     ],
   },
-];
-
-export const asyncRoutes = [
   adminRoutes,
   errorRoutes,
   {

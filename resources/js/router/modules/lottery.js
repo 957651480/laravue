@@ -9,6 +9,7 @@ const lotteryRoutes = {
   meta: {
     title: '转盘管理',
     icon: 'example',
+    permissions: ['view menu lottery ui'],
   },
   children: [
     {
@@ -52,7 +53,7 @@ const lotteryRoutes = {
     {
       path: '/lottery/record/list',
       component: () => import('@/views/lottery-prize/List'),
-      name: 'LotteryPrizeList',
+      name: 'LotteryRecordList',
       meta: { title: '中奖记录', icon: 'list',noCache: true },
     },
   ],

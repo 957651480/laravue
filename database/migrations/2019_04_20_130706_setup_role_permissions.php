@@ -36,7 +36,15 @@ class SetupRolePermissions extends Migration
         // Setup basic permission
         $adminRole->givePermissionTo(Permission::all());
         $managerRole->givePermissionTo(Permission::all());
-        $partnerRole->givePermissionTo(Permission::where('name','like',"%menu%")->get());
+        $partnerRole->givePermissionTo(Permission::whereIn('name',[
+            'view menu house ui',
+            'view menu parking ui',
+            'view menu region ui',
+            'view menu lottery ui',
+            'view menu auction ui',
+            'view menu information ui',
+            'view menu banner ui',
+        ])->get());
 
     }
 

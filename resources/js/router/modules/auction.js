@@ -9,6 +9,7 @@ const auctionRoutes = {
   meta: {
     title: '竞拍管理',
     icon: 'example',
+    permissions: ['view menu auction ui'],
   },
   children: [
     {

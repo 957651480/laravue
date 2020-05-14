@@ -9,6 +9,7 @@ const informationRoutes = {
   meta: {
     title: '资讯管理',
     icon: 'example',
+    permissions: ['view menu information ui'],
   },
   children: [
     {

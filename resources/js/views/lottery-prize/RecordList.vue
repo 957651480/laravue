@@ -102,7 +102,7 @@ import { fetchList,deleteLotteryPrize } from '@/api/lottery-prize';
 
 
 export default {
-  name: 'LotteryPrizeList',
+  name: 'LotteryRecordList',
   components: { Pagination },
   directives: { waves },
   data() {

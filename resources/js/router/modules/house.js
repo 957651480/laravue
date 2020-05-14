@@ -9,6 +9,7 @@ const houseRoutes = {
   meta: {
     title: '楼盘管理',
     icon: 'example',
+    permissions: ['view menu house ui'],
   },
   children: [
     {

@@ -7,7 +7,7 @@ const regionRoutes = {
   redirect: '/region/list',
   name: 'Region',
   meta: {
-    title: '分类管理',
+    title: '地区管理',
     icon: 'example',
   },
   children: [
@@ -15,7 +15,7 @@ const regionRoutes = {
       path: 'list',
       component: () => import('@/views/region/List'),
       name: 'RegionList',
-      meta: { title: '地区列表', icon: 'list' },
+      meta: { title: '地区列表', icon: 'list' ,permissions: ['view menu region ui'],},
     },
   ],
 };
