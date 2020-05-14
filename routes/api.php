@@ -116,40 +116,27 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
     });
 
 });
-Route::group(['middleware' => 'auth:api'], function () {
+Route::group(['middleware' => 'api','namespace'=>'Api'],function (){
+
+    Route::group(['middleware' => 'auth'], function () {
 
 
-    //我报名的课程
-    Route::get('courses/mine', 'CourseController@myCourseList');
-    Route::get('courses/mine/detail/{id}', 'CourseController@myCourseDetail');
+    });
 
-    //分类路由
-    Route::post('categories/create', 'CategoryController@store');
-    Route::post('categories/update/{id}', 'CategoryController@update');
-    Route::get('categories/delete/{id}', 'CategoryController@destroy');
+    //公共路由
+    Route::any('region/city','RegionController@city');
+    Route::any('house/list','HouseController@index');
+    Route::any('house/detail/{id}','HouseController@detail');
+    Route::any('information/list','InformationController@index');
+    Route::any('information/detail/{id}','InformationController@detail');
 
-    //教师路由
-    Route::apiResource('teachers', 'TeacherController');
-    //报名列表
-    Route::get('attends', 'AttendController@index');
-    //报名路由
-    Route::post('attends/join/{id}', 'AttendController@join');
-    Route::get('attends/delete/{id}', 'AttendController@destroy');
+    Route::any('banner', 'BannerController@index');
+    Route::any('banner/detail/{id}', 'BannerController@show');
 });
 
-//公共路由
-Route::namespace('Common')->group(function (){
 
-    Route::get('region/city','RegionController@city');
-    Route::get('house/list','HouseController@index');
-    Route::get('house/detail/{id}','HouseController@detail');
-});
 
-//分类路由
-Route::get('categories','CategoryController@index');
-Route::get('categories/detail/{id}','CategoryController@show');
-//banner路由
-Route::get('banners', 'BannerController@index');
-Route::get('banners/detail/{id}', 'BannerController@show');
+
+
 
 

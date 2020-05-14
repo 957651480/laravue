@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Common;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Common\CommonRegionResource;
+use App\Http\Resources\Api\ApiRegionResource;
 use App\Models\Region ;
 use Arr;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ class RegionController extends Controller
         $paginator = $query->paginate($limit);
         $data =[
             'total'=>$paginator->total(),
-            'list'=>CommonRegionResource::collection($paginator)
+            'list'=>ApiRegionResource::collection($paginator)
         ];
         return $this->renderSuccess('',$data);
     }

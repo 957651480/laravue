@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Common;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Common\CommonHouseResource;
+use App\Http\Resources\Api\ApiHouseResource;
 use App\Models\House;
 use DB;
 use Illuminate\Http\Request;
@@ -61,7 +61,7 @@ class HouseController extends Controller
 
         $data =[
             'total'=>$paginate->total(),
-            'list'=>CommonHouseResource::collection($paginate)
+            'list'=>ApiHouseResource::collection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }
@@ -73,7 +73,7 @@ class HouseController extends Controller
     {
         //
         $course = $this->service->getModelByIdOrFail($id,['images','parking_images','region','city','author']);
-        $course = new CommonHouseResource($course);
+        $course = new ApiHouseResource($course);
         return $this->renderSuccess('',$course);
     }
 

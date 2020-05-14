@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources\Common;
+namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommonRegionResource extends JsonResource
+class ApiRegionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

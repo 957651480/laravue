@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Common;
+namespace App\Http\Resources\Api;
 
 use App\Collection\FileCollection;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CommonHouseResource extends JsonResource
+class ApiHouseResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -49,7 +49,6 @@ class CommonHouseResource extends JsonResource
             'sales'=>$this->sales,
             'map'=>$this->map,
             'house_recommend'=>$this->house_recommend,
-            'house_region'=>$this->house_region,
             'parking_count'=>(integer)$this->parking_count,
             'parking_avg'=>number_format($this->parking_avg,2),
             'appoint_count'=>(integer)$this->appoint_count,
@@ -57,9 +56,7 @@ class CommonHouseResource extends JsonResource
             'user_has_appoint'=>$user_has_appoint,
             'region_id'=>$this->region_id,
             'region_merger_name'=>(string)optional($region)->merger_name,
-            'images' => $this->images->fileIds(),
             'image_list' => $images->urls(),
-            'parking_images' => $parking_images->fileIds(),
             'parking_image_list' => $parking_images->urls(),
             'city_id'=>(integer)$this->city_id,
             'city_name'=>(string)optional($city)->name,
