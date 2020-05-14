@@ -57,6 +57,8 @@ class BannerController extends Controller
     public function show($id)
     {
         //
+        $banner = $this->banners->getModelByIdOrFail($id,['image']);
+        return $this->renderSuccess('',new ApiBannerResource($banner));
     }
 
 

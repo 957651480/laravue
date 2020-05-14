@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\AdminLotteryResource;
+use App\Http\Resources\Api\ApiLotteryResource;
 use App\Models\Lottery;
 use DB;
 use Illuminate\Database\Eloquent\Collection;
@@ -37,9 +37,6 @@ class LotteryController extends Controller
 
         $title = Arr::getStringTrimAddSlashes($form,'title');
         $city_id = Arr::getInt($form,'city_id');
-        if($user_city_id = getUserCityId()){
-            $city_id = $user_city_id;
-        }
 
         $query = $this->service->with(['images','city','author'])->newQuery();
         if($scopes =array_filter([
@@ -54,11 +51,19 @@ class LotteryController extends Controller
 
         $data =[
             'total'=>$paginate->total(),
-            'list'=>AdminLotteryResource::collection($paginate)
+            'list'=>ApiLotteryResource::collection($paginate)
         ];
         return $this->renderSuccess('',$data);
     }
 
+
+    public function show(Request $request,$id)
+    {
+        //
+        $course = $this->service->getModelByIdOrFail($id,['images','city','author']);
+        $course = new ApiLotteryResource($course);
+        return $this->renderSuccess('',$course);
+    }
 
     public function draw(Request $request)
     {

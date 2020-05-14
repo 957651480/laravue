@@ -125,13 +125,18 @@ Route::group(['middleware' => 'api','namespace'=>'Api'],function (){
 
     //公共路由
     Route::any('region/city','RegionController@city');
-    Route::any('house/list','HouseController@index');
-    Route::any('house/detail/{id}','HouseController@detail');
-    Route::any('information/list','InformationController@index');
-    Route::any('information/detail/{id}','InformationController@detail');
 
-    Route::any('banner', 'BannerController@index');
+    Route::any('house/list','HouseController@index');
+    Route::any('house/detail/{id}','HouseController@show');
+
+    Route::any('information/list','InformationController@index');
+    Route::any('information/detail/{id}','InformationController@show');
+
+    Route::any('banner/list', 'BannerController@index');
     Route::any('banner/detail/{id}', 'BannerController@show');
+
+    Route::any('lottery/list', 'LotteryController@index');
+    Route::any('lottery/detail/{id}', 'LotteryController@show');
 });
 
 
