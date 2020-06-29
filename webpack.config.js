@@ -39,7 +39,7 @@ module.exports = {
       },
     ],
   },
-  optimization: {
+  /*optimization: {
     splitChunks: {
       chunks: 'all',
       cacheGroups: {
@@ -55,6 +55,6 @@ module.exports = {
         },
       },
     },
-  },
+  },*/
   plugins: plugins,
 };
