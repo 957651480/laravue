@@ -4,13 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Banner extends EloquentModel
+
+class Brand extends EloquentModel
 {
     //
     use SoftDeletes;
     protected $guarded = [];
-    protected $table='banner';
-    protected $primaryKey='id';
+    protected $table='brand';
 
     public function image()
     {

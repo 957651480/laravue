@@ -31,6 +31,12 @@ const houseRoutes = {
       name: 'HouseList',
       meta: { title: '楼盘列表', icon: 'list',noCache: true },
     },
+    {
+      path: 'brand/list',
+      component: () => import('@/views/brand/List'),
+      name: 'BrandList',
+      meta: { title: '品牌列表', icon: 'list',noCache: true },
+    },
   ],
 };
 

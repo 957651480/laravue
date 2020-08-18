@@ -4,26 +4,25 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\AdminBannerResource;
-use App\Models\Banner;
-use App\Http\Resources\Admin\AdminBannerResourceCollection;
+use App\Http\Resources\Admin\AdminBrandResource;
+use App\Models\Brand;
 use Arr;
 use Illuminate\Http\Request;
 
-class BannerController extends Controller
+class BrandController extends Controller
 {
     /**
-     * @var Banner
+     * @var Brand
      */
-    protected $banners;
+    protected $brands;
 
     /**
-     * BannerController constructor.
-     * @param Banner $banners
+     * BrandController constructor.
+     * @param Brand $brands
      */
-    public function __construct(Banner $banners)
+    public function __construct(Brand $brands)
     {
-        $this->banners = $banners;
+        $this->brands = $brands;
     }
 
 
@@ -33,13 +32,14 @@ class BannerController extends Controller
         $form = $request->all();
         $limit = Arr::getInt($form,'limit',15);
 
-        $query = $this->banners->newQuery();
-        if($title = Arr::getStringTrimAddSlashes($form,'title')){
-            $query->where('name','like',"%$title%");
+        $query = $this->brands->newQuery();
+
+        if($name = Arr::getStringTrimAddSlashes($form,'name')){
+            $query->where('name','like',"%$name%");
         }
 
         $paginate = $query->orderByDesc('sort')->latest()->paginate($limit);
-        $data =AdminBannerResource::collection($paginate);
+        $data =AdminBrandResource::collection($paginate);
         return api_response()->success(['total'=>$paginate->total(),'data'=>$data]);
     }
 
@@ -47,8 +47,8 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         //
-        $data = $this->validateBanner($request->all());
-        $this->banners->create($data);
+        $data = $this->validateBrand($request->all());
+        $this->brands->create($data);
         return api_response()->success();
     }
 
@@ -62,8 +62,8 @@ class BannerController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $banner = $this->banners->getModelByIdOrFail($id);
-        $data = $this->validateBanner($request->all());
+        $banner = $this->brands->getModelByIdOrFail($id);
+        $data = $this->validateBrand($request->all());
         $banner->update($data);
         return api_response()->success();
     }
@@ -72,28 +72,28 @@ class BannerController extends Controller
     public function destroy($id)
     {
         //
-        $banner = $this->banners->getModelByIdOrFail($id);
+        $banner = $this->brands->getModelByIdOrFail($id);
         $banner->delete();
         return api_response()->success();
     }
 
     public function batchDelete(Request $request)
     {
-        $this->banners->whereIn('id',$request->get('ids'))->delete();
+        $this->brands->whereIn('id',$request->get('ids'))->delete();
         return api_response()->success();
     }
 
-    protected function validateBanner($from)
+    protected function validateBrand($from)
     {
         $rules =[
-            'title'=>'required',
+            'name'=>'required',
             'image_id'=>'required',
             'show'=>'sometimes',
             'sort'=>'sometimes'
         ];
         $validator = \Validator::make($from,$rules,
             [
-                'title.required'=>'标题必填',
+                'title.required'=>'名称必填',
                 'image_id.required'=>'图片必传',
             ]
         );

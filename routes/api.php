@@ -32,7 +32,15 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::get('banner/detail/{id}', 'BannerController@show');
         Route::post('banner/update/{id}', 'BannerController@update');
         Route::get('banner/delete/{id}', 'BannerController@destroy');
-        Route::any('category/batch/delete','CategoryController@batchDelete');
+        Route::post('banner/batch/delete','BannerController@batchDelete');
+
+        //品牌
+        Route::get('brand', 'BrandController@index');
+        Route::post('brand/create', 'BrandController@store');
+        Route::get('brand/detail/{id}', 'BrandController@show');
+        Route::post('brand/update/{id}', 'BrandController@update');
+        Route::get('brand/delete/{id}', 'BrandController@destroy');
+        Route::post('brand/batch/delete','BrandController@batchDelete');
 
         //城市管理路由
         Route::get('region', 'RegionController@index');

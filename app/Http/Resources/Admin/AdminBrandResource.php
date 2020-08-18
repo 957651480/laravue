@@ -4,7 +4,7 @@ namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AdminBannerResource extends JsonResource
+class AdminBrandResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +17,7 @@ class AdminBannerResource extends JsonResource
 
         return [
             'id'=>(integer)$this->id,
-            'title'=>(string)$this->title,
+            'name'=>(string)$this->name,
             'image_id'=>(integer)$this->image_id,
             'image_url'=>optional($this->image)->url,
             'show'=>(integer)$this->show,
