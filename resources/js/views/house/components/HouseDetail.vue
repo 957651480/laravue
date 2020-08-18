@@ -1,8 +1,10 @@
 <template>
   <div class="createPost-container" style="margin-top: 20px">
-    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container" label-width="217px">
 
       <div class="createPost-main-container">
+
+
         <el-form-item style="margin-bottom: 40px;" label-width="150px" label="名称:" prop="name">
           <el-input
             v-model="postForm.name"
@@ -13,7 +15,7 @@
             placeholder="请输入名称"
           />
         </el-form-item>
-        <el-form-item style="margin-bottom: 40px;" label-width="150px" label="简介:" prop="desc">
+        <el-form-item label-width="150px" label="简介:" prop="desc">
           <el-input
             v-model="postForm.desc"
             :rows="1"
@@ -22,6 +24,49 @@
             autosize
             placeholder="请输入简介"
           />
+        </el-form-item>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label-width="150px" label="型号:" prop="desc">
+              <el-input
+                      v-model="postForm.desc"
+                      placeholder="请输入型号"
+                      style="width:217px"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6" >
+            <el-form-item  label-width="150px" label="品牌:" prop="brand_id">
+              <el-select v-model="postForm.brand_id" >
+                <el-option
+                        v-for="item in brandList"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="10">
+            <el-form-item label-width="150px" label="出厂日期:" prop="date_of_manufacture">
+              <el-date-picker
+                      v-model="postForm.date_of_manufacture"
+                      type="date"
+                      placeholder="选择日期">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6" >
+            <el-form-item  label-width="150px" label="使用时长:" prop="duration_of_use">
+              <el-input-number v-model="postForm.duration_of_use"></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item  label-width="150px" label="设备手术:" prop="operation">
+          <el-input v-model="postForm.operation" style="width:217px"></el-input>
         </el-form-item>
         <el-row>
           <el-col :span="10">
@@ -55,7 +100,7 @@
           <el-col :span="10" >
 
               <el-form-item label-width="150px"
-                :label="`销售${index+1}姓名`"
+                :label="`销售姓名`"
                 :prop="'sales.' + index + '.name'"
                 :rules="{
             required: true, message: '销售姓名不能为空', trigger: 'blur'
@@ -67,7 +112,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label-width="150px"
-              :label="`销售${index+1}手机号`"
+              :label="`销售手机号`"
               :prop="'sales.' + index + '.phone'"
               :rules="[
              {required: true, message: '销售手机号不能为空', trigger: 'blur'},
@@ -142,11 +187,18 @@ import AreaSelect from "@/components/AreaSelect/index";
 import UploadImage from "@/components/Upload/UploadImage";
 import {arrayColumn} from "@/utils";
 import {fetchTreeList} from "@/api/region";
+import {fetchList as fetchBrandList} from "@/api/brand";
+
 import GouldMap from "@/components/Map/Gould/index";
 const defaultForm = {
-  house_id: undefined,
+  id: undefined,
   name: '',
   desc: '',
+  model: '',
+  brand_id: null,
+  date_of_manufacture: null,
+  duration_of_use:null,
+  operation:'',
   content: '',
   household:1,
   rate:'',
@@ -201,6 +253,7 @@ export default {
       regionTrees:[],
       fileList:[],
       parking_image_list:[],
+      brandList:[]
     };
   },
   computed: {
@@ -219,28 +272,15 @@ export default {
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     this.tempRoute = Object.assign({}, this.$route);
+    this.getBrandList();
   },
   methods: {
     fetchData(id) {
       fetchHouse(id)
         .then(response => {
 
-          let {house_id,name,desc,images,household,rate,sales,house_status,region_id,image_list,content,parking_images,parking_image_list,house_recommend,map} = response.data;
-          this.postForm.house_id=house_id;
-          this.postForm.name=name;
-          this.postForm.desc=desc;
-          this.postForm.images=images;
-          this.postForm.household=household;
-          this.postForm.rate=rate;
-          this.postForm.sales=sales;
-          this.postForm.house_status=house_status;
-          this.postForm.region_id=region_id;
-          this.postForm.content = content;
-          this.fileList=image_list;
-          this.parking_images = parking_images;
-          this.parking_image_list=parking_image_list;
-          this.postForm.house_recommend=house_recommend;
-          this.postForm.map=map;
+          let {data} = response.data;
+          this.postForm=data;
           // Set tagsview title
           this.setTagsViewTitle();
         })
@@ -249,12 +289,7 @@ export default {
         });
     },
     setTagsViewTitle() {
-      const title =
-        this.lang === 'zh'
-          ? '编辑课程'
-          : this.lang === 'vi'
-            ? 'Chỉnh sửa'
-            : 'Edit Article'; // Should move to i18n
+      const title ='编辑'
       const route = Object.assign({}, this.tempRoute, {
         title: `${title}-${this.postForm.id}`,
       });
@@ -331,6 +366,10 @@ export default {
             return false;
         }
         this.postForm.sales.splice(index, 1)
+    },
+    async getBrandList() {
+      const { data } = await fetchBrandList();
+      this.brandList = data;
     },
   },
 };
