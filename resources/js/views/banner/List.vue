@@ -10,9 +10,9 @@
       <el-button type="primary" icon="el-icon-plus" @click="handleCreate">
         添加
       </el-button>
-      <el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <!--<el-button v-waves :loading="downloading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
         导出
-      </el-button>
+      </el-button>-->
     </el-form>
 
     <base-table :data="list" :columns="columns" ref="table" v-loading="tableLoading"  border fit highlight-current-row style="width: 100%"
