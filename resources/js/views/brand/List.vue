@@ -72,7 +72,7 @@
             <el-input v-model="newBrand.name" show-word-limit maxlength="25"/>
           </el-form-item>
           <el-form-item label="图片:" prop="image_id">
-            <single-upload v-model="newBrand.image_id" :img_url.sync="newBrand.image_url"></single-upload>
+            <single-upload v-model="newBrand.image_id" :file_url.sync="newBrand.image_url"></single-upload>
           </el-form-item>
           <el-form-item label="状态:" prop="show">
             <custom-element-switch v-model="newBrand.show" ></custom-element-switch>

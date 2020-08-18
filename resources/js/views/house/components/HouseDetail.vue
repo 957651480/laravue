@@ -71,12 +71,12 @@
         <el-row>
           <el-col :span="10">
             <el-form-item label-width="150px" label="图片:" prop="images">
-              <upload-image v-model="postForm.images" :image-list="fileList"  @updateImageList="updateImageList"></upload-image>
+              <upload-image v-model="postForm.images" :file_url="fileList" ></upload-image>
             </el-form-item>
           </el-col>
           <el-col :span="10">
             <el-form-item label-width="150px" label="车位分布图:" prop="parking_images">
-              <upload-image v-model="postForm.parking_images" :image-list="parking_image_list"  @updateImageList="updateImageList"></upload-image>
+              <upload-image v-model="postForm.parking_images" :file_url="parking_image_list" ></upload-image>
             </el-form-item>
           </el-col>
         </el-row>

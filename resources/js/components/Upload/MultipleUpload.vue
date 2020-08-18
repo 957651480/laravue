@@ -1,27 +1,24 @@
 <template>
-<div v-bind="$attrs" class="single-upload">
+<div v-bind="$attrs" class="multiple-upload">
     <el-upload
-            class="avatar-uploader"
             :ref="$attrs.ref"
             v-bind="uploadAttrs"
             v-on="$listeners"
             :action="action"
             :headers="header"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-        <img v-if="elFileUrl" :src.sync="elFileUrl" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            :before-upload="handleBeforeUpload"
+            :on-success="handleSuccess"
+            >
+        <i class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
 </div>
-
 </template>
 
 <script>
     import {getToken} from "@/utils/auth";
 
     export default {
-    name: "SingleUpload",
+    name: "MultipleUpload",
     props:{
         action:{
             type:String,
@@ -33,10 +30,6 @@
                 return { Authorization: 'Bearer ' + getToken() }
             }
         },
-        "show-file-list":{
-            type:Boolean,
-            default:false
-        },
         extension: {
             type: Array,
             default(){
@@ -47,21 +40,14 @@
             type: Number,
             default: 0
         },
-        file_url:{
-            type:String,
-            default:''
-        }
     },
+
     data() {
         return {
-            uploadAttrs:{},
-            elFileUrl:this.file_url
+            uploadAttrs: {},
+            dialogVisible: false,
+            disabled: false
         };
-    },
-    watch:{
-        file_url(val){
-            this.elFileUrl=this.file_url;
-        }
     },
     created(){
         this.$nextTick(() => {
@@ -72,15 +58,19 @@
         init() {
             this.uploadAttrs = this.$attrs;
         },
-        handleAvatarSuccess(res, file) {
-            let {data}=file.response;
+        handleSuccess(res, file,fileList) {
 
-            this.elFileUrl=data.url;
-            this.$emit('input',data.id);
-            this.$emit('update:file_url',data.url);
+            let ids=[];
+            let file_urls=[];
+            fileList.forEach((item)=>{
+                ids.push(item.response.data.id);
+                file_urls.push(item.response.data.url);
+            });
+            this.$emit('input',ids);
+            this.$emit('update:file-list',file_urls);
 
         },
-        beforeAvatarUpload(file) {
+        handleBeforeUpload(file) {
             let length = this.extension.length;
             if (length) {
                 let allow_extension = this.extension.some(item=>{
@@ -100,34 +90,20 @@
             }
             return true;
         },
-
-
+        handleRemove(file) {
+            console.log(file);
+        },
+        handlePictureCardPreview(file) {
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
+        handleDownload(file) {
+            console.log(file);
+        }
     }
 }
 </script>
 
-<style >
-    .avatar-uploader .el-upload {
-        border: 1px dashed #d9d9d9;
-        border-radius: 6px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-    .avatar-uploader .el-upload:hover {
-        border-color: #409EFF;
-    }
-    .avatar-uploader-icon {
-        font-size: 28px;
-        color: #8c939d;
-        width: 178px;
-        height: 178px;
-        line-height: 178px;
-        text-align: center;
-    }
-    .avatar {
-        width: 178px;
-        height: 178px;
-        display: block;
-    }
+<style scoped>
+
 </style>
