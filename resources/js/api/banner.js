@@ -2,7 +2,7 @@ import request from '@/utils/request';
 
 export function fetchList(query) {
   return request({
-    url: 'banner',
+    url: 'admin/banner',
     method: 'get',
     params: query,
   });
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchBanner(id) {
   return request({
-    url: 'banner/detail/' + id,
+    url: 'admin/banner/detail/' + id,
     method: 'get',
   });
 }
@@ -18,7 +18,7 @@ export function fetchBanner(id) {
 
 export function createBanner(data) {
   return request({
-    url: 'banner/create',
+    url: 'admin/banner/create',
     method: 'post',
     data,
   });
@@ -26,7 +26,7 @@ export function createBanner(data) {
 
 export function updateBanner(id,data) {
   return request({
-    url: 'banner/update/'+id,
+    url: 'admin/banner/update/'+id,
     method: 'post',
     data,
   });
@@ -34,7 +34,15 @@ export function updateBanner(id,data) {
 
 export function deleteBanner(id) {
   return request({
-    url: 'banner/delete/' + id,
+    url: 'admin/banner/delete/' + id,
     method: 'get',
   });
+}
+export function batchDeleteBanner(data) {
+
+  return request({
+    url: 'admin/banner/batch/delete',
+    method: 'post',
+    data
+  })
 }

@@ -32,6 +32,7 @@ Route::prefix('admin/')->namespace('Admin')->group(function ()
         Route::get('banner/detail/{id}', 'BannerController@show');
         Route::post('banner/update/{id}', 'BannerController@update');
         Route::get('banner/delete/{id}', 'BannerController@destroy');
+        Route::any('category/batch/delete','CategoryController@batchDelete');
 
         //城市管理路由
         Route::get('region', 'RegionController@index');

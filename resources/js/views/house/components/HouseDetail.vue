@@ -37,9 +37,9 @@
         </el-row>
         <el-row>
           <el-col :span="10">
-            <el-form-item  label-width="150px" label="区域" prop="house_region">
+            <el-form-item  label-width="150px" label="区域" prop="region_id">
               <el-cascader
-                v-model="postForm.house_region"
+                v-model="postForm.region_id"
                 :props="optionProps"
                 :options="regionTrees"
               ></el-cascader>
@@ -153,7 +153,7 @@ const defaultForm = {
   house_status:10,
   images:[],
   parking_images:[],
-  house_region:[],
+  region_id:null,
   sales:[{name:'',phone:''}],
   house_recommend:20,
   map:{lng:null,lat:null,address:null},
@@ -181,7 +181,7 @@ export default {
       rules: {
         name: [{ required: true, message: '名称必须', trigger: 'blur' }],
         desc: [{ required: true, message: '简介必须', trigger: 'blur' }],
-        house_region: [{ required: true, message: '请选择地区', trigger: 'blur' }],
+        region_id: [{ required: true, message: '请选择地区', trigger: 'blur' }],
         household: [{ required: true, message: '请填写人数', trigger: 'blur' }],
         rate: [{ required: true, message: '请填写车位配比', trigger: 'blur' }],
         house_status: [{ required: true, message: '请选择楼盘上下架状态', trigger: 'blur' }],
@@ -196,6 +196,7 @@ export default {
       optionProps:{
           value: 'region_id',
           label: 'name',
+          emitPath:false
       },
       regionTrees:[],
       fileList:[],
@@ -224,7 +225,7 @@ export default {
       fetchHouse(id)
         .then(response => {
 
-          let {house_id,name,desc,images,household,rate,sales,house_status,house_region,region_id,image_list,content,parking_images,parking_image_list,house_recommend,map} = response.data;
+          let {house_id,name,desc,images,household,rate,sales,house_status,region_id,image_list,content,parking_images,parking_image_list,house_recommend,map} = response.data;
           this.postForm.house_id=house_id;
           this.postForm.name=name;
           this.postForm.desc=desc;
@@ -233,7 +234,6 @@ export default {
           this.postForm.rate=rate;
           this.postForm.sales=sales;
           this.postForm.house_status=house_status;
-          this.postForm.house_region=house_region;
           this.postForm.region_id=region_id;
           this.postForm.content = content;
           this.fileList=image_list;

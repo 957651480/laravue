@@ -34,14 +34,9 @@ class BannerController extends Controller
         $limit = Arr::getInt($form,'limit',15);
 
         $title = Arr::getStringTrimAddSlashes($form,'title');
-        $city_id = Arr::getInt($form,'city_id');
-        if($user_city_id = getUserCityId()){
-            $city_id = $user_city_id;
-        }
 
-        $query = $this->banners->with(['image','city','author'])->newQuery();
+        $query = $this->banners->with(['image'])->newQuery();
         if($scopes =array_filter([
-            'cityId'=>$city_id,
             'likeTitle'=>$title
         ])){
             foreach (($scopes) as $scope => $value) {
@@ -49,11 +44,8 @@ class BannerController extends Controller
             }
         }
         $paginate = $query->orderByDesc('sort')->latest()->paginate($limit);
-        $data =[
-            'total'=>$paginate->total(),
-            'list'=>AdminBannerResource::collection($paginate)
-        ];
-        return $this->renderSuccess('',$data);
+        $data =AdminBannerResource::collection($paginate);
+        return api_response()->success(['total'=>$paginate->total(),'data'=>$data]);
     }
 
 
@@ -62,7 +54,7 @@ class BannerController extends Controller
         //
         $data = $this->validateBanner($request->all());
         $this->banners->create($data);
-        return $this->renderSuccess();
+        return api_response()->success();
     }
 
 
@@ -78,7 +70,7 @@ class BannerController extends Controller
         $banner = $this->banners->getModelByIdOrFail($id);
         $data = $this->validateBanner($request->all());
         $banner->update($data);
-        return $this->renderSuccess();
+        return api_response()->success();
     }
 
 
@@ -87,29 +79,30 @@ class BannerController extends Controller
         //
         $banner = $this->banners->getModelByIdOrFail($id);
         $banner->delete();
-        return $this->renderSuccess();
+        return api_response()->success();
+    }
+
+    public function batchDelete(Request $request)
+    {
+        $this->banners->whereIn('id',$request->get('ids'))->delete();
+        return api_response()->success();
     }
 
     protected function validateBanner($from)
     {
         $rules =[
             'title'=>'required',
-            'type_id'=>'required',
-            'images'=>'required',
+            'image_id'=>'required',
             'show'=>'sometimes',
             'sort'=>'sometimes'
         ];
         $validator = \Validator::make($from,$rules,
             [
                 'title.required'=>'标题必填',
-                'type_id.required'=>'类型必填',
-                'images.required'=>'图片必传',
+                'image_id.required'=>'图片必传',
             ]
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
-        $data = Arr::only($validator->getData(),array_keys($rules));
-        $images = Arr::pull($data,'images');
-        $data['image_id'] = $images[0];
-        return $data;
+        return $validator->validated();
     }
 }

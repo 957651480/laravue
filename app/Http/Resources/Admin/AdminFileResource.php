@@ -16,7 +16,7 @@ class AdminFileResource extends JsonResource
     {
         $author = $this->author;
         return [
-            'file_id'=>(integer)$this->file_id,
+            'id'=>(integer)$this->file_id,
             'filename'=>(string)$this->filename,
             'source_filename'=>(string)$this->source_filename,
             'name'=>(string)$this->source_filename,

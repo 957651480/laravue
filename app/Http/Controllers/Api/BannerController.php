@@ -45,11 +45,8 @@ class BannerController extends Controller
             }
         }
         $paginate = $query->orderByDesc('sort')->latest()->paginate($limit);
-        $data =[
-            'total'=>$paginate->total(),
-            'list'=>ApiBannerResource::collection($paginate)
-        ];
-        return $this->renderSuccess('',$data);
+        $data =ApiBannerResource::collection($paginate);
+        return api_response()->success(['total'=>$paginate->total(),'data'=>$data]);
     }
 
 

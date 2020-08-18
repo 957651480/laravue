@@ -64,19 +64,9 @@
           <span>{{scope.row.house_recommend===10?'是':'否' }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180px" align="center" label="所属城市">
-        <template slot-scope="scope">
-          <span>{{ scope.row.city_name }}</span>
-        </template>
-      </el-table-column>
       <el-table-column width="180px" align="center" label="区域">
         <template slot-scope="scope">
           <span>{{ scope.row.region_merger_name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column width="180px" align="center" label="作者">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author_name }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" min-width="80px" label="发布时间">

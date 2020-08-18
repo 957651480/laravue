@@ -127,7 +127,7 @@ class HouseController extends Controller
             'map'=>'required|array',
             'rate'=>'required',
             'house_status'=>'sometimes',
-            'house_region'=>'required',
+            'region_id'=>'required',
             'images'=>'required',
             'parking_images'=>'required',
             'content'=>'required',
@@ -140,7 +140,7 @@ class HouseController extends Controller
                 'desc.sometimes'=>'标题必填',
                 'rate.required'=>'车位配比必填',
                 'house_status.sometimes'=>'楼盘上下架状态',
-                'house_region.required'=>'区域必填',
+                'region_id.required'=>'区域必填',
                 'images.required'=>'图片必传',
                 'parking_images.required'=>'车位分布图必传',
                 'content.required'=>'详情必须',
@@ -151,7 +151,6 @@ class HouseController extends Controller
         );
         throw_if($validator->fails(),ApiException::class,$validator->messages()->first());
         $data = Arr::only($validator->getData(),array_keys($rules));
-        $data['region_id'] = end($data['house_region']);
         $images = Arr::pull($data,'images');
         $parking_images = Arr::pull($data,'parking_images');
         return [$data,$images,$parking_images];
