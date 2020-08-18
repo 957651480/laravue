@@ -49,14 +49,78 @@ function export_excel($fileName, $tileArray = [], $dataArray = [])
     ob_end_clean();
 }
 
-function array_get_int($arr,$key,$default=0){
-    return Arr::getInt($arr,$key,$default);
+if (! function_exists('get_sons')) {
+    function get_sons($data, $parent_id = 0, string $pIdName = 'parent_id')
+    {
+        $sons = [];
+        foreach ($data as $key=>$item) {
+            if ($item[$pIdName] == $parent_id)
+                $sons[] = $item;
+            unset($data[$key]);
+        }
+        return $sons;
+    }
 }
 
-function getUserCityId(){
-    $city_id =0;
-    if($user = auth()->user()){
-        $city_id=$user->city_id;
+if (! function_exists('get_subs_recursive'))
+{
+    function get_subs_recursive(array $data,int $parent_id=0,$level=1,string $pkName = 'id', string $pIdName = 'parent_id'){
+        $subs=array();
+        foreach($data as $key=>$item){
+            if($item[$pIdName]==$parent_id){
+                $item['level']=$level;
+                $subs[]=$item;
+                unset($data[$key]);
+                $subs=array_merge($subs,get_subs_recursive($data,$item[$pkName],$level+1));
+
+            }
+        }
+        return $subs;
     }
-    return $city_id;
+}
+
+if (! function_exists('get_parents'))
+{
+    function get_parents(array $data, int $parent_id,string $pkName = 'id', string $pIdName = 'parent_id'){
+        $parents=array();
+        while($parent_id != 0){
+            foreach($data as $key=>$item){
+                if($item[$pkName]==$parent_id){
+                    $parents[]=$item;
+                    $parent_id=$item[$pIdName];
+                    unset($data[$key]);
+                    break;
+                }
+            }
+        }
+        return $parents;
+    }
+}
+if (! function_exists('arr_to_tree_recursive'))
+{
+    /**
+     * 采用递归将数据列表转换成树
+     *
+     * @param  array   $data   数据列表
+     * @param  integer $rootId    根节点ID
+     * @param  string  $pkName    主键
+     * @param  string  $pIdName   父节点名称
+     * @param  string  $childName 子节点名称
+     *
+     * @return array  转换后的树
+     */
+    function arr_to_tree_recursive(array $data, int $rootId = 0, string $pkName = 'id', string $pIdName = 'parent_id', string $childName = 'children')
+    {
+        $arr = [];
+        foreach ($data as $sorData)
+        {
+            if ($sorData[$pIdName] == $rootId)
+            {
+                $sorData[$childName] = arr_to_tree_recursive($data, $sorData[$pkName]);
+                $arr[]               = $sorData;
+            }
+        }
+        return $arr;
+    }
+
 }

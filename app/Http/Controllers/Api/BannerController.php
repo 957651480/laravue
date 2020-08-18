@@ -32,18 +32,11 @@ class BannerController extends Controller
         $form = $request->all();
         $limit = Arr::getInt($form,'limit',15);
 
-        $title = Arr::getStringTrimAddSlashes($form,'title');
-        $city_id = Arr::getInt($form,'city_id');
-
-        $query = $this->banners->with(['image','city','author'])->newQuery();
-        if($scopes =array_filter([
-            'cityId'=>$city_id,
-            'likeTitle'=>$title
-        ])){
-            foreach (($scopes) as $scope => $value) {
-                $query->$scope($value);
-            }
+        $query = $this->banners->newQuery();
+        if($title = Arr::getStringTrimAddSlashes($form,'title')){
+            $query->where('name','like',"%$title%");
         }
+
         $paginate = $query->orderByDesc('sort')->latest()->paginate($limit);
         $data =ApiBannerResource::collection($paginate);
         return api_response()->success(['total'=>$paginate->total(),'data'=>$data]);
@@ -57,12 +50,4 @@ class BannerController extends Controller
         $banner = $this->banners->getModelByIdOrFail($id,['image']);
         return $this->renderSuccess('',new ApiBannerResource($banner));
     }
-
-
-
-
-
-
-
-
 }

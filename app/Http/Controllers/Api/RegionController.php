@@ -40,11 +40,8 @@ class RegionController extends Controller
             $query->where('level',$level);
         }
         $paginator = $query->paginate($limit);
-        $data =[
-            'total'=>$paginator->total(),
-            'list'=>ApiRegionResource::collection($paginator)
-        ];
-        return $this->renderSuccess('',$data);
+        $data =ApiRegionResource::collection($paginator);
+        return api_response()->success(['total' => $paginator->total(), 'data' => $data]);
     }
 
     public function treeList(Request $request)
@@ -52,21 +49,7 @@ class RegionController extends Controller
         $need_level = $request->get('need_level',0);
         $all_region = $this->service->fetchLevelAll($need_level);
         $parent_id = $request->get('parent_id');
-        if($city_id=getUserCityId()){
-            $parent_id=$city_id;
-        }
-        $list = $this->service->getTree($all_region,$parent_id);
-        return $this->renderSuccess('',['list'=>$list]);
-    }
-
-    public function city(Request $request)
-    {
-        $list = $this->service->fetchAllCity();
-        $data = [
-            'hot_city'=>[],
-            'list'=>$list,
-            'total'=>count($list)
-        ];
-        return $this->renderSuccess('',$data);
+        $tree = arr_to_tree_recursive($all_region,$parent_id);
+        return api_response()->success(['list'=>$tree]);
     }
 }
