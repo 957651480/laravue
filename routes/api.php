@@ -144,7 +144,7 @@ Route::group(['namespace'=>'Api'],function (){
     Route::any('information/detail/{id}','InformationController@show');
 
     Route::any('banner/list', 'BannerController@index');
-    Route::any('banner/detail/{id}', 'BannerController@show');
+    Route::any('brand/list', 'BrandController@index');
 
     Route::any('lottery/list', 'LotteryController@index');
     Route::any('lottery/detail/{id}', 'LotteryController@show');
